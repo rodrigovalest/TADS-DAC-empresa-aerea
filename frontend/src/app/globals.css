@@ -11,6 +11,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-oranged: #ff3d00;
+  --color-browned: #711E03;
 }
 
 @media (prefers-color-scheme: dark) {
