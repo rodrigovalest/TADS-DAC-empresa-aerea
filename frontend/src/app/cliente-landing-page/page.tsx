@@ -1,10 +1,12 @@
 import React from 'react';
 import '../../app/globals.css';
 import TravelCardRecord from '@/components/TravelCardRecord';
+import Header from "../../components/header"
 
 const ClienteLandingPage: React.FC = () => {
   return (
     <div>
+        <Header/>
         <div className="flex items-center justify-center p-8 text-center bg-cover min-h-100"
             style={{ backgroundImage: "url('/images/header-cliente-landing-page.png')", 
                 fontFamily: 'Pathway Gothic One, sans-serif' }}>
