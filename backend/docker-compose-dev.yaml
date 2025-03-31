@@ -1,0 +1,40 @@
+services:
+  db-cliente:
+    image: postgres:17.4
+    container_name: db-cliente
+    ports:
+      - '14000:5432'
+    environment:
+      POSTGRES_PASSWORD: 123mudar
+      POSTGRES_USER: 123mudar
+      POSTGRES_DB: cliente
+
+  db-funcionario:
+    image: postgres:17.4
+    container_name: db-funcionario
+    ports:
+      - '14001:5432'
+    environment:
+      POSTGRES_PASSWORD: 123mudar
+      POSTGRES_USER: 123mudar
+      POSTGRES_DB: funcionario
+
+  db-reserva:
+    image: postgres:17.4
+    container_name: db-reserva
+    ports:
+      - '14002:5432'
+    environment:
+      POSTGRES_PASSWORD: 123mudar
+      POSTGRES_USER: 123mudar
+      POSTGRES_DB: reserva
+
+  db-voos:
+    image: postgres:17.4
+    container_name: db-voos
+    ports:
+      - '14003:5432'
+    environment:
+      POSTGRES_PASSWORD: 123mudar
+      POSTGRES_USER: 123mudar
+      POSTGRES_DB: voos
