@@ -17,7 +17,7 @@ export default function Header() {
                     <Link href="/cliente-landing-page">Home</Link>
                 </li>
                 <li>
-                    <Link href="/cliente-landing-page">Milhas</Link>
+                    <Link href="/mileage-history">Milhas</Link>
                 </li>
                 <li>
                     <Link href="/cliente-landing-page">Voos</Link>
@@ -35,7 +35,7 @@ export default function Header() {
                 </li>
             </ul>
         </nav>
-        <h2>1200 pts</h2>
+        <h2 className="text-white">1200 pts</h2>
     </div>
   );
 }

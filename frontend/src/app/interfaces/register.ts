@@ -1,4 +1,4 @@
-interface IRegister {
+export interface IRegister {
   cpf: string;
   name: string;
   email: string;

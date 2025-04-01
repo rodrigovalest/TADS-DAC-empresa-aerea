@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { IRegister } from "../interfaces/register";
 
 const RegisterForm: React.FC<{ onSubmit: SubmitHandler<IRegister> }> = ({ onSubmit }) => {
   const {

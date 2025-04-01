@@ -28,7 +28,6 @@ interface CustomDialogProps {
 
 const CustomOrangeDialog: React.FC<CustomDialogProps> = ({
   isOpen,
-  onClose,
   title,
   body,
   buttons = [],
