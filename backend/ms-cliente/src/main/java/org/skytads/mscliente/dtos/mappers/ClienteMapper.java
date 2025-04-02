@@ -2,6 +2,8 @@ package org.skytads.mscliente.dtos.mappers;
 
 import org.skytads.mscliente.dtos.requests.AutocadastroRequestDto;
 import org.skytads.mscliente.dtos.responses.AutocadastroResponseDto;
+import org.skytads.mscliente.dtos.responses.ClienteResponseDto;
+import org.skytads.mscliente.dtos.responses.EnderecoResponseDto;
 import org.skytads.mscliente.models.Cliente;
 
 public class ClienteMapper {
@@ -25,12 +27,32 @@ public class ClienteMapper {
         );
     }
 
-    public static AutocadastroResponseDto toDto(Cliente novoCliente) {
+    public static AutocadastroResponseDto toAutocadastroResponseDto(Cliente cliente) {
         return new AutocadastroResponseDto(
-                novoCliente.getId(),
-                novoCliente.getCpf(),
-                novoCliente.getEmail(),
-                novoCliente.getNome()
+                cliente.getId(),
+                cliente.getCpf(),
+                cliente.getEmail(),
+                cliente.getNome()
+        );
+    }
+
+    public static ClienteResponseDto toClienteResponseDto(Cliente cliente) {
+        EnderecoResponseDto endereco = new EnderecoResponseDto(
+                cliente.getCep(),
+                cliente.getUf(),
+                cliente.getCidade(),
+                cliente.getBairro(),
+                cliente.getRua(),
+                cliente.getNumero(),
+                cliente.getComplemento()
+        );
+
+        return new ClienteResponseDto(
+                cliente.getCpf(),
+                cliente.getEmail(),
+                cliente.getNome(),
+                cliente.getSaldoMilhas(),
+                endereco
         );
     }
 }

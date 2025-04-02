@@ -1,10 +1,11 @@
 package org.skytads.mscliente.services;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.skytads.mscliente.exceptions.ClienteNaoEncontradoException;
 import org.skytads.mscliente.models.Cliente;
 import org.skytads.mscliente.repositories.ClienteRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 
@@ -24,5 +25,12 @@ public class ClienteService {
         novoCliente.setSaldoMilhas(0L);
 
         return this.clienteRepository.save(novoCliente);
+    }
+
+    @Transactional(readOnly = true)
+    public Cliente findClienteByEmail(String email) {
+        return this.clienteRepository.findByEmail(email).orElseThrow(
+                () -> new ClienteNaoEncontradoException("cliente nao encontrado")
+        );
     }
 }
