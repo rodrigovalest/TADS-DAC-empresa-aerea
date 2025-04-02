@@ -37,7 +37,7 @@ const CustomOrangeDialog: React.FC<CustomDialogProps> = ({
 
   return (
     // Diálogo principal (fundo escuro com opacidade)
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-blackopacity75 z-50">
       {/* Caixa do diálogo */}
       <div className="bg-oranged text-white p-6 rounded-xl shadow-lg w-auto max-w-3xl">
         {/* Título do diálogo */}

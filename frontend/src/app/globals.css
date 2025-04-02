@@ -4,5 +4,7 @@
 @theme {
     --color-oranged: #ff3d00;
     --color-browned: #711E03;
+    --color-blackopacity50: rgba(0, 0, 0, 0.5);
+    --color-blackopacity75: rgba(0, 0, 0, 0.75);
     --font-pathway: "Pathway Gothic One", "sans-serif";
 }
