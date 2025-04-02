@@ -38,6 +38,9 @@ export default function Header() {
             <Link href="/cliente-landing-page">Minhas reservas</Link>
           </li>
           <li>
+            <Link href="/search-reservation">Procurar Reserva</Link>
+          </li>
+          <li>
             <Link href="/cliente-landing-page">Check-In</Link>
           </li>
         </ul>
