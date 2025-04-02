@@ -16,32 +16,36 @@ app.use('/clientes', createProxyMiddleware({
   target: services.cliente,
   changeOrigin: true,
   pathRewrite: {
-    '^/clientes': '/clientes',
+    '^/': '/clientes/'
   },
+  logger: console
 }));
 
 app.use('/funcionarios', createProxyMiddleware({
   target: services.funcionario,
   changeOrigin: true,
   pathRewrite: {
-    '^/funcionarios': '/funcionarios',
+    '^/': '/clientes/'
   },
+  logger: console
 }));
 
 app.use('/reservas', createProxyMiddleware({
   target: services.reserva,
   changeOrigin: true,
   pathRewrite: {
-    '^/reservas': '/reservas',
+    '^/': '/clientes/'
   },
+  logger: console
 }));
 
 app.use('/voos', createProxyMiddleware({
   target: services.voos,
   changeOrigin: true,
   pathRewrite: {
-    '^/voos': '/voos',
+    '^/': '/clientes/'
   },
+  logger: console
 }));
 
 app.listen(port, () => {
