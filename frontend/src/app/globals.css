@@ -1,2 +1,8 @@
 @import '../../public/utils/fonts/fonts.css';
 @import "tailwindcss";
+
+@theme {
+    --color-oranged: #ff3d00;
+    --color-browned: #711E03;
+    --font-pathway: "Pathway Gothic One", "sans-serif";
+}
