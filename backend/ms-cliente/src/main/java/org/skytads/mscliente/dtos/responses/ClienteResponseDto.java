@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class ClienteResponseDto {
+    private String codigo;
     private String cpf;
     private String email;
     private String nome;
