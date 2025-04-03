@@ -1,5 +1,6 @@
-package org.skytads.mscliente.dtos.mappers;
+package org.skytads.mscliente.mappers;
 
+import org.skytads.mscliente.dtos.messages.CriarClienteMessageDto;
 import org.skytads.mscliente.dtos.requests.AutocadastroRequestDto;
 import org.skytads.mscliente.dtos.responses.AutocadastroResponseDto;
 import org.skytads.mscliente.dtos.responses.ClienteResponseDto;
@@ -48,11 +49,21 @@ public class ClienteMapper {
         );
 
         return new ClienteResponseDto(
+                cliente.getId().toString(),
                 cliente.getCpf(),
                 cliente.getEmail(),
                 cliente.getNome(),
                 cliente.getSaldoMilhas(),
                 endereco
+        );
+    }
+
+    public static CriarClienteMessageDto toCriarClienteMessageDto(Cliente cliente) {
+        return new CriarClienteMessageDto(
+                cliente.getId().toString(),
+                cliente.getCpf(),
+                cliente.getEmail(),
+                cliente.getSenha()
         );
     }
 }

@@ -2,6 +2,7 @@ package org.skytads.mscliente.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.skytads.mscliente.dtos.responses.ErrorResponseDto;
+import org.skytads.mscliente.exceptions.BadCredentialsException;
 import org.skytads.mscliente.exceptions.ClienteNaoEncontradoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -63,6 +64,19 @@ public class RestExceptionHandler {
         ErrorResponseDto restErrorDto = new ErrorResponseDto(HttpStatus.NOT_FOUND, e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(restErrorDto);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    private ResponseEntity<ErrorResponseDto> badCredentialsExceptionHandler(
+            BadCredentialsException e
+    ) {
+        log.info("{} | {} | {}", String.valueOf(e.getCause()), e.getMessage(), e.getClass());
+
+        ErrorResponseDto restErrorDto = new ErrorResponseDto(HttpStatus.UNAUTHORIZED, "bad credentials");
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(restErrorDto);
     }
