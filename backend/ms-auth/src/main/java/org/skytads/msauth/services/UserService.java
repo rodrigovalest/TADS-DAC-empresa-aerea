@@ -3,19 +3,15 @@ package org.skytads.msauth.services;
 import lombok.RequiredArgsConstructor;
 import org.skytads.msauth.domain.User;
 import org.skytads.msauth.domain.UserType;
-import org.skytads.msauth.dtos.requests.ValidateCredentialsRequestDto;
-import org.skytads.msauth.dtos.responses.ClienteResponseDto;
 import org.skytads.msauth.entities.UserEntity;
 import org.skytads.msauth.exceptions.BadCredentialsException;
 import org.skytads.msauth.exceptions.UserNotFoundException;
-import org.skytads.msauth.integration.ClienteClient;
 import org.skytads.msauth.mappers.UserMapper;
 import org.skytads.msauth.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -27,11 +23,11 @@ public class UserService {
     @Transactional
     public User login(String login, String senha) {
         UserEntity userEntity = this.userRepository.findByEmail(login).orElseThrow(
-                () -> new BadCredentialsException("Bad credentials aaaaaa")
+                () -> new BadCredentialsException("Bad credentials")
         );
 
         if (!Objects.equals(senha, userEntity.getSenha()))
-            throw new BadCredentialsException("Bad credentials bbbbbbb");
+            throw new BadCredentialsException("Bad credentials");
 
         String token = this.jwtService.generateToken(UserMapper.toDomain(userEntity));
         userEntity.setTokenType("Bearer");

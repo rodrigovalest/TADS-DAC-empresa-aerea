@@ -1,4 +1,4 @@
-package org.skytads.msauth.domain;
+package org.skytads.mscliente.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

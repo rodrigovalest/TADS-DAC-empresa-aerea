@@ -1,14 +1,13 @@
-package org.skytads.msauth.config;
+package org.skytads.mscliente.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.skytads.msauth.domain.UserDetailsImpl;
-import org.skytads.msauth.domain.UserType;
-import org.skytads.msauth.services.JwtService;
-import org.skytads.msauth.services.UserService;
+import org.skytads.mscliente.models.UserDetailsImpl;
+import org.skytads.mscliente.models.UserType;
+import org.skytads.mscliente.services.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,8 +20,6 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-
-    private final UserService userService;
 
     @Override
     protected void doFilterInternal(

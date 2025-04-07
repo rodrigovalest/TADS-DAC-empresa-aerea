@@ -28,9 +28,4 @@ public class AuthController {
         this.userService.logout(requestDto.getLogin());
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/hello")
-    public ResponseEntity<?> login() {
-        return ResponseEntity.ok("Hello world");
-    }
 }
