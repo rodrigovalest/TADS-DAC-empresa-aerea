@@ -42,15 +42,4 @@ public class ClienteService {
                 () -> new ClienteNaoEncontradoException("cliente nao encontrado")
         );
     }
-
-    @Transactional(readOnly = true)
-    public Cliente validateCredentials(String email, String senha) {
-        Cliente cliente = this.findClienteByEmail(email);
-
-        if (!Objects.equals(senha, cliente.getSenha())) {
-            throw new BadCredentialsException("email ou senha invalidos");
-        }
-
-        return cliente;
-    }
 }
