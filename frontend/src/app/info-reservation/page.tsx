@@ -3,6 +3,7 @@ import React from "react";
 import Header from "../../components/Header";
 import HeaderBanner from "@/components/HeaderBanner";
 import { Reservation } from "../interfaces/reservation-types";
+import CancelReservationButton from "@/components/CancelReservationButton";
 
 const infoReservation: React.FC = () => {
   const reservationData: Reservation = {
@@ -17,10 +18,6 @@ const infoReservation: React.FC = () => {
 
   const handleCheckIn = () => {
     alert("Check-in realizado com sucesso!");
-  };
-
-  const handleCancelReservation = () => {
-    alert("Reserva cancelada com sucesso!");
   };
 
   const isFlightWithin48Hours = () => {
@@ -66,12 +63,7 @@ const infoReservation: React.FC = () => {
                 Fazer Check-in
               </button>
             )}
-            <button
-              onClick={handleCancelReservation}
-              className="px-6 py-2 bg-red-500 text-white text-2xl rounded-md hover:bg-red-700 transition-all"
-            >
-              Cancelar Reserva
-            </button>
+            <CancelReservationButton reservationCode={reservationData.code} />
           </div>
         </div>
       </div>
