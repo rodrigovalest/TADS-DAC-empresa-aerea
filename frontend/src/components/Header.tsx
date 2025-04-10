@@ -29,6 +29,9 @@ export default function Header() {
             <Link href="/cliente-landing-page">Home</Link>
           </li>
           <li>
+            <Link href="/new-trip">Nova reserva</Link>
+          </li>
+          <li>
             <Link href="/mileage-history">Milhas</Link>
           </li>
           <li>
@@ -38,10 +41,10 @@ export default function Header() {
             <Link href="/cliente-landing-page">Minhas reservas</Link>
           </li>
           <li>
-            <Link href="/search-reservation">Procurar Reserva</Link>
+            <Link href="/search-reservation">Procurar reserva</Link>
           </li>
           <li>
-            <Link href="/cliente-landing-page">Check-In</Link>
+            <Link href="/cliente-landing-page">Check-in</Link>
           </li>
         </ul>
         <ul className="absolute bottom-4 left-4 space-y-4">
