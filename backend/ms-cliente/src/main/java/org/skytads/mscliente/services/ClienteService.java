@@ -1,7 +1,6 @@
 package org.skytads.mscliente.services;
 
 import lombok.RequiredArgsConstructor;
-import org.skytads.mscliente.exceptions.BadCredentialsException;
 import org.skytads.mscliente.exceptions.ClienteNaoEncontradoException;
 import org.skytads.mscliente.mappers.ClienteMapper;
 import org.skytads.mscliente.models.Cliente;
@@ -9,7 +8,7 @@ import org.skytads.mscliente.repositories.ClienteRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
+import java.util.List;
 import java.util.Random;
 
 @RequiredArgsConstructor
@@ -42,4 +41,26 @@ public class ClienteService {
                 () -> new ClienteNaoEncontradoException("cliente nao encontrado")
         );
     }
+    
+    @Transactional(readOnly = true)
+    public List<Cliente> findAllClientes() {
+        return this.clienteRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Cliente findClienteById(Long id) {
+        return this.clienteRepository.findById(id).orElseThrow(
+                () -> new ClienteNaoEncontradoException("cliente nao encontrado com ID: " + id)
+        );
+    }
+
+    @Transactional
+    public void atualizarMilhas(String cpf, Integer milhas) {
+        Cliente cliente = clienteRepository.findByCpf(cpf)
+                .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado com CPF: " + cpf));
+        
+        cliente.setSaldoMilhas(cliente.getSaldoMilhas() + milhas);
+        clienteRepository.save(cliente);
+    }
+
 }
