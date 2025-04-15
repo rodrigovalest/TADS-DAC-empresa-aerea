@@ -2,6 +2,7 @@
 
 import React from "react";
 import RegisterForm from "./register-form";
+import IRegister from "../interfaces/register";
 
 const RegisterPage: React.FC = () => {
   const handleRegister = (data: IRegister) => {

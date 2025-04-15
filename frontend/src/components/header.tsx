@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -7,11 +8,11 @@ export default function Header() {
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
     <div className="fixed flex min-w-[100%] bg-[#00000080] flex-row justify-between items-center p-4">
-        <img src="/icons/icon-menu.png" alt="menu" onClick={toggleMenu} className="cursor-pointer" />
+        <Image src="/icons/icon-menu.png" alt="menu" onClick={toggleMenu} className="cursor-pointer" />
         <nav className={`fixed top-0 left-0 h-full w-64 bg-black text-white p-4 transition-all transform ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}>
-            <img src="/icons/icon-menu.png" alt="close menu" onClick={toggleMenu} className="cursor-pointer absolute top-4 right-4" />
+            <Image src="/icons/icon-menu.png" alt="close menu" onClick={toggleMenu} className="cursor-pointer absolute top-4 right-4" />
             <ul className="space-y-4 pt-10">
                 <li>
                     <Link href="/cliente-landing-page">Home</Link>
