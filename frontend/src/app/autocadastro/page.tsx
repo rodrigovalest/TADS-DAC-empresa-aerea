@@ -2,14 +2,12 @@
 
 import React from "react";
 import RegisterForm from "./register-form";
-import IRegister from "../interfaces/register";
+import { IRegister } from "../interfaces/register";
 
 const RegisterPage: React.FC = () => {
   const handleRegister = (data: IRegister) => {
     console.log("Form Data:", data);
   };
-
-
 
   return (
     <div className="flex justify-between w-full h-screen items-center bg-gray-200">
