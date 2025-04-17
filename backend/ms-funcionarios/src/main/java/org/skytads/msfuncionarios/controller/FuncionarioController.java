@@ -2,7 +2,7 @@ package org.skytads.msfuncionarios.controller;
 
 import org.skytads.msfuncionarios.dto.FuncionarioDTO;
 import org.skytads.msfuncionarios.dto.FuncionarioUpdateDTO;
-import org.skytads.msfuncionarios.service.FuncionarioService;
+import org.skytads.msfuncionarios.services.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

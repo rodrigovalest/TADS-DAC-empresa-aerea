@@ -1,5 +1,9 @@
+'use client';
 import React from 'react';
 import '../app/globals.css';
+import Link from "next/link";
+
+
 
 const TravelCardRecord: React.FC = () => {
   return (
@@ -35,7 +39,11 @@ const TravelCardRecord: React.FC = () => {
             </div>
             <div className="flex flex-1/5 justify-center">
                 <div className="flex flex-col">
-                    <button className="my-2 hover:bg-[rgba(255,61,0,0.54)] bg-[#FF3D00] text-white py-0.5 px-12 rounded-[15] hover:cursor-pointer">Detalhes</button>
+                <Link href="/info-reservation">
+                <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                    Ver Detalhes
+                </button>
+                </Link>
                     <button className="my-2 hover:bg-[rgba(255,61,0,0.54)] bg-[#FF3D00] text-white py-0.5 px-12 rounded-[15] hover:cursor-pointer">Cancelar</button>
                 </div>
             </div>

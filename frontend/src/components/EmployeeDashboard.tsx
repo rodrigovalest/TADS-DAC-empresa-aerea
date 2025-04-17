@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import FlightActionModal from "./FlightActionModal";
 
 // Interface para voo
-interface Flight {
+export interface Flight {
   id: string;
   dateTime: string;
   origin: string;
@@ -12,18 +13,35 @@ interface Flight {
 
 const EmployeeDashboard: React.FC = () => {
   const [flights, setFlights] = useState<Flight[]>([]);
-  const [showModal, setShowModal] = useState(false);  // Controla a visibilidade do modal
+  const [showModal, setShowModal] = useState(false); // Controla a visibilidade do modal
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null); // Voo selecionado para o modal
-  const [actionType, setActionType] = useState<string>(''); // Tipo de ação (confirmar, cancelar, realizar)
+  const [actionType, setActionType] = useState<string>(""); // Tipo de ação (confirmar, cancelar, realizar)
 
   useEffect(() => {
     const mockFlights: Flight[] = [
-      { id: "1", dateTime: "2025-05-12T10:00", origin: "São Paulo", destination: "Rio de Janeiro" },
-      { id: "2", dateTime: "2025-05-12T15:30", origin: "Curitiba", destination: "Porto Alegre" },
-      { id: "3", dateTime: "2025-05-12T18:45", origin: "Brasília", destination: "Fortaleza" },
+      {
+        id: "1",
+        dateTime: "2025-05-12T10:00",
+        origin: "São Paulo",
+        destination: "Rio de Janeiro",
+      },
+      {
+        id: "2",
+        dateTime: "2025-05-12T15:30",
+        origin: "Curitiba",
+        destination: "Porto Alegre",
+      },
+      {
+        id: "3",
+        dateTime: "2025-05-12T18:45",
+        origin: "Brasília",
+        destination: "Fortaleza",
+      },
     ];
 
-    const sortedFlights = mockFlights.sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime());
+    const sortedFlights = mockFlights.sort(
+      (a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+    );
     setFlights(sortedFlights);
   }, []);
 
@@ -38,18 +56,25 @@ const EmployeeDashboard: React.FC = () => {
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedFlight(null);
-    setActionType('');
+    setActionType("");
+  };
+
+  const handleConfirmAction = () => {
+    alert("Ação confirmada com sucesso!");
   };
 
   return (
-    <div className="bg-cover bg-center min-h-screen flex flex-col items-center justify-start p-6"
-      style={{ backgroundImage: "url('/images/header-cliente-landing-page.png')", fontFamily: "Pathway Gothic One, sans-serif" }}>
-      
+    <div
+      className="bg-cover bg-center min-h-screen flex flex-col items-center justify-start p-6"
+      style={{
+        backgroundImage: "url('/images/header-cliente-landing-page.png')",
+        fontFamily: "Pathway Gothic One, sans-serif",
+      }}
+    >
       {/* Título */}
       <h2 className="text-white text-[64px] mt-10 text-center drop-shadow-lg">
         Voos nas Próximas 48 Horas
       </h2>
-
       {/* Tabela de Voos */}
       <div className="rounded-3xl border-4 w-[85vw] border-black mx-auto mt-8 bg-white shadow-2xl p-6">
         <div className="overflow-x-auto">
@@ -64,24 +89,36 @@ const EmployeeDashboard: React.FC = () => {
             </thead>
             <tbody>
               {flights.map((flight) => (
-                <tr key={flight.id} className="text-center bg-white hover:bg-gray-100 transition-all text-[18px]">
-                  <td className="border p-4 text-black font-semibold">{new Date(flight.dateTime).toLocaleString()}</td>
-                  <td className="border p-4 text-black font-semibold">{flight.origin}</td>
-                  <td className="border p-4 text-black font-semibold">{flight.destination}</td>
+                <tr
+                  key={flight.id}
+                  className="text-center bg-white hover:bg-gray-100 transition-all text-[18px]"
+                >
+                  <td className="border p-4 text-black font-semibold">
+                    {new Date(flight.dateTime).toLocaleString()}
+                  </td>
+                  <td className="border p-4 text-black font-semibold">
+                    {flight.origin}
+                  </td>
+                  <td className="border p-4 text-black font-semibold">
+                    {flight.destination}
+                  </td>
                   <td className="border p-4 flex justify-center gap-2">
                     <button
                       className="transition duration-300 ease-in-out hover:bg-[rgba(255,61,0,0.54)] bg-[#FF3D00] text-white font-semibold py-2 px-6 rounded-lg shadow-md"
-                      onClick={() => handleOpenModal(flight, 'confirmar')}>
+                      onClick={() => handleOpenModal(flight, "confirmar")}
+                    >
                       Confirmar Embarque
                     </button>
                     <button
                       className="transition duration-300 ease-in-out hover:bg-[rgba(255,61,0,0.54)] bg-[#FF3D00] text-white font-semibold py-2 px-6 rounded-lg shadow-md"
-                      onClick={() => handleOpenModal(flight, 'cancelar')}>
+                      onClick={() => handleOpenModal(flight, "cancelar")}
+                    >
                       Cancelar Voo
                     </button>
                     <button
                       className="transition duration-300 ease-in-out hover:bg-[rgba(255,61,0,0.54)] bg-[#FF3D00] text-white font-semibold py-2 px-6 rounded-lg shadow-md"
-                      onClick={() => handleOpenModal(flight, 'realizar')}>
+                      onClick={() => handleOpenModal(flight, "realizar")}
+                    >
                       Realizar Voo
                     </button>
                   </td>
@@ -91,31 +128,15 @@ const EmployeeDashboard: React.FC = () => {
           </table>
         </div>
       </div>
-
       {/* Modal */}
       {showModal && selectedFlight && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-[60vw] text-black relative">
-            <div className="flex justify-between items-center">
-              <h3 className="text-2xl font-semibold mb-4 text-black">Ação: {actionType === 'confirmar' ? 'Confirmar Embarque' : actionType === 'cancelar' ? 'Cancelar Voo' : 'Realizar Voo'}</h3>
-            </div>
-            <p><strong>Data/Hora:</strong> {new Date(selectedFlight.dateTime).toLocaleString()}</p>
-            <p><strong>Origem:</strong> {selectedFlight.origin}</p>
-            <p><strong>Destino:</strong> {selectedFlight.destination}</p>
-
-            <div className="mt-6 flex justify-between gap-4">
-              {actionType === 'confirmar' && <button className="hover:bg-[rgba(255,61,0,0.54)] bg-[#FF3D00] text-white py-2 px-6 rounded-lg">Confirmar</button>}
-              {actionType === 'cancelar' && <button className="hover:bg-[rgba(255,61,0,0.54)] bg-[#FF3D00] text-white py-2 px-6 rounded-lg">Cancelar</button>}
-              {actionType === 'realizar' && <button className="hover:bg-[rgba(255,61,0,0.54)] bg-[#FF3D00] text-white py-2 px-6 rounded-lg">Realizar</button>}
-            </div>
-
-            {/* Botão "Fechar" posicionado no canto inferior direito */}
-            <button
-              className="absolute bottom-4 right-4 transition duration-300 ease-in-out hover:bg-[rgba(255,61,0,0.54)] bg-[#FF3D00] text-white font-semibold py-2 px-6 rounded-lg shadow-md"
-              onClick={handleCloseModal}>Fechar</button>
-          </div>
-        </div>
-      )}
+        <FlightActionModal
+          flight={selectedFlight}
+          actionType={actionType}
+          onClose={handleCloseModal}
+          onConfirm={handleConfirmAction}
+        />
+      )}{" "}
     </div>
   );
 };
