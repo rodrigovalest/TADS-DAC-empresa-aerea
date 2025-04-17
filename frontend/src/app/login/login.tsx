@@ -1,5 +1,7 @@
 import React from "react";
 import '../../../public/styles/login.css';
+import Image from "next/image";
+
 const Login = () => {
     return(
         <div className="d-flex flex h-screen" >
@@ -7,7 +9,7 @@ const Login = () => {
                 <div className="z-1  w-[70%] h-[50%] absolute flex justify-center items-center backdrop-blur-md shadow-xl rounded-md text-center px-2">
                     <div className="main-text">Sua <span>viagem</span> dos <span>sonhos</span> á um <span>clique</span> de distância</div>
                 </div>
-                <img className="object-cover w-full h-full" src="airplane.png"></img>
+                <Image className="object-cover w-full h-full" src="airplane.png" alt=""></Image>
             </section>
 
             <section className="w-full bg-white sm:w-1/2 flex justify-center items-center flex-col relative pt-16">
