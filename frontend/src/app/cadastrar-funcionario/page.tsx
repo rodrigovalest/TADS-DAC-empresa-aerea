@@ -1,6 +1,7 @@
 'use client'
 
 import React, {useState} from "react";
+import '../../../public/styles/login.css';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
 
@@ -47,7 +48,7 @@ const StaffRegister = () => {
                     <div className="text-[#FF3D00] text-3xl font-semibold">
                         Registrar novo funcionário
                     </div>
-                    <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
+                    <div className="w-full max-w-md bg-white rounded-lg p-6">
                     <form className="flex flex-col gap-4">
                         <TextField label="CPF" type="number" variant="outlined" 
                             onBlur={checkCPF} 
