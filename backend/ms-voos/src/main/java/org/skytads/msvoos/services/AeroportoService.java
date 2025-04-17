@@ -2,6 +2,7 @@ package org.skytads.msvoos.services;
 
 import lombok.RequiredArgsConstructor;
 import org.skytads.msvoos.entities.AeroportoEntity;
+import org.skytads.msvoos.exceptions.EntityNotFoundException;
 import org.skytads.msvoos.repositories.AeroportoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,5 +18,11 @@ public class AeroportoService {
     @Transactional
     public List<AeroportoEntity> findAll() {
         return this.aeroportoRepository.findAll();
+    }
+
+    @Transactional
+    public AeroportoEntity findByCodigo(String codigo) {
+        return this.aeroportoRepository.findById(codigo)
+                .orElseThrow(() -> new EntityNotFoundException("aeroporto nao encontrado"));
     }
 }
