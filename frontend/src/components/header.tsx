@@ -1,9 +1,14 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import BuyMilesDialog from "./BuyMilesDialog";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPointsModalOpen, setIsPointsModalOpen] = useState(false);
+  const openPointsModal = () => setIsPointsModalOpen(true);
+  const closePointsModal = () => setIsPointsModalOpen(false);
+  const handleSubmit = (amount: number) =>{}
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
     <div className="fixed flex min-w-[100%] bg-[#00000080] flex-row justify-between items-center p-4">
@@ -32,7 +37,7 @@ export default function Header() {
             <Link href="/new-trip">Nova reserva</Link>
           </li>
           <li>
-            <Link href="/mileage-history">Milhas</Link>
+            <Link href="/mileage-history">Extrato de milhas</Link>
           </li>
           <li>
             <Link href="/cliente-landing-page">Voos</Link>
@@ -53,7 +58,10 @@ export default function Header() {
           </li>
         </ul>
       </nav>
-      <h2 className="text-white">1200 pts</h2>
+      <h2 className="text-white cursor-pointer"
+          onClick={openPointsModal} >1200 pts</h2>
+          <BuyMilesDialog isOpen={isPointsModalOpen} onClose={closePointsModal} onSubmit={handleSubmit}/>
     </div>
+    
   );
 }
