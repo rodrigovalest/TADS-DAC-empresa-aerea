@@ -22,13 +22,14 @@ const RegisterFly = () => {
 
 const [valor, setValor] = useState('');
 const [milhas, setMilhas] = useState(0);
-const handleChange = (event) => {
+const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = event.target.value;
-    inputValue = inputValue.replace(/[^0-9.]/g, ""); 
+    inputValue = inputValue.replace(/[^0-9.]/g, "");
+    const inputNumber = parseFloat(inputValue) 
 
-    if (inputValue && parseFloat(inputValue) > 0) {
+    if (inputNumber && inputNumber > 0) {
         setValor(inputValue);
-        setMilhas(parseFloat((inputValue * 1.2).toFixed(3)));
+        setMilhas(parseFloat((inputNumber * 1.2).toFixed(3)));
     } else {
         setValor(""); 
         setMilhas(0)
