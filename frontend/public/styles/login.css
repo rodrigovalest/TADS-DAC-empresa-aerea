@@ -1,49 +1,14 @@
-.login-btn{
-    font-size: clamp(6px, 1vw, 14px);
-    font-weight:500;
-    padding: 2vh 0;
-    background-color: #FF3D00;
-    width: 85%;
-    border-radius: 5px;
+div{
+    color: #D63000 ;
 }
-.login:hover{
-    background-color: black;
+a{
+    font-weight: bold;
+    color: #8f1f00 ;
 }
 
-.input-field {
-    border-radius: 5px;
-    color: #FF3D00;
-    padding: 1vw 10px;
-    margin: ; /* Use um valor menor no padding horizontal */
-    font-size: 20px;
-    border: 3px solid #FF3D00;
-    width: 90%; /* Garante que o input ocupe toda a largura da div */
-    box-sizing: border-box; /* Impede que o padding aumente a largura total */
-}
-
-.header{
-    width: 100%;
-    color: black;
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-}
-
-#login-form{
-    gap:10px;
-    margin: 20px 20px;
-}
-.logo{
-    font-size: 30px;
-    color: #FF3D00;
-    font-weight: bolder;
-}
-.main-text{
-    font-size: 50px;
-    color: #000000;
-    font-weight: bolder;
-}
-span{
-    color: #FF3D00;
-    font-size: 60px;
+button{
+    background-color: #D63000 !important;
+    &:hover{
+        background-color: #8f1f00 !important;
+    }
 }

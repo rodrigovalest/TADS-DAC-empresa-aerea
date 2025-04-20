@@ -9,8 +9,6 @@ const RegisterPage: React.FC = () => {
     console.log("Form Data:", data);
   };
 
-
-
   return (
     <div className="flex justify-between w-full h-screen items-center bg-gray-200">
       <div className="flex justify-center items-center w-1/2 h-full bg-orange-500">

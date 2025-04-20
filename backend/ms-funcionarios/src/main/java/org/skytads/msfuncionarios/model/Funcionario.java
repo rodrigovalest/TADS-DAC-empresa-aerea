@@ -24,6 +24,9 @@ public class Funcionario {
     @Column(unique = true, nullable = false)
     private String email;
     
+    @Column(name = "senha")
+    private String senha;
+
     @Column(nullable = false)
     private String telefone;
     
