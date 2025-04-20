@@ -37,7 +37,7 @@ export default function Header() {
             <Link href="/new-trip">Nova reserva</Link>
           </li>
           <li>
-            <Link href="/mileage-history">Milhas</Link>
+            <Link href="/mileage-history">Extrato de milhas</Link>
           </li>
           <li>
             <Link href="/cliente-landing-page">Voos</Link>
