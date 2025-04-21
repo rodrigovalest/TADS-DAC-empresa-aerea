@@ -17,7 +17,7 @@ const searchReservationPage: React.FC = () => {
     if (reservationCode === "VOO456") {
       const mockData: Reservation = {
         code: "VOO456",
-        dateTime: "2025-04-11T03:00:00",
+        dateTime: "2025-04-18T03:00:00",
         origin: "São Paulo (GRU)",
         destination: "Rio de Janeiro (GIG)",
         amountSpent: 4500,
