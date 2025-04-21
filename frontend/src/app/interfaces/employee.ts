@@ -3,6 +3,5 @@ export default interface Employee {
   cpf: string;
   email: string;
   phone: string;
-  user: string;
   password: string;
 }
