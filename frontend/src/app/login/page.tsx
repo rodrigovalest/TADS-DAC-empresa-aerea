@@ -1,11 +1,12 @@
 "use client";
 
+import Cookies from 'js-cookie';
 import React from "react";
 import "../../../public/styles/login.css";
 import Image from "next/image";
 import ILoginRequest from "@/models/requests/login-request";
 import { useForm } from "react-hook-form";
-import { login, setToken } from "@/services/auth-service";
+import { login } from "@/services/auth-service";
 import ILoginResponse from "@/models/response/login-response";
 
 const Login = () => {
@@ -15,7 +16,15 @@ const Login = () => {
     login(data.login, data.senha)
       .then((res: ILoginResponse) => {
         console.log("login success:", res);
-        setToken(res.access_token);
+
+        Cookies.set('token', res.access_token);
+        Cookies.set('role', res.tipo);
+
+        if (res.tipo === 'FUNCIONARIO')
+          window.location.href = "/funcionario";
+
+        else if (res.tipo === 'CLIENTE')
+          window.location.href = "/cliente";
       })
       .catch((err) => {
         console.error("Erro ao fazer login:", err);
