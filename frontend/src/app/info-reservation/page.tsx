@@ -1,6 +1,6 @@
 'use client';
 import React from "react";
-import Header from "../../components/Header";
+import Header from "../../components/header";
 import HeaderBanner from "@/components/HeaderBanner";
 import { Reservation } from "../interfaces/reservation-types";
 import CancelReservationButton from "@/components/CancelReservationButton";
