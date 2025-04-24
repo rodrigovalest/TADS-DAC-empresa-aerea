@@ -13,7 +13,7 @@ const Login = () => {
   const { register, handleSubmit } = useForm<ILoginRequest>();
 
   const onSubmit = (data: ILoginRequest) => {
-    authService.login(data.login, data.senha)
+    authService.login(data)
       .then((res: ILoginResponse) => {
         console.log("login success:", res);
 

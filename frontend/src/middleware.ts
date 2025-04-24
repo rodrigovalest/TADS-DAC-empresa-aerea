@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const funcionarioRoutes = ['/funcionario']
 const clienteRoutes = ['/cliente']
-const publicRoutes = ['/autocadastro', '/login', '/', 
-  'cadastrar-funcionario', 'check-in', 'cliente-landing-page', 'example-page', 'func/tela-inicial-funcionario', 'info-reservation', 'lista-funcionarios', 
-  'mileage-history', 'new-trip', 'new-trip/details', 'search-reservation', 'tela-inicial-funcionario', 'voo']
+const publicRoutes = ['/autocadastro', '/login', 
+  '/cadastrar-funcionario', '/check-in', '/cliente-landing-page', '/example-page', '/func/tela-inicial-funcionario', '/info-reservation', '/lista-funcionarios', 
+  '/mileage-history', '/new-trip', '/new-trip/details', '/search-reservation', '/tela-inicial-funcionario', '/voo']
 
 export default function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value || null;
