@@ -31,7 +31,7 @@ const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
 
     if (inputNumber && inputNumber > 0) {
         setValor(inputValue);
-        setMilhas(parseFloat((inputNumber * 1.2).toFixed(3)));
+        setMilhas(parseFloat((inputNumber * 5).toFixed(3)));
     } else {
         setValor(""); 
         setMilhas(0)
@@ -69,7 +69,7 @@ const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
                         </FormControl>
 
                         <FormControl fullWidth >
-                            <InputLabel>aeroporto de destino</InputLabel>
+                            <InputLabel>Aeroporto de destino</InputLabel>
                             <Select required>
                                 <MenuItem value="">Selecione</MenuItem>
                                 {aeroportos.map((aeroporto, index) => (
