@@ -12,7 +12,7 @@ const RegisterForm: React.FC<{ onSubmit: SubmitHandler<IRegister> }> = ({ onSubm
   } = useForm<IRegister>();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="p-6 w-96">
+    <form onSubmit={handleSubmit(onSubmit)} className="p-6 w-full max-w-md">
       <h2 className="text-3xl font-medium mb-4 text-center text-white">Autocadastro</h2>
 
       <div className="mb-2">
