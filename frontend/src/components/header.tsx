@@ -44,7 +44,11 @@ export default function Header() {
             <a href="/search-reservation">Procurar reserva</a>
           </li>
           <li>
+<<<<<<< HEAD
             <a href="/cliente-landing-page">Check-in</a>
+=======
+            <Link href="/cliente-landing-page">Check-in</Link>
+>>>>>>> 09c7e607324cef716295966ca3cbd465b957c0f2
           </li>
         </ul>
         <ul className="absolute bottom-4 left-4 space-y-4">
