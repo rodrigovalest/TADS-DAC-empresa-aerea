@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import FlightActionModal from "./FlightActionModal";
+import { useRouter } from "next/navigation";
 
 // Interface para voo
 export interface Flight {
@@ -16,6 +17,7 @@ const EmployeeDashboard: React.FC = () => {
   const [showModal, setShowModal] = useState(false); // Controla a visibilidade do modal
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null); // Voo selecionado para o modal
   const [actionType, setActionType] = useState<string>(""); // Tipo de ação (confirmar, cancelar, realizar)
+  const router = useRouter();
 
   useEffect(() => {
     const mockFlights: Flight[] = [
@@ -47,9 +49,13 @@ const EmployeeDashboard: React.FC = () => {
 
   // Função para abrir o modal
   const handleOpenModal = (flight: Flight, action: string) => {
-    setSelectedFlight(flight);
-    setActionType(action);
-    setShowModal(true);
+    if (action === "confirmar") {
+      router.push(`/confirmar-embarques?flightId=${flight.id}`);
+    } else {
+      setSelectedFlight(flight);
+      setActionType(action);
+      setShowModal(true);
+    }
   };
 
   // Função para fechar o modal
