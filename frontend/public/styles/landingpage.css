@@ -1,0 +1,45 @@
+.section1 {
+    background-image: url(/images/travel2.png);
+    background-size: cover;
+    background-position: center;
+}
+.section2{
+    background-image: url(/images/backgroundImg.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+}
+
+.maintext{
+    color: white;
+    font-weight: bold;
+    font-size: 40px;
+
+}
+.call{
+    color: white;
+    padding: 5px 20px;
+    border: 2px solid white;
+    &:hover{
+        box-shadow: inset 300px 0 0 0 white;
+        color: #D63000;
+    }
+}
+
+.title{
+    color: #D63000;
+    font-weight: bold;
+}
+.card {
+    flex: 3;
+    border: 3px solid #D63000;
+    border-radius: 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;  
+    height: 100%;
+    padding: 20px;  
+}
+

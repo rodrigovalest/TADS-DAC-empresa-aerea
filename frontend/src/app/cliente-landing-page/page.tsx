@@ -4,7 +4,7 @@ import TravelCardRecord from '@/components/TravelCardRecord';
 import Header from "../../components/Header"
 import HeaderBanner from '@/components/HeaderBanner';
 
-const ClienteLandingPage: React.FC = () => {
+const ClienteLandingPage = () => {
   return (
     <div>
         <Header/>

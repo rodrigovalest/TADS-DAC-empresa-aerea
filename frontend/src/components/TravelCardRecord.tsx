@@ -1,7 +1,9 @@
+'use client'
+
 import React from 'react';
 import '../app/globals.css';
 
-const TravelCardRecord: React.FC = () => {
+const TravelCardRecord = () => {
   return (
     <div className="rounded-md px-8 pt-6 pb-8 m-4 bg-[#D9D9D9]"
       style={{ fontFamily: 'Pathway Gothic One, sans-serif' }}>
