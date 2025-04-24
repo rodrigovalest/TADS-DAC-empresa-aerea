@@ -1,3 +1,3 @@
-export default interface IComprarMilhasResponse {
+export default interface IComprarMilhasRequest {
   quantidade: number
 }

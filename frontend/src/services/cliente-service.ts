@@ -1,5 +1,7 @@
 import IAutocadastroRequest from "@/models/requests/autocadastro-request";
+import IComprarMilhasRequest from "@/models/requests/comprar-milhas-request";
 import IAutocadastroResponse from "@/models/response/autocadastro-response";
+import IClienteResponse from "@/models/response/cliente-response";
 
 const clienteService = {
   autocadastro: async (
@@ -48,24 +50,24 @@ const clienteService = {
     };
   },
 
-  findAllClientes: async () => {
-
+  findAllClientes: async (): Promise<IClienteResponse []> => {
+    throw new Error("Not implemented yet");
   },
 
-  findClienteById: async () => {
-
+  findClienteById: async (clienteId: number): Promise<IClienteResponse> => {
+    throw new Error("Not implemented yet");
   },
 
-  findAllReservasByClienteId: async () => {
-
+  findAllReservasByClienteId: async (clienteId: number) => {
+    throw new Error("Not implemented yet");
   },
 
-  comprarMilhas: async () => {
-
+  comprarMilhas: async (data: IComprarMilhasRequest) => {
+    throw new Error("Not implemented yet");
   },
 
   extratoMilhas: async () => {
-
+    throw new Error("Not implemented yet");
   },
 };
 

@@ -1,4 +1,4 @@
-export default interface IMudarEstadoReservaRequest {
+export default interface IInserirVooRequest {
   data: string;
   valor_passagem: number;
   quantidade_poltronas_total: number;
