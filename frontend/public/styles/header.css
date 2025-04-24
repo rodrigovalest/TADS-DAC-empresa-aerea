@@ -1,0 +1,14 @@
+.header{
+    position: fixed;
+    background-color: white;
+    width: 100vw;
+  }
+  a {
+    padding: 5px 20px;
+    border: 2px solid #D63000;
+    transition: ease-in-out 0.4s; 
+    &:hover{
+      box-shadow: inset 300px 0 0 0 #D63000;
+      color: white;
+    } 
+  }
