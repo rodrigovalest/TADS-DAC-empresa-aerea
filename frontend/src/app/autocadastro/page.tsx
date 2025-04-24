@@ -3,12 +3,12 @@
 import React from "react";
 import RegisterForm from "./register-form";
 import IAutocadastroRequest from "@/models/requests/autocadastro-request";
-import { autocadastro } from "@/services/cliente-service";
+import clienteService from "@/services/cliente-service";
 import IAutocadastroResponse from "@/models/response/autocadastro-response";
 
 const RegisterPage: React.FC = () => {
   const handleRegister = (data: IAutocadastroRequest) => {
-    autocadastro(data)
+    clienteService.autocadastro(data)
       .then((response: IAutocadastroResponse) => {
         console.log("Autocadastro success:", response);
       })

@@ -1,4 +1,4 @@
-export default interface IEnderecoRequest {
+export default interface IEnderecoResponse {
 	cep: string;
 	uf: string;
 	cidade: string;

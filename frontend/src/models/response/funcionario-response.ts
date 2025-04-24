@@ -1,4 +1,4 @@
-export default interface IAutocadastroResponse {
+export default interface IFuncionarioResponse {
   codigo: number,
   cpf: string,
   email: string,

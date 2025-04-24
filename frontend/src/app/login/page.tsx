@@ -6,14 +6,14 @@ import "../../../public/styles/login.css";
 import Image from "next/image";
 import ILoginRequest from "@/models/requests/login-request";
 import { useForm } from "react-hook-form";
-import { login } from "@/services/auth-service";
+import authService from "@/services/auth-service";
 import ILoginResponse from "@/models/response/login-response";
 
 const Login = () => {
   const { register, handleSubmit } = useForm<ILoginRequest>();
 
   const onSubmit = (data: ILoginRequest) => {
-    login(data.login, data.senha)
+    authService.login(data.login, data.senha)
       .then((res: ILoginResponse) => {
         console.log("login success:", res);
 

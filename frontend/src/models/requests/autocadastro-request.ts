@@ -1,4 +1,4 @@
-import IEnderecoRequest from "./endereco-request";
+import IEnderecoRequest from "@/models/requests/endereco-request";
 
 export default interface IAutocadastroRequest {
   cpf: string;
