@@ -14,7 +14,12 @@ import { Trip } from '@/app/interfaces/trip';
 
 type Order = 'asc' | 'desc';
 
-const TripsTable: React.FC<{ trips: Trip[] }> = ({ trips }) => {
+interface TripsTableProps {
+  trips: Trip[];
+  onRowClick?: (trip: Trip) => void;
+}
+
+const TripsTable: React.FC<TripsTableProps> = ({ trips, onRowClick }) => {
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof Trip>('date');
 
@@ -22,10 +27,6 @@ const TripsTable: React.FC<{ trips: Trip[] }> = ({ trips }) => {
     const isAscending = orderBy === property && order === 'asc';
     setOrder(isAscending ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleRowClick = (trip: Trip) => {
-    alert(`Viagem escolhida: de ${trip.origin} para ${trip.destination} na data ${trip.date.toLocaleDateString()}`);
   };
 
   const sortedTrips = [...trips].sort((a, b) => {
@@ -84,7 +85,7 @@ const TripsTable: React.FC<{ trips: Trip[] }> = ({ trips }) => {
             <TableRow 
               key={index}
               className="cursor-pointer hover:bg-gray-100"
-              onClick={() => handleRowClick(trip)}
+              onClick={() => onRowClick?.(trip)}
               style={{ transition: 'background-color 0.3s ease' }}
             >
               <TableCell>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import '../../../public/styles/login.css';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
 const aeroportos = [
@@ -16,13 +17,11 @@ const aeroportos = [
     "Aeroporto Internacional de Fortaleza (FOR)",
 ];
 
-
-
 const RegisterFly = () => {
 
 const [valor, setValor] = useState('');
 const [milhas, setMilhas] = useState(0);
-const handleChange = (event) => {
+const handleChange = (event: any) => {
     let inputValue = event.target.value;
     inputValue = inputValue.replace(/[^0-9.]/g, ""); 
 
@@ -40,16 +39,16 @@ const handleChange = (event) => {
                 <img className="w-full h-full object-cover object-top" src="registerfly.jpg" alt="Imagem de voo" />
             </div>
 
-
             <div className="w-1/2 flex justify-center items-center p-8 flex-col">
                     <div className="text-[#FF3D00] text-3xl font-semibold">
                         Cadastrar Voo
                     </div>
-                <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
+                <div className="w-full max-w-md bg-white  rounded-lg p-6">
                     <form className="flex flex-col gap-4">
                         
                         <TextField label="Código do Voo" variant="outlined" fullWidth required />
                         <TextField label="Data" type="date" variant="outlined" fullWidth InputLabelProps={{ shrink: true }} required />
+                        <TextField label="Hora" type="time" variant="outlined" fullWidth InputLabelProps={{ shrink: true }} required />
 
                         <FormControl fullWidth>
                             <InputLabel>Aeroporto de origem</InputLabel>
@@ -75,7 +74,6 @@ const handleChange = (event) => {
                             </Select>
                         </FormControl>
 
-                        
                         <TextField
                             label="Valor da passagem"
                             type="text"
@@ -89,10 +87,6 @@ const handleChange = (event) => {
                                          <span>ou {milhas} pontos em milhas</span>
                                     ) : (<div></div>)}
                        
-
-
-
-
                        <Button 
                             variant="contained" 
                             className="bg-[#FF3D00] hover:bg-[#D63000]" 

@@ -15,7 +15,6 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
     cpf: '',
     email: '',
     phone: '',
-    user: '',
     password: '',
   });
 
@@ -109,16 +108,6 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
               type="text"
               variant="outlined"
               value={formData.phone}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-            <TextField
-              label="Usuário"
-              name="user"
-              type="text"
-              variant="outlined"
-              value={formData.user}
               onChange={handleChange}
               fullWidth
               required

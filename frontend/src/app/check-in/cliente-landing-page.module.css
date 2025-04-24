@@ -1,0 +1,11 @@
+.container {
+    padding: 20px;
+    text-align: center;
+    background-image: url('./../../../public/images/header-cliente-landing-page.png');
+}
+  
+.heading {
+    color: #FFFFFF;
+    font-size: 64px;
+    font-family: 'Pathway Gothic One', sans-serif;
+}
