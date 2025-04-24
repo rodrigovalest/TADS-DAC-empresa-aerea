@@ -2,13 +2,13 @@
 
 import React, { useState } from 'react';
 import '../../app/globals.css';
-import Header from "../../components/Header";
 import HeaderBanner from '@/components/HeaderBanner';
 import EmployeeTable from '@/components/EmployeeTable';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, Dialog } from '@mui/material';
 import StaffRegister from '../cadastrar-funcionario/page';
 import Employee from '../interfaces/employee';
+import MenuFuncionario from '@/components/MenuFuncionario';
 
 const EmployeePage: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -54,7 +54,7 @@ const EmployeePage: React.FC = () => {
 
   return (
     <div>
-      <Header />
+      <MenuFuncionario />
       <HeaderBanner text="Lista de Funcionários" />
       <div className="w-[85vw] mx-auto flex justify-end -mt-18">
         <Button
@@ -76,8 +76,8 @@ const EmployeePage: React.FC = () => {
 
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
         <StaffRegister
-          onAddEmployee={handleAddOrEditEmployee}
-          initialData={editEmployee}
+          //onAddEmployee={handleAddOrEditEmployee}
+          //initialData={editEmployee}
         />
       </Dialog>
     </div>

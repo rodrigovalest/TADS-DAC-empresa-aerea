@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import '../../../public/styles/login.css';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import Header from "@/components/header";
 
 const aeroportos = [
     "Aeroporto Internacional de Guarulhos (GRU)",
@@ -38,6 +39,7 @@ const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
 };
     return (
         <div className="flex h-screen">
+            <Header/>
             <div className="w-1/2 bg-black flex justify-center items-center">
                 <img className="w-full h-full object-cover object-top" src="registerfly.jpg" alt="Imagem de voo" />
             </div>

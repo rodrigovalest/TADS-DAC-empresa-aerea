@@ -3,6 +3,7 @@
 import React, {useState} from "react";
 import '../../../public/styles/login.css';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import MenuFuncionario from "@/components/MenuFuncionario";
 
 
 
@@ -10,7 +11,7 @@ const StaffRegister = () => {
     const [errorCPF, setError] = useState(false);
     const [helperText, setHelperText] = useState('');
 
-    const checkCPF = (e) => {
+    const checkCPF = (e:any) => {
         const inputvalue = e.target.value.trim();
         if(inputvalue.length  < 11){
             setError(true);
@@ -41,6 +42,7 @@ const StaffRegister = () => {
 
     return(
         <div className="flex h-screen">
+            <MenuFuncionario/>
             <div className="w-1/2 bg-black flex justify-center items-center">
                 <img className="w-full h-full object-cover object-top" src="images/airportstaffs.jpeg" alt="Imagem de voo" />
             </div>
