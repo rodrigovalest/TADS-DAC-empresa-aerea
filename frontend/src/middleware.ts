@@ -25,9 +25,10 @@ export default function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
-  if (!token) {
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
+  //landing page
+  // if (!token) {
+  //   return NextResponse.redirect(new URL('/login', req.url));
+  // }
 
   if (isFuncionarioRoute && role !== 'FUNCIONARIO') {
     return NextResponse.redirect(new URL('/login', req.url));
