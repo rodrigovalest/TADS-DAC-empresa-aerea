@@ -2,11 +2,20 @@
 
 import React from "react";
 import RegisterForm from "./register-form";
-import { IRegister } from "../interfaces/register";
+import IAutocadastroRequest from "@/models/requests/autocadastro-request";
+import clienteService from "@/services/cliente-service";
+import IAutocadastroResponse from "@/models/response/autocadastro-response";
 
 const RegisterPage: React.FC = () => {
-  const handleRegister = (data: IRegister) => {
-    console.log("Form Data:", data);
+  const handleRegister = (data: IAutocadastroRequest) => {
+    clienteService.autocadastro(data)
+      .then((response: IAutocadastroResponse) => {
+        console.log("Autocadastro success:", response);
+      })
+      .catch((error) => {
+        console.error("Autocadastro error:", error);
+        alert(error);
+      });
   };
 
   return (
