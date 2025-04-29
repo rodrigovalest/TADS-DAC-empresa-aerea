@@ -23,6 +23,6 @@ public class AeroportoService {
     @Transactional
     public AeroportoEntity findByCodigo(String codigo) {
         return this.aeroportoRepository.findById(codigo)
-                .orElseThrow(() -> new EntityNotFoundException("aeroporto nao encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Aeroporto não encontrado"));
     }
 }
