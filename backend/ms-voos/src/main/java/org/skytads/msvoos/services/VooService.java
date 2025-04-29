@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -44,6 +45,10 @@ public class VooService {
         return vooRepository.findAll();
     }
 
+    public List<VooEntity> findByFilters(LocalDateTime data, Long origem, Long destino) {
+        return vooRepository.findByData(data, origem, destino);
+    }
+
     public List<VooEntity> findByAeroportoOrigem(Long aeroportoOrigemCodigo) {
         return vooRepository.findByAeroportoOrigemCodigo(aeroportoOrigemCodigo);
     }
@@ -52,35 +57,45 @@ public class VooService {
         return vooRepository.findByAeroportoDestinoCodigo(aeroportoDestinoCodigo);
     }
 
-    public VooEntity findByCodigo(Long codigo) {
+    public Optional<VooEntity> findByCodigo(Long codigo) {
         return vooRepository.findByCodigo(codigo);
     }
 
-    public void updateStatusToCancelado(Long codigo) {
-        VooEntity voo = vooRepository.findByCodigo(codigo);
-        if (voo != null) {
-            if (voo.getStatusVoo() == StatusVooEnum.CONFIRMADO) {
-                voo.setStatusVoo(StatusVooEnum.CANCELADO);
-                vooRepository.save(voo);
-            } else {
-                throw new IllegalStateException("Apenas vôos CONFIRMADOS podem ser marcados como CANCELADOS.");
-            }
-        } else {
-            throw new IllegalArgumentException("Nenhum vôo com este código foi encontrado.");
+    public VooEntity updateEstadoVoo(Long codigo, String novoEstado) {
+        VooEntity voo = vooRepository.findByCodigo(codigo)
+                .orElseThrow(() -> new IllegalArgumentException("Voo não encontrado"));
+    
+        StatusVooEnum statusVooEnum;
+        try {
+            statusVooEnum = StatusVooEnum.valueOf(novoEstado);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Estado inválido: " + novoEstado);
         }
+    
+        if (voo.getStatusVoo() == StatusVooEnum.CONFIRMADO &&
+                (statusVooEnum == StatusVooEnum.CANCELADO || statusVooEnum == StatusVooEnum.REALIZADO)) {
+            voo.setStatusVoo(statusVooEnum);
+            vooRepository.save(voo);
+    
+            // Notificar o microsserviço de reserva
+            notifyReservationService(voo.getCodigo(), statusVooEnum);
+        } else {
+            throw new IllegalStateException("Estado inválido para a transição");
+        }
+    
+        return voo;
     }
+    
+    private void notifyReservationService(Long vooCodigo, StatusVooEnum novoEstado) {
+        // Adicionar aqui a lógica de se comunicar com o microsserviço de reservas
 
-    public void updateStatusToRealizado(Long codigo) {
-        VooEntity voo = vooRepository.findByCodigo(codigo);
-        if (voo != null) {
-            if (voo.getStatusVoo() == StatusVooEnum.CONFIRMADO) {
-                voo.setStatusVoo(StatusVooEnum.REALIZADO);
-                vooRepository.save(voo);
-            } else {
-                throw new IllegalStateException("Apenas vôos CONFIRMADOS podem ser marcados como REALIZADOS.");
-            }
-        } else {
-            throw new IllegalArgumentException("Nenhum vôo com este código foi encontrado.");
-        }
+        // Pensei em algo tipo assim:
+
+        // String reservationServiceUrl = "http://nosso-link-para-ms-reservas/reservas/voo/" + vooCodigo + "/estado";
+        // Map<String, String> payload = new HashMap<>();
+        // payload.put("estado", novoEstado.toString());
+
+        // RestTemplate restTemplate = new RestTemplate();
+        // restTemplate.patchForObject(reservationServiceUrl, payload, Void.class);
     }
 }

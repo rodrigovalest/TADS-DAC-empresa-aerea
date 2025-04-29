@@ -1,6 +1,8 @@
 package org.skytads.msvoos.repositories;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.skytads.msvoos.entities.VooEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +15,10 @@ public interface VooRepository extends JpaRepository<VooEntity, String> {
 
     List<VooEntity> findByAeroportoDestinoCodigo(Long aeroportoDestinoCodigo);
 
-    VooEntity findByCodigo(Long codigo);
+    Optional<VooEntity> findByCodigo(Long codigo);
+
+    List<VooEntity> findByData (
+        LocalDateTime data, Long aeroportoOrigemCodigo, Long aeroportoDestinoCodigo
+    );
 
 }
