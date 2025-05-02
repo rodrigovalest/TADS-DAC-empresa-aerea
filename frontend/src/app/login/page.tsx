@@ -25,10 +25,10 @@ const Login = () => {
         Cookies.set('role', res.tipo);
 
         if (res.tipo === 'FUNCIONARIO')
-          window.location.href = "/funcionario";
+          window.location.href = "/employee";
 
         else if (res.tipo === 'CLIENTE')
-          window.location.href = "/cliente";
+          window.location.href = "/cliente-landing-page";
       })
       .catch((err) => {
         setFormInvalid(true)
@@ -57,6 +57,7 @@ const Login = () => {
                             variant="outlined"
                             fullWidth
                             required
+                            {...register("login")}
                             
                         />
                         <TextField
@@ -67,7 +68,7 @@ const Login = () => {
                             helperText={errorMessage}
                             fullWidth
                             required
-                            
+                            {...register("senha")}
                         />
                         <div>É novo por aqui? <a href="/autocadastro">clique aqui</a></div>
                        <Button 
