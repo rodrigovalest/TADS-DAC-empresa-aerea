@@ -31,31 +31,30 @@ export default function Header() {
         />
         <ul className="space-y-4 pt-10">
           <li>
-            <a href="/cliente-landing-page">Home</a>
+            <Link href="/cliente-landing-page">Home</Link>
           </li>
           <li>
-            <a href="/new-trip">Nova reserva</a>
+            <Link href="/new-trip">Nova reserva</Link>
           </li>
           <li>
             <Link href="/mileage-history">Extrato de milhas</Link>
-            <a href="/mileage-history">Milhas</a>
           </li>
           <li>
-            <a href="/cliente-landing-page">Voos</a>
+            <Link href="/cliente-landing-page">Voos</Link>
           </li>
           <li>
-            <a href="/cliente-landing-page">Minhas reservas</a>
+            <Link href="/cliente-landing-page">Minhas reservas</Link>
           </li>
           <li>
-            <a href="/search-reservation">Procurar reserva</a>
+            <Link href="/search-reservation">Procurar reserva</Link>
           </li>
           <li>
-            <a href="/cliente-landing-page">Check-in</a>
+            <Link href="/cliente-landing-page">Check-in</Link>
           </li>
         </ul>
         <ul className="absolute bottom-4 left-4 space-y-4">
           <li>
-            <a href="/cliente-landing-page">Sair</a>
+            <Link href="/cliente-landing-page">Sair</Link>
           </li>
         </ul>
       </nav>
