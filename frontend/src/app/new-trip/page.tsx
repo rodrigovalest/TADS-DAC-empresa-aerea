@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import '../../app/globals.css';
 import Header from "../../components/Header";
 import HeaderBanner from '@/components/HeaderBanner';
@@ -9,6 +10,8 @@ import { Autocomplete, TextField, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 const NewTripPage: React.FC = () => {
+    const router = useRouter();
+
     const allTrips = [
         { date: new Date('2022-05-12'), time: '12:00', origin: 'Curitiba', destination: 'Guarulhos', value: 2500 },
         { date: new Date('2023-06-05'), time: '15:45', origin: 'São Paulo', destination: 'Rio de Janeiro', value: 1000 },
@@ -49,8 +52,20 @@ const NewTripPage: React.FC = () => {
         setFilteredTrips(filtered);
     };
 
+    const handleRowClick = (trip: { date: Date; time: string; origin: string; destination: string; value: number }) => {
+        const query = new URLSearchParams({
+            date: trip.date.toISOString(),
+            time: trip.time,
+            origin: trip.origin,
+            destination: trip.destination,
+            value: trip.value.toString(),
+        }).toString();
+
+        router.push(`/new-trip/details?${query}`);
+    };
+
     return (
-        <div>
+        <div className="mb-10">
             <Header />
             <HeaderBanner htmlContent="Sua <span class='text-[#FF3D00] font-bold'>viagem</span> dos sonhos está a um <span class='text-[#FF3D00] font-bold'>clique</span> de <span class='text-[#FF3D00] font-bold'>distância</span>!" />
             <div className="-mt-12 flex gap-4 p-5 max-w-[95vw] mx-auto bg-[#FF3D00] rounded-md">
@@ -92,7 +107,12 @@ const NewTripPage: React.FC = () => {
                 </div>
             </div>
             <div className="p-5 rounded-3xl border-3 w-[85vw] border-black mx-auto mt-12 bg-white">
-                <TripsTable trips={filteredTrips} />
+                <TripsTable trips={filteredTrips} onRowClick={handleRowClick} />
+            </div>
+            <div className="text-center mt-5">
+                <button onClick={() => {}} className="btn-primary">
+                    Ver detalhes da viagem
+                </button>
             </div>
         </div>
     );
