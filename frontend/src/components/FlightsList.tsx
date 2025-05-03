@@ -19,7 +19,7 @@ const FlightsList: React.FC<FlightsListProps> = ({ flights, onOpenModal }) => {
             key={flight.id} 
             flight={flight} 
             onOpenModal={onOpenModal}
-            onConfirmBoarding={() => router.push('/confirmacao-embarque')}
+            onConfirmBoarding={() => router.push('/confirmar-embarques')}
           />
         ))
       ) : (

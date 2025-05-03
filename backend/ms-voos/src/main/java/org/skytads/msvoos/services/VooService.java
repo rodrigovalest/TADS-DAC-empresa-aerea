@@ -8,6 +8,8 @@ import org.skytads.msvoos.repositories.VooRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -37,5 +39,63 @@ public class VooService {
                 StatusVooEnum.CONFIRMADO
         );
         this.vooRepository.save(voo);
+    }
+
+    public List<VooEntity> findAll() {
+        return vooRepository.findAll();
+    }
+
+    public List<VooEntity> findByFilters(LocalDateTime data, Long origem, Long destino) {
+        return vooRepository.findByData(data, origem, destino);
+    }
+
+    public List<VooEntity> findByAeroportoOrigem(Long aeroportoOrigemCodigo) {
+        return vooRepository.findByAeroportoOrigemCodigo(aeroportoOrigemCodigo);
+    }
+
+    public List<VooEntity> findByAeroportoDestino(Long aeroportoDestinoCodigo) {
+        return vooRepository.findByAeroportoDestinoCodigo(aeroportoDestinoCodigo);
+    }
+
+    public Optional<VooEntity> findByCodigo(Long codigo) {
+        return vooRepository.findByCodigo(codigo);
+    }
+
+    public VooEntity updateEstadoVoo(Long codigo, String novoEstado) {
+        VooEntity voo = vooRepository.findByCodigo(codigo)
+                .orElseThrow(() -> new IllegalArgumentException("Voo não encontrado"));
+    
+        StatusVooEnum statusVooEnum;
+        try {
+            statusVooEnum = StatusVooEnum.valueOf(novoEstado);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Estado inválido: " + novoEstado);
+        }
+    
+        if (voo.getStatusVoo() == StatusVooEnum.CONFIRMADO &&
+                (statusVooEnum == StatusVooEnum.CANCELADO || statusVooEnum == StatusVooEnum.REALIZADO)) {
+            voo.setStatusVoo(statusVooEnum);
+            vooRepository.save(voo);
+    
+            // Notificar o microsserviço de reserva
+            notifyReservationService(voo.getCodigo(), statusVooEnum);
+        } else {
+            throw new IllegalStateException("Estado inválido para a transição");
+        }
+    
+        return voo;
+    }
+    
+    private void notifyReservationService(Long vooCodigo, StatusVooEnum novoEstado) {
+        // Adicionar aqui a lógica de se comunicar com o microsserviço de reservas
+
+        // Pensei em algo tipo assim:
+
+        // String reservationServiceUrl = "http://nosso-link-para-ms-reservas/reservas/voo/" + vooCodigo + "/estado";
+        // Map<String, String> payload = new HashMap<>();
+        // payload.put("estado", novoEstado.toString());
+
+        // RestTemplate restTemplate = new RestTemplate();
+        // restTemplate.patchForObject(reservationServiceUrl, payload, Void.class);
     }
 }

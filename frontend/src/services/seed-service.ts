@@ -18,6 +18,8 @@ const seedService = {
           codigo: nextCodigo,
           cpf: "000.111.222-33",
           email: "funcionario1@teste.com",
+          senha: "123mudar",
+
         },
       },
       {
@@ -28,6 +30,8 @@ const seedService = {
           codigo: nextCodigo + 1,
           cpf: "111.222.333-44",
           email: "cliente@email.com",
+          senha: "123mudar",
+  
         },
       },
       {
@@ -38,6 +42,7 @@ const seedService = {
           codigo: nextCodigo + 2,
           cpf: "111.222.333-44",
           email: "tralalero@email.com",
+          senha: "123mudar",
         },
       },
     ];

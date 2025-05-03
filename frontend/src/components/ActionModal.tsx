@@ -48,16 +48,16 @@ const ActionModal: React.FC<ActionModalProps> = ({
 
         <div className="flex justify-end space-x-2">
           <button
-            onClick={onClose}
-            className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-full"
-          >
-            Cancelar
-          </button>
-          <button
             onClick={onConfirm}
             className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full"
           >
             Confirmar
+          </button>
+          <button
+            onClick={onClose}
+            className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-full"
+          >
+            Cancelar
           </button>
         </div>
       </div>
