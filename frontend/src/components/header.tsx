@@ -49,7 +49,7 @@ export default function Header() {
             <Link href="/search-reservation">Procurar reserva</Link>
           </li>
           <li>
-            <Link href="/check-in">Check-in</Link>
+            <Link href="/cliente-landing-page">Check-in</Link>
           </li>
         </ul>
         <ul className="absolute bottom-4 left-4 space-y-4">
