@@ -1,18 +1,16 @@
 'use client';
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import '../../../public/styles/login.css';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import MenuFuncionario from "@/components/MenuFuncionario";
-
-
+import Employee from "../interfaces/employee";
 
 const StaffRegister = () => {
     const [errorCPF, setError] = useState(false);
     const [helperText, setHelperText] = useState('');
-import React, { useState, useEffect } from "react";
-import { TextField, Button } from "@mui/material";
-import Employee from "../interfaces/employee";
+
+
 
 interface StaffRegisterProps {
   onAddEmployee: (employee: Employee) => void;
@@ -26,6 +24,7 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
     email: '',
     phone: '',
     password: '',
+    user:''
   });
 
   const [errorCPF, setError] = useState(false);
@@ -51,7 +50,7 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onAddEmployee(formData);
-  };w-full max-w-md bg-white shadow-lg rounded-lg p-6
+  };
 
   return (
     <div className="flex h-screen">

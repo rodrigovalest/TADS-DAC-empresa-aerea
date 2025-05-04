@@ -1,6 +1,6 @@
 'use client';
 import React from "react";
-import Header from "../../components/header";
+import Header from "../../components/Header";
 import HeaderBanner from "@/components/HeaderBanner";
 import { Reservation } from "../interfaces/reservation-types";
 import CancelReservationButton from "@/components/CancelReservationButton";
@@ -63,7 +63,7 @@ const infoReservation: React.FC = () => {
                 Fazer Check-in
               </button>
             )}
-            <CancelReservationButton reservationCode={reservationData.code} />
+            <CancelReservationButton reservationCode={reservationData.code} telaAtual={true}/>
           </div>
         </div>
       </div>

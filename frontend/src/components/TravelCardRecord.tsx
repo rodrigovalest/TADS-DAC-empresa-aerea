@@ -2,11 +2,15 @@
 import React from 'react';
 import '../app/globals.css';
 import Link from "next/link";
+import CancelReservationButton from './CancelReservationButton';
 
 
 
 const TravelCardRecord: React.FC = () => {
-  return (
+    const handleCheckIn = () => {
+        alert("Check-in realizado com sucesso!");
+      };
+    return (
     <div className="rounded-md px-8 pt-6 pb-8 m-4 bg-[#D9D9D9]"
       style={{ fontFamily: 'Pathway Gothic One, sans-serif' }}>
         <div className="flex text-[32px]">
@@ -44,7 +48,8 @@ const TravelCardRecord: React.FC = () => {
                     Ver Detalhes
                 </button>
                 </Link>
-                    <button className="my-2 hover:bg-[rgba(255,61,0,0.54)] bg-[#FF3D00] text-white py-0.5 px-12 rounded-[15] hover:cursor-pointer">Cancelar</button>
+                    <CancelReservationButton reservationCode="" telaAtual={false}/>
+                    
                 </div>
             </div>
         </div>

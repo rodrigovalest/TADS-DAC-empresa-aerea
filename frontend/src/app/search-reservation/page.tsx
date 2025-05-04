@@ -86,7 +86,7 @@ const searchReservationPage: React.FC = () => {
                 value={reservationCode}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                className="w-full rounded-full px-4 py-3 text-black bg-white text-lg pr-12"
+                className="uppercase w-full rounded-full px-4 py-3 text-black bg-white text-lg pr-12"
               />
               <button
                 onClick={fetchFilteredReservations}

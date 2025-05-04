@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../app/globals.css';
 import TravelCardRecord from '@/components/TravelCardRecord';
-import Header from "../../components/header"
+import Header from "../../components/Header"
 import HeaderBanner from '@/components/HeaderBanner';
 
 const ClienteLandingPage: React.FC = () => {
