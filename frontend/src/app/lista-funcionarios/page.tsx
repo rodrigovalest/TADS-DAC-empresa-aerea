@@ -2,25 +2,25 @@
 
 import React, { useState } from 'react';
 import '../../app/globals.css';
-import Header from "../../components/Header";
 import HeaderBanner from '@/components/HeaderBanner';
 import EmployeeTable from '@/components/EmployeeTable';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, Dialog } from '@mui/material';
 import StaffRegister from '../cadastrar-funcionario/page';
 import Employee from '../interfaces/employee';
+import MenuFuncionario from '@/components/MenuFuncionario';
 
 const EmployeePage: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
   const [employees, setEmployees] = useState([
-    { name: 'Paulo', cpf: '111.111.111-11', email: 'paulo@example.com', phone: '123456789', password: 'password' },
-    { name: 'Ana', cpf: '222.222.222-22', email: 'ana@example.com', phone: '987654321', password: 'password' },
-    { name: 'Carlos', cpf: '333.333.333-33', email: 'carlos@example.com', phone: '456789123', password: 'password' },
-    { name: 'Maria', cpf: '444.444.444-44', email: 'maria@example.com', phone: '789123456', password: 'password' },
-    { name: 'João', cpf: '555.555.555-55', email: 'joao@example.com', phone: '321654987', password: 'password' },
-    { name: 'Fernanda', cpf: '666.666.666-66', email: 'fernanda@example.com', phone: '654987321', password: 'password' },
-    { name: 'Lucas', cpf: '777.777.777-77', email: 'lucas@example.com', phone: '987321654', password: 'password' },
+    { name: 'Paulo', cpf: '111.111.111-11', email: 'paulo@example.com', phone: '123456789', user: 'paulo', password: 'password' },
+    { name: 'Ana', cpf: '222.222.222-22', email: 'ana@example.com', phone: '987654321', user: 'ana', password: 'password' },
+    { name: 'Carlos', cpf: '333.333.333-33', email: 'carlos@example.com', phone: '456789123', user: 'carlos', password: 'password' },
+    { name: 'Maria', cpf: '444.444.444-44', email: 'maria@example.com', phone: '789123456', user: 'maria', password: 'password' },
+    { name: 'João', cpf: '555.555.555-55', email: 'joao@example.com', phone: '321654987', user: 'joao', password: 'password' },
+    { name: 'Fernanda', cpf: '666.666.666-66', email: 'fernanda@example.com', phone: '654987321', user: 'fernanda', password: 'password' },
+    { name: 'Lucas', cpf: '777.777.777-77', email: 'lucas@example.com', phone: '987321654', user: 'lucas', password: 'password' },
 ]);
 
   const addEmployee = () => {
@@ -53,8 +53,8 @@ const EmployeePage: React.FC = () => {
   };
 
   return (
-    <div className="mb-10">
-      <Header />
+    <div>
+      <MenuFuncionario />
       <HeaderBanner text="Lista de Funcionários" />
       <div className="w-[85vw] mx-auto flex justify-end -mt-18">
         <Button
@@ -76,8 +76,8 @@ const EmployeePage: React.FC = () => {
 
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
         <StaffRegister
-          onAddEmployee={handleAddOrEditEmployee}
-          initialData={editEmployee}
+          //onAddEmployee={handleAddOrEditEmployee}
+          //initialData={editEmployee}
         />
       </Dialog>
     </div>

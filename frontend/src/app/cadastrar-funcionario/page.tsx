@@ -1,8 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
-import { TextField, Button } from "@mui/material";
+import React, {useEffect, useState} from "react";
+import '../../../public/styles/login.css';
+import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import MenuFuncionario from "@/components/MenuFuncionario";
 import Employee from "../interfaces/employee";
+
+const StaffRegister = () => {
+    const [errorCPF, setError] = useState(false);
+    const [helperText, setHelperText] = useState('');
+
+
 
 interface StaffRegisterProps {
   onAddEmployee: (employee: Employee) => void;
@@ -16,6 +24,7 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
     email: '',
     phone: '',
     password: '',
+    user:''
   });
 
   const [errorCPF, setError] = useState(false);
@@ -56,7 +65,7 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
         <div className="text-[#FF3D00] text-3xl font-semibold">
           {initialData ? "Editar Funcionário" : "Registrar Novo Funcionário"}
         </div>
-        <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
+        <div className="">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <TextField
               label="CPF"
@@ -136,5 +145,5 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
     </div>
   );
 };
-
+}
 export default StaffRegister;

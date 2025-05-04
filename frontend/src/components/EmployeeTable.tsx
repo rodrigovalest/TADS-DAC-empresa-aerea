@@ -41,7 +41,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees, onEdit, onDele
   });
 
   return (
-    <TableContainer component={"div"}>
+    <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
@@ -94,10 +94,23 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees, onEdit, onDele
               <TableCell>{employee.email}</TableCell>
               <TableCell>{employee.phone}</TableCell>
               <TableCell>
-                <IconButton onClick={() => onEdit(employee)} color="primary">
+                <IconButton
+                  className=' m-2'
+                  onClick={() => onEdit(employee)} 
+                  style={{
+                    backgroundColor: '#FF3D00',
+                    color: '#FFFFFF',
+                    margin: '6px',
+                  }}>
                   <EditIcon />
                 </IconButton>
-                <IconButton onClick={() => onDelete(employee.cpf)} color="warning">
+                <IconButton 
+                  onClick={() => onDelete(employee.cpf)} 
+                  style={{
+                    backgroundColor: '#FF3D00',
+                    color: '#FFFFFF',
+                    margin: '6px',
+                  }}>
                   <DeleteIcon />
                 </IconButton>
               </TableCell>

@@ -63,7 +63,7 @@ const infoReservation: React.FC = () => {
                 Fazer Check-in
               </button>
             )}
-            <CancelReservationButton reservationCode={reservationData.code} />
+            <CancelReservationButton reservationCode={reservationData.code} telaAtual={true}/>
           </div>
         </div>
       </div>
