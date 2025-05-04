@@ -42,7 +42,7 @@ export default function MenuFuncionario () {
         </ul>
         <ul className="absolute bottom-4 left-4 space-y-4">
           <li>
-            <Link href="/cliente-landing-page">Sair</Link>
+            <Link href="/logout">Sair</Link>
           </li>
         </ul>
       </nav>
