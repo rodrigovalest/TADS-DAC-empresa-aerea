@@ -31,10 +31,13 @@ export default function MenuFuncionario () {
         />
         <ul className="space-y-4 pt-10">
           <li>
-            <Link href="/tela-inicial-funcionario">Home</Link>
+            <Link href="/employee">Home</Link>
           </li>
           <li>
             <Link href="/lista-funcionarios">Funcionarios</Link>
+          </li>
+          <li>
+            <Link href="/voo">Cadastrar Voo</Link>
           </li>
         </ul>
         <ul className="absolute bottom-4 left-4 space-y-4">
