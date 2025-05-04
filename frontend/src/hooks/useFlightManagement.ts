@@ -9,7 +9,7 @@ export const useFlightManagement = () => {
 
   useEffect(() => {
     const mockFlights: Flight[] = [
-      { id: "1", date: "24/04/2025", time: "08:00", origin: "Aeroporto de Curitiba", destination: "Aeroporto de São Paulo/Guarulhos ", status: "CONFIRMADO" },
+      { id: "1", date: "05/05/2025", time: "08:00", origin: "Aeroporto de Curitiba", destination: "Aeroporto de São Paulo/Guarulhos ", status: "CONFIRMADO" },
       { id: "2", date: "24/04/2025", time: "10:00", origin: "Aeroporto do Rio de Janeiro/Galeão", destination: "Aeroporto de Curitiba", status: "CONFIRMADO" },
       { id: "3", date: "24/04/2025", time: "14:00", origin: "Aeroporto Salgado Filho", destination: "Aeroporto do Rio de Janeiro/Galeão", status: "CONFIRMADO" },
       { id: "4", date: "24/04/2025", time: "18:00", origin: "Aeroporto de São Paulo/Guarulhos ", destination: "Aeroporto de Curitiba", status: "CONFIRMADO" },

@@ -8,8 +8,9 @@ import FlightsList from "@/components/FlightsList";
 import ActionModal from "@/components/ActionModal";
 import { Flight, Reservation } from "@/types/interfaces";
 import { useFlightManagement } from "@/hooks/useFlightManagement";
+import MenuFuncionario from "@/components/MenuFuncionario";
 
-const EmployeeHomePage: React.FC = () => {
+const EmployeeHomePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
   const [actionType, setActionType] = useState<"confirmar" | "cancelar" | "realizar" | "">("");
@@ -58,7 +59,7 @@ const EmployeeHomePage: React.FC = () => {
 
   return (
     <div>
-      <Header />
+      <MenuFuncionario />
       <div className="min-h-screen bg-gray-100">
         <FlightBanner />
         

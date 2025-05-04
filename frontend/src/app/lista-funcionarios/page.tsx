@@ -10,7 +10,7 @@ import StaffRegister from '../cadastrar-funcionario/page';
 import Employee from '../interfaces/employee';
 import MenuFuncionario from '@/components/MenuFuncionario';
 
-const EmployeePage: React.FC = () => {
+const EmployeePage = () => {
   const [open, setOpen] = useState(false);
   const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
   const [employees, setEmployees] = useState([
@@ -76,8 +76,8 @@ const EmployeePage: React.FC = () => {
 
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
         <StaffRegister
-          //onAddEmployee={handleAddOrEditEmployee}
-          //initialData={editEmployee}
+          onAddEmployee={handleAddOrEditEmployee}
+          initialData={editEmployee}
         />
       </Dialog>
     </div>
