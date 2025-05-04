@@ -1,4 +1,5 @@
 'use client';
+
 import React from 'react';
 
 interface CancelReservationButtonProps {
@@ -9,6 +10,7 @@ interface CancelReservationButtonProps {
 const CancelReservationButton: React.FC<CancelReservationButtonProps> = ({ reservationCode, telaAtual}) => {
   const handleCancel = () => {
     alert(`Reserva ${reservationCode} cancelada com sucesso!`);
+    window.location.href = "/cliente-landing-page"
   };
 
   return (

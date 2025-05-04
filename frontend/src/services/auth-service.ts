@@ -29,10 +29,12 @@ const authService = {
     }
   },
 
-  logout: async (data: ILogoutRequest): Promise<void> => {
+  logout: async (): Promise<void> => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     
     localStorage.clear();
+    Cookies.remove("token");
+    Cookies.remove("role");
   }
 }
 
