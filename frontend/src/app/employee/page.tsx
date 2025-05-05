@@ -2,12 +2,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Header from "@/components/Header";
 import FlightBanner from "@/components/FlightBanner";
 import FlightsList from "@/components/FlightsList";
 import ActionModal from "@/components/ActionModal";
 import { Flight, Reservation } from "@/types/interfaces";
 import { useFlightManagement } from "@/hooks/useFlightManagement";
+import HeaderBanner from '@/components/HeaderBanner';
 
 const EmployeeHomePage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -58,7 +58,7 @@ const EmployeeHomePage: React.FC = () => {
 
   return (
     <div>
-      <Header />
+      <HeaderBanner/>
       <div className="min-h-screen bg-gray-100">
         <FlightBanner />
         

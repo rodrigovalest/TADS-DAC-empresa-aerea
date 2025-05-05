@@ -76,8 +76,8 @@ const EmployeePage: React.FC = () => {
 
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
         <StaffRegister
-          //onAddEmployee={handleAddOrEditEmployee}
-          //initialData={editEmployee}
+          onAddEmployee={handleAddOrEditEmployee}
+          initialData={editEmployee}
         />
       </Dialog>
     </div>

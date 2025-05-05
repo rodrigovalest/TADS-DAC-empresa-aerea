@@ -6,10 +6,6 @@ import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from "@m
 import MenuFuncionario from "@/components/MenuFuncionario";
 import Employee from "../interfaces/employee";
 
-const StaffRegister = () => {
-    const [errorCPF, setError] = useState(false);
-    const [helperText, setHelperText] = useState('');
-
 
 
 interface StaffRegisterProps {
@@ -145,5 +141,5 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
     </div>
   );
 };
-}
+
 export default StaffRegister;
