@@ -8,6 +8,7 @@ import ActionModal from "@/components/ActionModal";
 import { Flight, Reservation } from "@/types/interfaces";
 import { useFlightManagement } from "@/hooks/useFlightManagement";
 import HeaderBanner from '@/components/HeaderBanner';
+import MenuFuncionario from "@/components/MenuFuncionario";
 
 const EmployeeHomePage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -58,6 +59,7 @@ const EmployeeHomePage: React.FC = () => {
 
   return (
     <div>
+      <MenuFuncionario />
       <HeaderBanner/>
       <div className="min-h-screen bg-gray-100">
         <FlightBanner />
