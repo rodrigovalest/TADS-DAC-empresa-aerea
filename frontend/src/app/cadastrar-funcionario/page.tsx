@@ -117,16 +117,6 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
               fullWidth
               required
             />
-            <TextField
-              label="Senha"
-              name="password"
-              type="password"
-              variant="outlined"
-              value={formData.password}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
             <Button
               variant="contained"
               className="bg-[#FF3D00] hover:bg-[#D63000]"

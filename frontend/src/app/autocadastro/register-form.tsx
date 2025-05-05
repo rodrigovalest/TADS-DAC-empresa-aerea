@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import IAutocadastroRequest from "@/models/requests/autocadastro-request";
 
@@ -9,8 +9,37 @@ const RegisterForm: React.FC<{ onSubmit: SubmitHandler<IAutocadastroRequest> }> 
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<IAutocadastroRequest>();
 
+  const cep = watch("endereco.cep");
+
+  useEffect(() => {
+    const fetchEndereco = async (cepValue: string) => {
+      const onlyNumbersCep = cepValue.replace(/\D/g, "");
+      if (onlyNumbersCep.length === 8) {
+        try {
+          const res = await fetch(`https://viacep.com.br/ws/${onlyNumbersCep}/json/`);
+          const data = await res.json();
+
+          if (!data.erro) {
+            setValue("endereco.rua", data.logradouro || "");
+            setValue("endereco.complemento", data.complemento || "");
+            setValue("endereco.cidade", data.localidade || "");
+            setValue("endereco.uf", data.uf || "");
+          }
+        } catch (err) {
+          console.error("Erro ao buscar endereço no ViaCEP:", err);
+        }
+      }
+    };
+
+    if (cep) {
+      fetchEndereco(cep);
+    }
+  }, [cep, setValue]);
+  
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="p-6 pb-2 w-full max-w-md">
       <h2 className="text-3xl font-medium mb-4 text-center text-white">Autocadastro</h2>
@@ -97,17 +126,6 @@ const RegisterForm: React.FC<{ onSubmit: SubmitHandler<IAutocadastroRequest> }> 
       </div>
 
       <div className="mb-2">
-        <label htmlFor="endereco.bairro" className="block font-light text-white pb-2">Bairro</label>
-        <input
-          type="text"
-          id="endereco.bairro"
-          {...register("endereco.bairro", { required: "Bairro é obrigatório" })}
-          className="w-full p-2 rounded bg-gray-100 border-0 text-gray-800 focus:outline-none"
-        />
-        {errors.endereco?.bairro && <p className="text-red-500">{errors.endereco.bairro.message}</p>}
-      </div>
-
-      <div className="mb-2">
         <label htmlFor="endereco.rua" className="block font-light text-white pb-2">Rua</label>
         <input
           type="text"
@@ -145,5 +163,6 @@ const RegisterForm: React.FC<{ onSubmit: SubmitHandler<IAutocadastroRequest> }> 
     </form>
   );
 };
+
 
 export default RegisterForm;

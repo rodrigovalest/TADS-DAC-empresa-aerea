@@ -6,6 +6,7 @@ import HeaderBanner from "@/components/HeaderBanner";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomTableWhite from "@/components/CustomTableWhite";
 import { Reservation as BaseReservation } from "@/app/interfaces/reservation-types";
+import MenuFuncionario from "@/components/MenuFuncionario";
 
 // Atualizando a interface para estender a de reservation-types
 interface Reservation extends BaseReservation {
@@ -165,6 +166,8 @@ const ConfirmarEmbarquesPage: React.FC = () => {
 
   return (
     <div className="mb-10">
+      <MenuFuncionario />
+
       <HeaderBanner
         body={
           <div className="flex justify-center w-full">

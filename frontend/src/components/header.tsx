@@ -43,18 +43,18 @@ export default function Header() {
             <Link href="/cliente-landing-page">Voos</Link>
           </li>
           <li>
-            <Link href="/cliente-landing-page">Minhas reservas</Link>
+            <Link href="/search-reservation">Minhas reservas</Link>
           </li>
           <li>
             <Link href="/search-reservation">Procurar reserva</Link>
           </li>
           <li>
-            <Link href="/cliente-landing-page">Check-in</Link>
+            <Link href="/check-in">Check-in</Link>
           </li>
         </ul>
         <ul className="absolute bottom-4 left-4 space-y-4">
           <li>
-            <Link href="/login">Sair</Link>
+            <Link href="/logout">Sair</Link>
           </li>
         </ul>
       </nav>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const funcionarioRoutes = ['/employee']
 const clienteRoutes = ['/cliente-landing-page']
-const publicRoutes = ['/autocadastro', '/login']
+const publicRoutes = ['/autocadastro', '/login', '/']
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value || null;

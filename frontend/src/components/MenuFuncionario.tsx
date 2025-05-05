@@ -46,10 +46,6 @@ export default function MenuFuncionario () {
           </li>
         </ul>
       </nav>
-      <h2 className="text-white cursor-pointer"
-          onClick={openPointsModal} >1200 pts</h2>
-          <BuyMilesDialog isOpen={isPointsModalOpen} onClose={closePointsModal} onSubmit={handleSubmit}/>
     </div>
-    
   );
 }

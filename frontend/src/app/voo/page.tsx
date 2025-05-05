@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import '../../../public/styles/login.css';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import Header from "@/components/Header";
+import MenuFuncionario from "@/components/MenuFuncionario";
 
 const aeroportos = [
     "Aeroporto Internacional de Guarulhos (GRU)",
@@ -37,7 +38,7 @@ const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
 };
     return (
         <div className="flex h-screen">
-            <Header/>
+            <MenuFuncionario />
             <div className="w-1/2 bg-black flex justify-center items-center">
                 <img className="w-full h-full object-cover object-top" src="registerfly.jpg" alt="Imagem de voo" />
             </div>
@@ -49,9 +50,10 @@ const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
                 <div className="w-full max-w-md bg-white  rounded-lg p-6">
                     <form className="flex flex-col gap-4">
                         
-                        <TextField label="Código do Voo" variant="outlined" fullWidth required />
                         <TextField label="Data" type="date" variant="outlined" fullWidth InputLabelProps={{ shrink: true }} required />
                         <TextField label="Hora" type="time" variant="outlined" fullWidth InputLabelProps={{ shrink: true }} required />
+
+                        <TextField label="Quantidade de poltronas" type="number" variant="outlined" fullWidth required />
 
                         <FormControl fullWidth>
                             <InputLabel>Aeroporto de origem</InputLabel>

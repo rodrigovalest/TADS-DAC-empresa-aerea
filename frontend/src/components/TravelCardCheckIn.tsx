@@ -77,16 +77,6 @@ const TravelCardCheckIn: React.FC<TravelCardCheckInProps> = ({ flight, onCheckIn
                     >
                       Check-in
                     </button>
-                    <button
-                      className={`my-2 py-0.5 px-12 rounded-[15] hover:cursor-pointer ${
-                        flight.flightStatus === "CHECK-IN"
-                          ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-                          : "hover:bg-[rgba(255,61,0,0.54)] bg-[#FF3D00] text-white"
-                      }`}
-                      disabled={flight.flightStatus === "CHECK-IN"}
-                    >
-                      Cancelar
-                    </button>
                 </div>
             </div>
         </div>
