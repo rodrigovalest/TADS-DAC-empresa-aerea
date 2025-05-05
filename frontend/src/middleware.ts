@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const funcionarioRoutes = ['/funcionario']
-const clienteRoutes = ['/cliente']
+const funcionarioRoutes = ['/employee']
+const clienteRoutes = ['/cliente-landing-page']
 const publicRoutes = ['/autocadastro', '/login']
 
 export function middleware(req: NextRequest) {
@@ -15,9 +15,9 @@ export function middleware(req: NextRequest) {
  
   if (token && role && (['/autocadastro', '/login'].includes(pathname))) {
     if (role === 'FUNCIONARIO')
-      return NextResponse.redirect(new URL('/funcionario', req.url));
+      return NextResponse.redirect(new URL('/employee', req.url));
     if (role === 'CLIENTE')
-      return NextResponse.redirect(new URL('/cliente', req.url));
+      return NextResponse.redirect(new URL('/cliente-landing-page', req.url));
   }
 
   if (isPublic) {

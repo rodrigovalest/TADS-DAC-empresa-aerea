@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import '../../../public/styles/login.css';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-import Header from "@/components/header";
+import Header from "@/components/Header";
 
 const aeroportos = [
     "Aeroporto Internacional de Guarulhos (GRU)",
