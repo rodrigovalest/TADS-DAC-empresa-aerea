@@ -6,5 +6,6 @@ export default interface IAutocadastroRequest {
   usuario: string;
   nome: string;
   saldo_milhas: number;
-	endereco: IEnderecoRequest;
+  endereco: IEnderecoRequest;
+  senha: string;
 }
