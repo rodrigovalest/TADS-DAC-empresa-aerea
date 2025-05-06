@@ -5,6 +5,8 @@ export interface Flight {
   origin: string;
   destination: string;
   status: "CONFIRMADO" | "CANCELADO" | "REALIZADO";
+  value: number;
+  miles: number;
 }
 
 export interface Reservation {
