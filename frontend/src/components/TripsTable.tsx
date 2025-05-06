@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   TableContainer,
   Table,
@@ -9,34 +9,34 @@ import {
   TableCell,
   TableBody,
   TableSortLabel,
-} from '@mui/material';
-import { Trip } from '@/app/interfaces/trip';
+} from "@mui/material";
+import { Flight } from "@/types/interfaces";
 
-type Order = 'asc' | 'desc';
+type Order = "asc" | "desc";
 
 interface TripsTableProps {
-  trips: Trip[];
-  onRowClick?: (trip: Trip) => void;
+  trips: Flight[];
+  onRowClick?: (trip: Flight) => void;
 }
 
 const TripsTable: React.FC<TripsTableProps> = ({ trips, onRowClick }) => {
-  const [order, setOrder] = useState<Order>('asc');
-  const [orderBy, setOrderBy] = useState<keyof Trip>('date');
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<keyof Flight>("date");
 
-  const handleSort = (property: keyof Trip) => {
-    const isAscending = orderBy === property && order === 'asc';
-    setOrder(isAscending ? 'desc' : 'asc');
+  const handleSort = (property: keyof Flight) => {
+    const isAscending = orderBy === property && order === "asc";
+    setOrder(isAscending ? "desc" : "asc");
     setOrderBy(property);
   };
 
   const sortedTrips = [...trips].sort((a, b) => {
-    if (orderBy === 'date') {
-      return order === 'asc'
+    if (orderBy === "date") {
+      return order === "asc"
         ? new Date(a.date).getTime() - new Date(b.date).getTime()
         : new Date(b.date).getTime() - new Date(a.date).getTime();
     }
-    if (a[orderBy] < b[orderBy]) return order === 'asc' ? -1 : 1;
-    if (a[orderBy] > b[orderBy]) return order === 'asc' ? 1 : -1;
+    if (a[orderBy] < b[orderBy]) return order === "asc" ? -1 : 1;
+    if (a[orderBy] > b[orderBy]) return order === "asc" ? 1 : -1;
     return 0;
   });
 
@@ -47,18 +47,18 @@ const TripsTable: React.FC<TripsTableProps> = ({ trips, onRowClick }) => {
           <TableRow>
             <TableCell>
               <TableSortLabel
-                active={orderBy === 'date'}
-                direction={orderBy === 'date' ? order : 'asc'}
-                onClick={() => handleSort('date')}
+                active={orderBy === "date"}
+                direction={orderBy === "date" ? order : "asc"}
+                onClick={() => handleSort("date")}
               >
                 <span className="font-bold text-[16px]">Data</span>
               </TableSortLabel>
             </TableCell>
             <TableCell>
               <TableSortLabel
-                active={orderBy === 'time'}
-                direction={orderBy === 'time' ? order : 'asc'}
-                onClick={() => handleSort('time')}
+                active={orderBy === "time"}
+                direction={orderBy === "time" ? order : "asc"}
+                onClick={() => handleSort("time")}
               >
                 <span className="font-bold text-[16px]">Horário</span>
               </TableSortLabel>
@@ -71,9 +71,9 @@ const TripsTable: React.FC<TripsTableProps> = ({ trips, onRowClick }) => {
             </TableCell>
             <TableCell>
               <TableSortLabel
-                active={orderBy === 'value'}
-                direction={orderBy === 'value' ? order : 'asc'}
-                onClick={() => handleSort('value')}
+                active={orderBy === "value"}
+                direction={orderBy === "value" ? order : "asc"}
+                onClick={() => handleSort("value")}
               >
                 <span className="font-bold text-[16px]">Valor</span>
               </TableSortLabel>
@@ -82,17 +82,17 @@ const TripsTable: React.FC<TripsTableProps> = ({ trips, onRowClick }) => {
         </TableHead>
         <TableBody>
           {sortedTrips.map((trip, index) => (
-            <TableRow 
+            <TableRow
               key={index}
               className="cursor-pointer hover:bg-gray-100"
               onClick={() => onRowClick?.(trip)}
-              style={{ transition: 'background-color 0.3s ease' }}
+              style={{ transition: "background-color 0.3s ease" }}
             >
               <TableCell>
-                {new Date(trip.date).toLocaleDateString('pt-BR', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
+                {new Date(trip.date).toLocaleDateString("pt-BR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
                 })}
               </TableCell>
               <TableCell>{trip.time}</TableCell>
