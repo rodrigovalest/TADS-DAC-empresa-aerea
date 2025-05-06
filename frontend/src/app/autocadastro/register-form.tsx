@@ -112,22 +112,6 @@ const RegisterForm: React.FC<{
       </div>
 
       <div className="mb-2">
-        <label htmlFor="senha" className="block font-light text-white pb-2">
-          Senha
-        </label>
-        <input
-          type="password"
-          id="senha"
-          {...register("senha", {
-            required: "Senha é obrigatória",
-          })}
-          className="w-full p-2 rounded bg-gray-100 border-0 text-gray-800 focus:outline-none"
-          autoComplete="new-password"
-        />
-        {errors.senha && <p className="text-red-800">{errors.senha.message}</p>}
-      </div>
-
-      <div className="mb-2">
         <label
           htmlFor="endereco.cep"
           className="block font-light text-white pb-2"
