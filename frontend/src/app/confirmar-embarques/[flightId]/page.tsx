@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation"; // Alterado de useSearchParams para useParams
+import { useParams } from "next/navigation";
 import HeaderBanner from "@/components/HeaderBanner";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomTableWhite from "@/components/CustomTableWhite";
 import { Reservation as BaseReservation } from "@/app/interfaces/reservation-types";
 import MenuFuncionario from "@/components/MenuFuncionario";
 
-// Mesma interface
 interface Reservation extends BaseReservation {
   id: string;
   flightId: string;
@@ -16,7 +15,6 @@ interface Reservation extends BaseReservation {
 }
 
 const ConfirmarEmbarquesPage: React.FC = () => {
-  // Use useParams em vez de useSearchParams
   const params = useParams();
   const flightId = params.flightId as string;
 
@@ -24,7 +22,6 @@ const ConfirmarEmbarquesPage: React.FC = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    // Dados mock atualizados para usar as propriedades da interface modificada
     const mockReservations: Reservation[] = [
       {
         id: "r1",
@@ -71,7 +68,6 @@ const ConfirmarEmbarquesPage: React.FC = () => {
         amountSpent: 0,
         milesSpent: 0,
       },
-      // Exemplo adicional
       {
         id: "r5",
         code: "RES000",
@@ -105,7 +101,7 @@ const ConfirmarEmbarquesPage: React.FC = () => {
   };
 
   const fetchFilteredReservations = () => {
-    // Filtra as reservas com base no código digitado (agora "code")
+    // Filtra as reservas com base no código digitado
     return reservations.filter((reservation) =>
       reservation.code.toLowerCase().includes(search.toLowerCase())
     );
@@ -121,7 +117,7 @@ const ConfirmarEmbarquesPage: React.FC = () => {
     }
   };
 
-  // Definição das colunas para o CustomTableWhite com as propriedades atualizadas
+  // Definição das colunas para o CustomTableWhite
   const columns = [
     {
       header: "Código da Reserva",
