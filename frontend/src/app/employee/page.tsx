@@ -7,21 +7,23 @@ import FlightsList from "@/components/FlightsList";
 import ActionModal from "@/components/ActionModal";
 import { Flight, Reservation } from "@/types/interfaces";
 import { useFlightManagement } from "@/hooks/useFlightManagement";
-import HeaderBanner from '@/components/HeaderBanner';
+import HeaderBanner from "@/components/HeaderBanner";
 import MenuFuncionario from "@/components/MenuFuncionario";
 
 const EmployeeHomePage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
-  const [actionType, setActionType] = useState<"confirmar" | "cancelar" | "realizar" | "">("");
+  const [actionType, setActionType] = useState<
+    "confirmar" | "cancelar" | "realizar" | ""
+  >("");
   const [reservationCodeInput, setReservationCodeInput] = useState("");
 
-  const { 
-    flights, 
-    upcomingFlights, 
-    handleConfirmBoarding, 
-    handleCancelFlight, 
-    handleCompleteFlight 
+  const {
+    flights,
+    upcomingFlights,
+    handleConfirmBoarding,
+    handleCancelFlight,
+    handleCompleteFlight,
   } = useFlightManagement();
 
   const handleOpenModal = (flight: Flight, action: typeof actionType) => {
@@ -47,7 +49,10 @@ const EmployeeHomePage: React.FC = () => {
         alert("Por favor, insira o código da reserva.");
         return;
       }
-      success = handleConfirmBoarding(selectedFlight.id, reservationCodeInput.trim());
+      success = handleConfirmBoarding(
+        selectedFlight.id,
+        reservationCodeInput.trim()
+      );
     } else if (actionType === "cancelar") {
       success = handleCancelFlight(selectedFlight.id);
     } else if (actionType === "realizar") {
@@ -60,31 +65,27 @@ const EmployeeHomePage: React.FC = () => {
   return (
     <div>
       <MenuFuncionario />
-      <HeaderBanner/>
-      <div className="min-h-screen bg-gray-100">
-        <FlightBanner />
-        
-        <div className="max-w-4xl mx-auto -mt-10 pb-10">
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-700 mx-4">
-            <div className="p-6">
-              <FlightsList 
-                flights={upcomingFlights} 
-                onOpenModal={handleOpenModal} 
-              />
-            </div>
-          </div>
-
-          {showModal && selectedFlight && (
-            <ActionModal
-              flight={selectedFlight}
-              actionType={actionType}
-              reservationCodeInput={reservationCodeInput}
-              setReservationCodeInput={setReservationCodeInput}
-              onClose={handleCloseModal}
-              onConfirm={handleConfirmAction}
+      <HeaderBanner text="Próximos voos" />
+      <div className="max-w-4xl mx-auto -mt-20 pb-10">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-700 mx-4">
+          <div className="p-6">
+            <FlightsList
+              flights={upcomingFlights}
+              onOpenModal={handleOpenModal}
             />
-          )}
+          </div>
         </div>
+
+        {showModal && selectedFlight && (
+          <ActionModal
+            flight={selectedFlight}
+            actionType={actionType}
+            reservationCodeInput={reservationCodeInput}
+            setReservationCodeInput={setReservationCodeInput}
+            onClose={handleCloseModal}
+            onConfirm={handleConfirmAction}
+          />
+        )}
       </div>
     </div>
   );
