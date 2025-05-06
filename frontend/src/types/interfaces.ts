@@ -13,6 +13,7 @@ export interface Reservation {
   id: string;
   flightId: string;
   status:
+    | "CRIADO"
     | "CHECK-IN"
     | "EMBARCADO"
     | "CANCELADO VOO"

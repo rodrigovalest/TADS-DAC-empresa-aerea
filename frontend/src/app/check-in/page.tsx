@@ -19,7 +19,7 @@ const mockFlights: ReservationWithFlightDetails[] = [
       id: "r1",
       code: "VOO123",
       flightId: "f1",
-      status: "CHECK-IN",
+      status: "CRIADO",
     },
     flight: {
       id: "f1",
@@ -37,7 +37,7 @@ const mockFlights: ReservationWithFlightDetails[] = [
       id: "r2",
       code: "VOO456",
       flightId: "f2",
-      status: "CHECK-IN",
+      status: "CRIADO",
     },
     flight: {
       id: "f2",
@@ -55,7 +55,7 @@ const mockFlights: ReservationWithFlightDetails[] = [
       id: "r3",
       code: "VOO789",
       flightId: "f3",
-      status: "CHECK-IN",
+      status: "CRIADO",
     },
     flight: {
       id: "f3",
