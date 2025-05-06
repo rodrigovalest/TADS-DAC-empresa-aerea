@@ -1,25 +1,24 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation"; // Alterado de useSearchParams para useParams
 import HeaderBanner from "@/components/HeaderBanner";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomTableWhite from "@/components/CustomTableWhite";
 import { Reservation as BaseReservation } from "@/app/interfaces/reservation-types";
 import MenuFuncionario from "@/components/MenuFuncionario";
 
-// Atualizando a interface para estender a de reservation-types
+// Mesma interface
 interface Reservation extends BaseReservation {
   id: string;
   flightId: string;
-  // Sobrescrevendo flightStatus para um tipo restrito
   flightStatus: "CHECK-IN" | "EMBARCADO";
-  // Assume que "code" corresponde a reservationCode e "dateTime" a flightDateTime
 }
 
 const ConfirmarEmbarquesPage: React.FC = () => {
-  const searchParams = useSearchParams();
-  const flightId = searchParams.get("flightId");
+  // Use useParams em vez de useSearchParams
+  const params = useParams();
+  const flightId = params.flightId as string;
 
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [search, setSearch] = useState("");
@@ -152,15 +151,23 @@ const ConfirmarEmbarquesPage: React.FC = () => {
       header: "Ação",
       accessor: "action",
       sortable: false,
-      renderCell: (row: Reservation) => (
-        <button
-          onClick={() => handleConfirmBoarding(row.id)}
-          className="bg-oranged hover:bg-browned text-white text-xl py-2 px-4 rounded-lg "
-          disabled={row.flightStatus === "EMBARCADO"}
-        >
-          Confirmar Embarque
-        </button>
-      ),
+      renderCell: (row: Reservation) => {
+        const isEmbarcado = row.flightStatus === "EMBARCADO";
+
+        return (
+          <button
+            onClick={() => handleConfirmBoarding(row.id)}
+            className={`text-white text-xl py-2 px-4 rounded-lg ${
+              isEmbarcado
+                ? "bg-gray-400 cursor-not-allowed opacity-70"
+                : "bg-oranged hover:bg-browned"
+            }`}
+            disabled={isEmbarcado}
+          >
+            {isEmbarcado ? "Já Embarcado" : "Confirmar Embarque"}
+          </button>
+        );
+      },
     },
   ];
 
