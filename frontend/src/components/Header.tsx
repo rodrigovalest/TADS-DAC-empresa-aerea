@@ -8,7 +8,7 @@ export default function Header() {
   const [isPointsModalOpen, setIsPointsModalOpen] = useState(false);
   const openPointsModal = () => setIsPointsModalOpen(true);
   const closePointsModal = () => setIsPointsModalOpen(false);
-  const handleSubmit = (amount: number) =>{}
+  const handleSubmit = (amount: number) => {};
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
     <div className="fixed flex min-w-[100%] bg-[#00000080] flex-row justify-between items-center p-4">
@@ -40,28 +40,26 @@ export default function Header() {
             <Link href="/mileage-history">Extrato de milhas</Link>
           </li>
           <li>
-            <Link href="/cliente-landing-page">Voos</Link>
+            <Link href="/search-reservation">Minhas reservas</Link>
           </li>
           <li>
-            <Link href="/cliente-landing-page">Minhas reservas</Link>
-          </li>
-          <li>
-            <Link href="/search-reservation">Procurar reserva</Link>
-          </li>
-          <li>
-            <Link href="/cliente-landing-page">Check-in</Link>
+            <Link href="/check-in">Check-in</Link>
           </li>
         </ul>
         <ul className="absolute bottom-4 left-4 space-y-4">
           <li>
-            <Link href="/cliente-landing-page">Sair</Link>
+            <Link href="/logout">Sair</Link>
           </li>
         </ul>
       </nav>
-      <h2 className="text-white cursor-pointer"
-          onClick={openPointsModal} >1200 pts</h2>
-          <BuyMilesDialog isOpen={isPointsModalOpen} onClose={closePointsModal} onSubmit={handleSubmit}/>
+      <h2 className="text-white cursor-pointer" onClick={openPointsModal}>
+        1200 pts
+      </h2>
+      <BuyMilesDialog
+        isOpen={isPointsModalOpen}
+        onClose={closePointsModal}
+        onSubmit={handleSubmit}
+      />
     </div>
-    
   );
 }

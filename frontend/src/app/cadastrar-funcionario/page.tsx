@@ -1,30 +1,38 @@
-'use client';
+"use client";
 
-import React, {useEffect, useState} from "react";
-import '../../../public/styles/login.css';
-import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import "../../../public/styles/login.css";
+import {
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import MenuFuncionario from "@/components/MenuFuncionario";
-import Employee from "../interfaces/employee";
-
-
+import Employee from "@/types/interfaces";
 
 interface StaffRegisterProps {
   onAddEmployee: (employee: Employee) => void;
   initialData?: Employee | null;
 }
 
-const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialData }) => {
+const StaffRegister: React.FC<StaffRegisterProps> = ({
+  onAddEmployee,
+  initialData,
+}) => {
   const [formData, setFormData] = useState<Employee>({
-    name: '',
-    cpf: '',
-    email: '',
-    phone: '',
-    password: '',
-    user:''
+    name: "",
+    cpf: "",
+    email: "",
+    phone: "",
+    password: "",
+    user: "",
   });
 
   const [errorCPF, setError] = useState(false);
-  const [helperText, setHelperText] = useState('');
+  const [helperText, setHelperText] = useState("");
 
   useEffect(() => {
     if (initialData) {
@@ -35,8 +43,8 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name === 'cpf' || name === 'phone') {
-      const numericValue = value.replace(/\D/g, '');
+    if (name === "cpf" || name === "phone") {
+      const numericValue = value.replace(/\D/g, "");
       setFormData((prevData) => ({ ...prevData, [name]: numericValue }));
     } else {
       setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -75,11 +83,11 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
                 setFormData((prevData) => ({ ...prevData, cpf: trimmedValue }));
                 if (trimmedValue.length < 11) {
                   setError(true);
-                  setHelperText('O CPF deve ter 11 dígitos');
+                  setHelperText("O CPF deve ter 11 dígitos");
                   return;
                 }
                 setError(false);
-                setHelperText('');
+                setHelperText("");
               }}
               error={errorCPF}
               helperText={helperText}

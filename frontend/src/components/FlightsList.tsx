@@ -5,7 +5,10 @@ import FlightCard from "./FlightCard";
 
 interface FlightsListProps {
   flights: Flight[];
-  onOpenModal: (flight: Flight, action: "confirmar" | "cancelar" | "realizar") => void;
+  onOpenModal: (
+    flight: Flight,
+    action: "confirmar" | "cancelar" | "realizar"
+  ) => void;
 }
 
 const FlightsList: React.FC<FlightsListProps> = ({ flights, onOpenModal }) => {
@@ -15,11 +18,13 @@ const FlightsList: React.FC<FlightsListProps> = ({ flights, onOpenModal }) => {
     <div className="space-y-4 font-bold">
       {flights.length > 0 ? (
         flights.map((flight) => (
-          <FlightCard 
-            key={flight.id} 
-            flight={flight} 
+          <FlightCard
+            key={flight.id}
+            flight={flight}
             onOpenModal={onOpenModal}
-            onConfirmBoarding={() => router.push('/confirmar-embarques')}
+            onConfirmBoarding={() =>
+              router.push("/confirmar-embarques/" + flight.id)
+            }
           />
         ))
       ) : (
