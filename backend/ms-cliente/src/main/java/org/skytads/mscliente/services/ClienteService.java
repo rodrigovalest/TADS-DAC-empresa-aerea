@@ -2,6 +2,7 @@ package org.skytads.mscliente.services;
 
 import lombok.RequiredArgsConstructor;
 import org.skytads.mscliente.exceptions.ClienteNaoEncontradoException;
+import org.skytads.mscliente.exceptions.SaldoInsuficienteException;
 import org.skytads.mscliente.mappers.ClienteMapper;
 import org.skytads.mscliente.models.Cliente;
 import org.skytads.mscliente.repositories.ClienteRepository;
@@ -30,7 +31,7 @@ public class ClienteService {
         System.out.println("senha criada para o usuario " + novoCliente.getEmail() + ": " + senha);
 
         novoCliente = this.clienteRepository.save(novoCliente);
-        this.clienteMessagePublisherService.sendPointsMessage(ClienteMapper.toCriarClienteMessageDto(novoCliente));
+        this.clienteMessagePublisherService.sendToCriarClienteQueue(ClienteMapper.toCriarClienteMessageDto(novoCliente));
 
         return novoCliente;
     }
@@ -63,4 +64,16 @@ public class ClienteService {
         clienteRepository.save(cliente);
     }
 
+    public void usarMilhas(Long codigoCliente, Long milhas) {
+        Cliente cliente = this.clienteRepository.findById(codigoCliente).orElseThrow(
+                () -> new ClienteNaoEncontradoException("cliente nao encontrado com ID: " + codigoCliente)
+        );
+
+        if (milhas > cliente.getSaldoMilhas()) {
+            throw new SaldoInsuficienteException("nao foi possivel usar as milhas. saldo insuficiente");
+        }
+
+        cliente.setSaldoMilhas(cliente.getSaldoMilhas() - milhas);
+        this.clienteRepository.save(cliente);
+    }
 }

@@ -12,10 +12,13 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
     
     public static final String FILA_CRIAR_CLIENTE = "criar-cliente-queue";
-
     public static final String EXCHANGE_CLIENTE = "cliente-exchange";
-    
     public static final String ROUTING_KEY_CRIAR_CLIENTE = "criar.cliente";
+
+
+    public static final String EXCHANGE_RESERVA = "reserva.direct.exchange";
+    public static final String QUEUE_USAR_MILHAS_CRIAR_RESERVA = "usar-milhas.criar-reserva.queue";
+    public static final String ROUTING_KEY_COMPRAR_MILHAS_CRIAR_RESERVA = "comprar-milhas.criar-reserva";
 
     @Bean
     public Queue filaCriarCliente() {
@@ -44,5 +47,22 @@ public class RabbitMQConfig {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(jsonMessageConverter());
         return rabbitTemplate;
+    }
+
+    @Bean
+    public DirectExchange exchangeReserva() {
+        return new DirectExchange(EXCHANGE_RESERVA);
+    }
+
+    @Bean
+    public Queue filaUsarMilhasCriarReserva() {
+        return new Queue(QUEUE_USAR_MILHAS_CRIAR_RESERVA, true);
+    }
+
+    @Bean
+    public Binding bindingComprarMilhasCriarReserva() {
+        return BindingBuilder.bind(filaUsarMilhasCriarReserva())
+                .to(exchangeReserva())
+                .with(ROUTING_KEY_COMPRAR_MILHAS_CRIAR_RESERVA);
     }
 }
