@@ -64,11 +64,13 @@ public class ClienteService {
         clienteRepository.save(cliente);
     }
 
+    @Transactional
     public void usarMilhas(Long codigoCliente, Long milhas) {
         Cliente cliente = this.clienteRepository.findById(codigoCliente).orElseThrow(
                 () -> new ClienteNaoEncontradoException("cliente nao encontrado com ID: " + codigoCliente)
         );
 
+        System.out.println("Milhas utilizadas: " + milhas + " | Saldo milhas: " + cliente.getSaldoMilhas());
         if (milhas > cliente.getSaldoMilhas()) {
             throw new SaldoInsuficienteException("nao foi possivel usar as milhas. saldo insuficiente");
         }
