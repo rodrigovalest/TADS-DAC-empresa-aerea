@@ -30,33 +30,33 @@ public class VooController {
 
     private final VooService vooService;
 
-    @GetMapping
-    public ResponseEntity<Map<String, Object>> findByFilters(
-            @RequestParam String data,
-            @RequestParam Long origem,
-            @RequestParam Long destino) {
-
-        LocalDateTime dataParsed = LocalDateTime.parse(data, DateTimeFormatter.ISO_DATE_TIME);
-        List<VooEntity> voos = vooService.findByFilters(dataParsed, origem, destino);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("data", data);
-        response.put("origem", origem);
-        response.put("destino", destino);
-        response.put("voos", voos);
-
-        return ResponseEntity.ok(response);
-    }
+//    @GetMapping
+//    public ResponseEntity<Map<String, Object>> findByFilters(
+//            @RequestParam String data,
+//            @RequestParam Long origem,
+//            @RequestParam Long destino) {
+//
+//        LocalDateTime dataParsed = LocalDateTime.parse(data, DateTimeFormatter.ISO_DATE_TIME);
+//        List<VooEntity> voos = vooService.findByFilters(dataParsed, origem, destino);
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("data", data);
+//        response.put("origem", origem);
+//        response.put("destino", destino);
+//        response.put("voos", voos);
+//
+//        return ResponseEntity.ok(response);
+//    }
     
 
     @GetMapping("/origem/{aeroportoOrigemCodigo}")
-    public ResponseEntity<List<VooEntity>> findByAeroportoOrigem(@PathVariable Long aeroportoOrigemCodigo) {
+    public ResponseEntity<List<VooEntity>> findByAeroportoOrigem(@PathVariable String aeroportoOrigemCodigo) {
         List<VooEntity> voos = vooService.findByAeroportoOrigem(aeroportoOrigemCodigo);
         return ResponseEntity.ok(voos);
     }
 
     @GetMapping("/destino/{aeroportoDestinoCodigo}")
-    public ResponseEntity<List<VooEntity>> findByAeroportoDestino(@PathVariable Long aeroportoDestinoCodigo) {
+    public ResponseEntity<List<VooEntity>> findByAeroportoDestino(@PathVariable String aeroportoDestinoCodigo) {
         List<VooEntity> voos = vooService.findByAeroportoDestino(aeroportoDestinoCodigo);
         return ResponseEntity.ok(voos);
     }

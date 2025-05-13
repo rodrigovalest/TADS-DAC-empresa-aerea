@@ -11,14 +11,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VooRepository extends JpaRepository<VooEntity, Long> {
 
-    List<VooEntity> findByAeroportoOrigemCodigo(Long aeroportoOrigemCodigo);
+    List<VooEntity> findByAeroportoOrigemCodigo(String aeroportoOrigemCodigo);
 
-    List<VooEntity> findByAeroportoDestinoCodigo(Long aeroportoDestinoCodigo);
+    List<VooEntity> findByAeroportoDestinoCodigo(String aeroportoDestinoCodigo);
 
     Optional<VooEntity> findByCodigo(Long codigo);
 
-    List<VooEntity> findByData (
-        LocalDateTime data, Long aeroportoOrigemCodigo, Long aeroportoDestinoCodigo
-    );
+//    List<VooEntity> findByData (
+//        LocalDateTime data, Long aeroportoOrigemCodigo, Long aeroportoDestinoCodigo
+//    );
 
 }

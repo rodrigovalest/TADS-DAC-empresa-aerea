@@ -15,10 +15,15 @@ public class RabbitMQConfig {
     public static final String EXCHANGE_CLIENTE = "cliente-exchange";
     public static final String ROUTING_KEY_CRIAR_CLIENTE = "criar.cliente";
 
-
     public static final String EXCHANGE_RESERVA = "reserva.direct.exchange";
-    public static final String QUEUE_USAR_MILHAS_CRIAR_RESERVA = "usar-milhas.criar-reserva.queue";
-    public static final String ROUTING_KEY_COMPRAR_MILHAS_CRIAR_RESERVA = "comprar-milhas.criar-reserva";
+
+    // Criar reserva step 3
+    public static final String QUEUE_USAR_MILHAS_CLIENTE = "usar-milhas.cliente.queue";
+    public static final String ROUTING_KEY_USAR_MILHAS_CLIENTE = "usar-milhas.cliente.routing";
+
+    // Criar reserva step 4
+    public static final String QUEUE_USAR_MILHAS_RESERVA = "usar-milhas.reserva.queue";
+    public static final String ROUTING_KEY_USAR_MILHAS_RESERVA = "usar-milhas.reserva.routing";
 
     @Bean
     public Queue filaCriarCliente() {
@@ -55,14 +60,26 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue filaUsarMilhasCriarReserva() {
-        return new Queue(QUEUE_USAR_MILHAS_CRIAR_RESERVA, true);
+    public Queue filaUsarMilhasCliente() {
+        return new Queue(QUEUE_USAR_MILHAS_CLIENTE, true);
     }
 
     @Bean
-    public Binding bindingComprarMilhasCriarReserva() {
-        return BindingBuilder.bind(filaUsarMilhasCriarReserva())
+    public Binding bindingUsarMilhasCliente() {
+        return BindingBuilder.bind(filaUsarMilhasCliente())
                 .to(exchangeReserva())
-                .with(ROUTING_KEY_COMPRAR_MILHAS_CRIAR_RESERVA);
+                .with(ROUTING_KEY_USAR_MILHAS_CLIENTE);
+    }
+
+    @Bean
+    public Queue filaUsarMilhasReserva() {
+        return new Queue(QUEUE_USAR_MILHAS_RESERVA, true);
+    }
+
+    @Bean
+    public Binding bindingUsarMilhasReserva() {
+        return BindingBuilder.bind(filaUsarMilhasReserva())
+                .to(exchangeReserva())
+                .with(ROUTING_KEY_USAR_MILHAS_RESERVA);
     }
 }

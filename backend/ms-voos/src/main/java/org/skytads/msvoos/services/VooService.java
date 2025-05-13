@@ -49,15 +49,15 @@ public class VooService {
         return vooRepository.findAll();
     }
 
-    public List<VooEntity> findByFilters(LocalDateTime data, Long origem, Long destino) {
-        return vooRepository.findByData(data, origem, destino);
-    }
+//    public List<VooEntity> findByFilters(LocalDateTime data, Long origem, Long destino) {
+//        return vooRepository.findByData(data, origem, destino);
+//    }
 
-    public List<VooEntity> findByAeroportoOrigem(Long aeroportoOrigemCodigo) {
+    public List<VooEntity> findByAeroportoOrigem(String aeroportoOrigemCodigo) {
         return vooRepository.findByAeroportoOrigemCodigo(aeroportoOrigemCodigo);
     }
 
-    public List<VooEntity> findByAeroportoDestino(Long aeroportoDestinoCodigo) {
+    public List<VooEntity> findByAeroportoDestino(String aeroportoDestinoCodigo) {
         return vooRepository.findByAeroportoDestinoCodigo(aeroportoDestinoCodigo);
     }
 
@@ -104,7 +104,7 @@ public class VooService {
     }
 
     @Transactional
-    public void reservarPoltronas(Long codigoVoo, Long quantidadePoltronas) {
+    public VooEntity reservarPoltronas(Long codigoVoo, Long quantidadePoltronas) {
         VooEntity voo = this.vooRepository.findById(codigoVoo)
                 .orElseThrow(() -> new EntityNotFoundException("Reservar poltronas: voo com o codigo " + codigoVoo + " nao encontrado"));
 
@@ -119,6 +119,6 @@ public class VooService {
         }
 
         voo.setQuantidadePoltronasOcupadas(voo.getQuantidadePoltronasOcupadas() + quantidadePoltronas);
-        this.vooRepository.save(voo);
+        return this.vooRepository.save(voo);
     }
 }
