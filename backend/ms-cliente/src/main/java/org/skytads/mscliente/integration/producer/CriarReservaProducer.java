@@ -12,9 +12,9 @@ public class CriarReservaProducer {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void sendCriarReservaToCliente(Long reservaId, Long codigoCliente, Boolean success, String info) {
+    public void sendUsarMilhasToReserva(Long reservaId, Long codigoCliente, Boolean success, String info) {
         var message = MessageMapper.toCriarReservaResponseMessageDto(reservaId, codigoCliente, success, info);
 
-        this.rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_RESERVA, RabbitMQConfig.ROUTING_KEY_COMPRAR_MILHAS_CRIAR_RESERVA, message);
+        this.rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_RESERVA, RabbitMQConfig.ROUTING_KEY_USAR_MILHAS_RESERVA, message);
     }
 }

@@ -27,7 +27,7 @@ public class ReservaService {
         );
 
         this.reservaResumoService.create(novaReserva.getCodigo(), valor, milhas, quantidadePoltronas, codigoCliente, codigoVoo);
-        this.criarReservaProducer.sendCriarReservaToCliente(novaReserva.getCodigo(), codigoCliente, milhas, valor);
+        this.criarReservaProducer.sendReservarPoltronaToVoo(novaReserva.getCodigo(), codigoVoo, quantidadePoltronas);
     }
 
     public void cancelarReserva(Long reservaId) {

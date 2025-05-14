@@ -1,4 +1,4 @@
-package org.skytads.msreserva.config;
+package org.skytads.msvoos.configs;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -20,14 +20,6 @@ public class RabbitMQConfig {
     // Criar reserva step 2
     public static final String QUEUE_RESERVAR_POLTRONA_RESERVA = "reservar-poltronas.reserva.queue";
     public static final String ROUTING_KEY_RESERVAR_POLTRONA_RESERVA = "reservar-poltrona.reserva.routing";
-
-    // Criar reserva step 3
-    public static final String QUEUE_USAR_MILHAS_CLIENTE = "usar-milhas.cliente.queue";
-    public static final String ROUTING_KEY_USAR_MILHAS_CLIENTE = "usar-milhas.cliente.routing";
-
-    // Criar reserva step 4
-    public static final String QUEUE_USAR_MILHAS_RESERVA = "usar-milhas.reserva.queue";
-    public static final String ROUTING_KEY_USAR_MILHAS_RESERVA = "usar-milhas.reserva.routing";
 
     // Criar reserva step 5
     public static final String QUEUE_REVERTER_RESERVA_POLTRONAS_VOO = "reverter-reserva-poltronas.voo.queue";
@@ -84,29 +76,5 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(filaReverterReservaPoltronasVoo())
                 .to(exchangeReserva())
                 .with(ROUTING_KEY_REVERTER_RESERVA_POLTRONAS_VOO);
-    }
-
-    @Bean
-    public Queue filaUsarMilhasCliente() {
-        return new Queue(QUEUE_USAR_MILHAS_CLIENTE, true);
-    }
-
-    @Bean
-    public Binding bindingUsarMilhasCliente() {
-        return BindingBuilder.bind(filaUsarMilhasCliente())
-                .to(exchangeReserva())
-                .with(ROUTING_KEY_USAR_MILHAS_CLIENTE);
-    }
-
-    @Bean
-    public Queue filaUsarMilhasReserva() {
-        return new Queue(QUEUE_USAR_MILHAS_RESERVA, true);
-    }
-
-    @Bean
-    public Binding bindingUsarMilhasReserva() {
-        return BindingBuilder.bind(filaUsarMilhasReserva())
-                .to(exchangeReserva())
-                .with(ROUTING_KEY_USAR_MILHAS_RESERVA);
     }
 }

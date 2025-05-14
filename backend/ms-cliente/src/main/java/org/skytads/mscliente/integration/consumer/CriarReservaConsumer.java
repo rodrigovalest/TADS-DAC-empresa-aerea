@@ -1,6 +1,7 @@
 package org.skytads.mscliente.integration.consumer;
 
 import lombok.RequiredArgsConstructor;
+import org.skytads.mscliente.config.RabbitMQConfig;
 import org.skytads.mscliente.dtos.messages.CriarReservaClienteMessageDto;
 import org.skytads.mscliente.exceptions.ClienteNaoEncontradoException;
 import org.skytads.mscliente.exceptions.SaldoInsuficienteException;
@@ -16,28 +17,28 @@ public class CriarReservaConsumer {
     private final ClienteService clienteService;
     private final CriarReservaProducer criarReservaProducer;
 
-    @RabbitListener(queues = "criar-reserva.cliente.queue")
-    public void receberMensagem(CriarReservaClienteMessageDto dto) {
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_USAR_MILHAS_CLIENTE)
+    public void usarMilhas(CriarReservaClienteMessageDto dto) {
         System.out.println("Consumer criar reserva cliente: " + dto);
 
         try {
             this.clienteService.usarMilhas(dto.getCodigoCliente(), dto.getMilhasUtilizadas());
-            this.criarReservaProducer.sendCriarReservaToCliente(
+            this.criarReservaProducer.sendUsarMilhasToReserva(
                     dto.getReservaId(), dto.getCodigoCliente(), true, "cliente valido e milhas utilizadas com sucesso"
             );
         } catch (ClienteNaoEncontradoException e) {
             System.out.println("reserva id: " + dto.getReservaId() + " | cliente nao encontrado");
-            this.criarReservaProducer.sendCriarReservaToCliente(
+            this.criarReservaProducer.sendUsarMilhasToReserva(
                     dto.getReservaId(), dto.getCodigoCliente(), false, "cliente nao encontrado"
             );
         } catch (SaldoInsuficienteException e) {
             System.out.println("reserva id: " + dto.getReservaId() + " | saldo insuficiente");
-            this.criarReservaProducer.sendCriarReservaToCliente(
+            this.criarReservaProducer.sendUsarMilhasToReserva(
                     dto.getReservaId(), dto.getCodigoCliente(), false, "saldo de milhas insuficiente"
             );
         } catch (Exception e) {
             System.out.println("algo deu errado" + e.getMessage());
-            this.criarReservaProducer.sendCriarReservaToCliente(
+            this.criarReservaProducer.sendUsarMilhasToReserva(
                     dto.getReservaId(), dto.getCodigoCliente(), false, "algo deu errado: " + e.getMessage()
             );
         }
