@@ -4,9 +4,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.skytads.msreserva.dtos.requests.CriarReservaRequestDto;
+import org.skytads.msreserva.dtos.responses.ConsultaReservaResponseDto;
 import org.skytads.msreserva.dtos.responses.CriarReservaResponseDto;
 import org.skytads.msreserva.services.ReservaService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,5 +33,11 @@ public class ReservaController {
         );
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ConsultaReservaResponseDto> consultarReserva(@PathVariable("id") Long id) {
+        ConsultaReservaResponseDto dto = reservaService.consultarReserva(id);
+        return ResponseEntity.ok(dto);
     }
 }
