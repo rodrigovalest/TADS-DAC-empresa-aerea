@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FuncionarioRepository extends JpaRepository<Funcionario, String> {
-    
+public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
+
     List<Funcionario> findByAtivoTrueOrderByNomeAsc();
-    
+
     Optional<Funcionario> findByEmailAndAtivoTrue(String email);
-    
+
     boolean existsByEmail(String email);
+
+    boolean existsByCpf(String cpf);
 }

@@ -10,35 +10,54 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
-    
-    public static final String FILA_CRIAR_CLIENTE = "criar-cliente-queue";
 
+    public static final String FILA_CRIAR_CLIENTE = "criar-cliente-queue";
     public static final String EXCHANGE_CLIENTE = "cliente-exchange";
-    
     public static final String ROUTING_KEY_CRIAR_CLIENTE = "criar.cliente";
+
+    public static final String FILA_CRIAR_USUARIO = "criar-usuario-queue";
+    public static final String EXCHANGE_FUNCIONARIO = "funcionario-exchange";
+    public static final String ROUTING_KEY_CRIAR_USUARIO = "criar.usuario";
 
     @Bean
     public Queue filaCriarCliente() {
         return new Queue(FILA_CRIAR_CLIENTE, true);
     }
-    
+
     @Bean
     public DirectExchange exchangeCliente() {
         return new DirectExchange(EXCHANGE_CLIENTE);
     }
-    
+
     @Bean
-    public Binding bindingCriarUsuario() {
+    public Binding bindingCriarCliente() {
         return BindingBuilder.bind(filaCriarCliente())
                 .to(exchangeCliente())
                 .with(ROUTING_KEY_CRIAR_CLIENTE);
     }
 
     @Bean
+    public Queue filaCriarUsuario() {
+        return new Queue(FILA_CRIAR_USUARIO, true);
+    }
+
+    @Bean
+    public DirectExchange exchangeFuncionario() {
+        return new DirectExchange(EXCHANGE_FUNCIONARIO);
+    }
+
+    @Bean
+    public Binding bindingCriarUsuario() {
+        return BindingBuilder.bind(filaCriarUsuario())
+                .to(exchangeFuncionario())
+                .with(ROUTING_KEY_CRIAR_USUARIO);
+    }
+
+    @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
-    
+
     @Bean
     public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory) {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);

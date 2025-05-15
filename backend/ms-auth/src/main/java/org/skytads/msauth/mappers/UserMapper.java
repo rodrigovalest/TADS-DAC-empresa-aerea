@@ -11,6 +11,7 @@ import org.skytads.msauth.entities.UserEntity;
 import java.time.Instant;
 
 public class UserMapper {
+
     public static User toDomain(UserEntity entity) {
         return new User(
                 entity.getId(),
@@ -80,6 +81,20 @@ public class UserMapper {
         user.setAccessToken(null);
         user.setTokenType(null);
         user.setTipo(UserType.CLIENTE);
+        user.setCreatedAt(Instant.now());
+        user.setUpdatedAt(Instant.now());
+        return user;
+    }
+
+    public static User toDomain(CriarFuncionarioMessageDto dto) {
+        User user = new User();
+        user.setCodigo(dto.getCodigo());
+        user.setCpf(dto.getCpf());
+        user.setEmail(dto.getEmail());
+        user.setSenha(dto.getSenha());
+        user.setTipo(UserType.valueOf(dto.getTipo()));
+        user.setAccessToken(null);
+        user.setTokenType(null);
         user.setCreatedAt(Instant.now());
         user.setUpdatedAt(Instant.now());
         return user;

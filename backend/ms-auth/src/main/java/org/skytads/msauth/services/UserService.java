@@ -26,8 +26,9 @@ public class UserService {
                 () -> new BadCredentialsException("Bad credentials")
         );
 
-        if (!Objects.equals(senha, userEntity.getSenha()))
+        if (!Objects.equals(senha, userEntity.getSenha())) {
             throw new BadCredentialsException("Bad credentials");
+        }
 
         String token = this.jwtService.generateToken(UserMapper.toDomain(userEntity));
         userEntity.setTokenType("Bearer");
@@ -60,6 +61,12 @@ public class UserService {
     @Transactional
     public void createCliente(User user) {
         user.setTipo(UserType.CLIENTE);
+        this.userRepository.save(UserMapper.toEntity(user));
+    }
+
+    @Transactional
+    public void createFuncionario(User user) {
+        user.setTipo(UserType.FUNCIONARIO);
         this.userRepository.save(UserMapper.toEntity(user));
     }
 }
