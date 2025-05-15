@@ -83,4 +83,17 @@ public class ReservaService {
         AeroportoResponseDto response = restTemplate.getForObject(url, AeroportoResponseDto.class);
         return Long.valueOf(response.getCodigo());
     }
+//TODO
+    public void mudarEstadoReserva(Long reservaId, EstadoReservaEnum novoEstado) {
+    ReservaEntity reserva = this.reservaRepository.findById(reservaId)
+            .orElseThrow(() -> new ReservaNotFoundException("Reserva com id " + reservaId + " não encontrada"));
+
+    HistoricoReservaEntity historicoReserva = new HistoricoReservaEntity(
+            null, reserva, null, reserva.getEstado(), novoEstado
+    );
+    this.historicoReservaRespository.save(historicoReserva);
+
+    reserva.setEstado(novoEstado);
+    this.reservaRepository.save(reserva);
+}
 }

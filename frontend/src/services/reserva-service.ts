@@ -26,9 +26,21 @@ const reservaService = {
 
     return await response.json();
   },
-
+//TODO
   mudarEstadoReserva: async (data: IMudarEstadoReservaRequest): Promise<IEstadoReservaResponse> => {
-    throw new Error("Not implemented yet");
+    const response = await fetch(`http://localhost:8082/reservas/${data.estado}/estado`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ estado: data.estado }),
+    });
+  
+    if (!response.ok) {
+      throw new Error("Erro ao mudar estado da reserva");
+    }
+  
+    return await response.json();
 	},
 };
 
