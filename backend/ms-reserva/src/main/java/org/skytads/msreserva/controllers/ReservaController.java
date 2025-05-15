@@ -40,4 +40,10 @@ public class ReservaController {
         ConsultaReservaResponseDto dto = reservaService.consultarReserva(id);
         return ResponseEntity.ok(dto);
     }
+
+    @PutMapping("/{id}/cancelar")
+    public ResponseEntity<Void> cancelarReserva(@PathVariable("id") Long id) {
+        reservaService.cancelarReserva(id);
+        return ResponseEntity.ok().build();
+    }
 }

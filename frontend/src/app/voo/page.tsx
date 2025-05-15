@@ -178,6 +178,7 @@ const RegisterFly = () => {
               className="bg-[#FF3D00] hover:bg-[#D63000]"
               type="submit"
               fullWidth
+              
             >
               Registrar
             </Button>
