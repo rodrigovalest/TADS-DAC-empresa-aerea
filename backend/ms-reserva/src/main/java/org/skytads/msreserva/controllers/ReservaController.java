@@ -46,4 +46,12 @@ public class ReservaController {
         reservaService.cancelarReserva(id);
         return ResponseEntity.ok().build();
     }
+//TODO
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<Void> mudarEstadoReserva(
+            @PathVariable("id") Long id,
+            @RequestBody @Valid MudarEstadoReservaRequest request) {
+        reservaService.mudarEstadoReserva(id, request.getEstado());
+        return ResponseEntity.ok().build();
+    }
 }
