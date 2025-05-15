@@ -12,8 +12,19 @@ const reservaService = {
     throw new Error("Not implemented yet");
   },
 
-  cancelarReserva: async (): Promise<IEstadoReservaResponse> => {
-    throw new Error("Not implemented yet");
+  cancelarReserva: async (id: number): Promise<IEstadoReservaResponse> => {
+    const response = await fetch(`http://localhost:8082/reservas/${id}/cancelar`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao cancelar reserva");
+    }
+
+    return await response.json();
   },
 
   mudarEstadoReserva: async (data: IMudarEstadoReservaRequest): Promise<IEstadoReservaResponse> => {

@@ -1,5 +1,6 @@
 'use client';
 
+import reservaService from '@/services/reserva-service';
 import React from 'react';
 
 interface CancelReservationButtonProps {
@@ -9,8 +10,22 @@ interface CancelReservationButtonProps {
 
 const CancelReservationButton: React.FC<CancelReservationButtonProps> = ({ reservationCode, telaAtual}) => {
   const handleCancel = () => {
-    alert(`Reserva ${reservationCode} cancelada com sucesso!`);
-    window.location.href = "/cliente-landing-page"
+    const codigoReserva = Number(reservationCode);
+
+  if (isNaN(codigoReserva)) {
+    alert("Código da reserva inválido.");
+    return;
+  }
+
+  reservaService.cancelarReserva(codigoReserva)
+    .then(() => {
+      alert(`Reserva ${reservationCode} cancelada com sucesso!`);
+      window.location.href = "/cliente-landing-page";
+    })
+    .catch((error) => {
+      alert("Erro ao cancelar reserva.");
+      console.error(error);
+    });
   };
 
   return (
