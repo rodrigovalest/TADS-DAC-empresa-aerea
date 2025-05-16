@@ -1,4 +1,4 @@
-package org.skytads.msreserva.dtos.messages;
+package org.skytads.msvoos.dtos.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CriarReservaClienteMessageDto {
+public class CriarReservaReverterPoltronasMessageDto {
     private String info;
     private Long reservaId;
-    private Long codigoCliente;
-    private Long milhasUtilizadas;
+    private Long codigoVoo;
+    private Long quantidadePoltronas;
 }

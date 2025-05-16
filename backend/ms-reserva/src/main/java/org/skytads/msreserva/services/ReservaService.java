@@ -11,6 +11,7 @@ import org.skytads.msreserva.repositories.HistoricoReservaRespository;
 import org.skytads.msreserva.repositories.ReservaRepository;
 import org.skytads.msreserva.repositories.ReservaResumoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +22,7 @@ public class ReservaService {
     private final ReservaResumoService reservaResumoService;
     private final CriarReservaProducer criarReservaProducer;
 
+    @Transactional
     public void criarReserva(Float valor, Long milhas, Long quantidadePoltronas, Long codigoCliente, Long codigoVoo) {
         ReservaEntity novaReserva = this.reservaRepository.save(
                 new ReservaEntity(null, codigoCliente, codigoVoo, quantidadePoltronas, null, EstadoReservaEnum.CRIADA)
@@ -30,6 +32,7 @@ public class ReservaService {
         this.criarReservaProducer.sendReservarPoltronaToVoo(novaReserva.getCodigo(), codigoVoo, quantidadePoltronas);
     }
 
+    @Transactional
     public void cancelarReserva(Long reservaId) {
         ReservaEntity reserva = this.reservaRepository.findById(reservaId)
                 .orElseThrow(() -> new ReservaNotFoundException("Cancelar reserva: reserva com id " + reservaId + " nao encontrado"));
@@ -41,5 +44,34 @@ public class ReservaService {
 
         reserva.setEstado(EstadoReservaEnum.CANCELADA);
         this.reservaRepository.save(reserva);
+    }
+
+    @Transactional
+    public void usarMilhasCliente(Long reservaId, Float valorPassagem) {
+        ReservaResumoEntity reservaResumo = this.reservaResumoService.findByCodigoReserva(reservaId);
+
+        float diferencaValor = valorPassagem - reservaResumo.getValor();
+        long milhasNecessarias = (long) Math.round(diferencaValor / 5.0f);
+
+        if (milhasNecessarias < 0) {
+            milhasNecessarias = 0L;
+        }
+
+        this.criarReservaProducer.sendUsarMilhasToCliente(
+                reservaId, reservaResumo.getCodigoCliente(), milhasNecessarias
+        );
+
+        reservaResumo.setMilhasUtilizadas(milhasNecessarias);
+
+        this.reservaResumoService.updateReservaResumoById(reservaId, reservaResumo);
+    }
+
+    @Transactional
+    public void reverterReservaPoltronasVoo(Long reservaId) {
+        ReservaResumoEntity reservaResumo = this.reservaResumoService.findByCodigoReserva(reservaId);
+
+        this.criarReservaProducer.reverterReservaToPoltronasVoo(
+                reservaResumo.getCodigoReserva(), reservaResumo.getCodigoVoo(), reservaResumo.getQuantidadePoltronas()
+        );
     }
 }

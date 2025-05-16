@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CriarReservaClienteMessageDto {
+public class CriarReservaReverterPoltronasMessageDto {
     private String info;
     private Long reservaId;
-    private Long codigoCliente;
-    private Long milhasUtilizadas;
+    private Long codigoVoo;
+    private Long quantidadePoltronas;
 }
