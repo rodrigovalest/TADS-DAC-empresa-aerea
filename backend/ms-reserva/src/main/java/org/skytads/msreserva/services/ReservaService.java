@@ -35,7 +35,7 @@ public class ReservaService {
     @Transactional
     public void cancelarReserva(Long reservaId) {
         ReservaEntity reserva = this.reservaRepository.findById(reservaId)
-                .orElseThrow(() -> new ReservaNotFoundException("Cancelar reserva: reserva com id " + reservaId + " nao encontrado"));
+                .orElseThrow(() -> new ReservaNotFoundException("Cancelar reserva: reserva com id " + reservaId + " nao encontrado", reservaId));
 
         HistoricoReservaEntity historicoReserva = new HistoricoReservaEntity(
                 null, reserva, null, reserva.getEstado(), EstadoReservaEnum.CANCELADA

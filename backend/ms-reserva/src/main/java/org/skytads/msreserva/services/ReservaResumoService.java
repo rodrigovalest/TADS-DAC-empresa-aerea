@@ -16,7 +16,7 @@ public class ReservaResumoService {
     @Transactional
     public ReservaResumoEntity findByCodigoReserva(Long codigoReserva) {
        return this.reservaResumoRepository.findById(codigoReserva)
-                .orElseThrow(() -> new ReservaNotFoundException("Find reserva resumo by codigo " + codigoReserva + " not found"));
+                .orElseThrow(() -> new ReservaNotFoundException("Find reserva resumo by codigo " + codigoReserva + " not found", codigoReserva));
     }
 
     @Transactional
@@ -29,7 +29,7 @@ public class ReservaResumoService {
     @Transactional
     public void updateReservaResumoById(Long codigoReserva, ReservaResumoEntity reservaResumo) {
         ReservaResumoEntity persistedReservaResumo = this.reservaResumoRepository.findById(codigoReserva)
-                .orElseThrow(() -> new ReservaNotFoundException("Find reserva resumo by codigo " + codigoReserva + " not found"));
+                .orElseThrow(() -> new ReservaNotFoundException("Find reserva resumo by codigo " + codigoReserva + " not found", codigoReserva));
 
         persistedReservaResumo.setCodigoCliente(reservaResumo.getCodigoCliente());
         persistedReservaResumo.setValor(reservaResumo.getValor());
