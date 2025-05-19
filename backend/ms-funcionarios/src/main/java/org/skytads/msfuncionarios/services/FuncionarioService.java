@@ -26,17 +26,18 @@ public class FuncionarioService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<FuncionarioDTO> buscarPorCpf(String cpf) {
-        return funcionarioRepository.findById(cpf)
+    public Optional<FuncionarioDTO> buscarPorId(Long id) {
+        return funcionarioRepository.findById(id)
                 .filter(Funcionario::isAtivo)
                 .map(this::convertToDTO);
     }
 
     @Transactional
     public FuncionarioDTO inserirFuncionario(FuncionarioDTO funcionarioDTO) {
-        if (funcionarioRepository.existsById(funcionarioDTO.getCpf())) {
+        if (funcionarioRepository.existsByCpf(funcionarioDTO.getCpf())) {
             throw new RuntimeException("Já existe um funcionário com este CPF");
         }
+
         if (funcionarioRepository.existsByEmail(funcionarioDTO.getEmail())) {
             throw new RuntimeException("Já existe um funcionário com este e-mail");
         }
@@ -44,29 +45,28 @@ public class FuncionarioService {
         Funcionario funcionario = convertToEntity(funcionarioDTO);
         funcionario.setAtivo(true);
 
-
         String senha = String.format("%04d", new Random().nextInt(10000));
         funcionario.setSenha(senha);
 
-
-        System.out.println("senha criada para o funcionário " + funcionario.getEmail() + ": " + senha);
+        System.out.println("Senha criada para o funcionário " + funcionario.getEmail() + ": " + senha);
 
         Funcionario savedFuncionario = funcionarioRepository.save(funcionario);
-
         return convertToDTO(savedFuncionario);
     }
 
     @Transactional
-    public FuncionarioDTO atualizarFuncionario(String cpf, FuncionarioUpdateDTO funcionarioUpdateDTO) {
-        Funcionario funcionario = funcionarioRepository.findById(cpf)
+    public FuncionarioDTO atualizarFuncionario(Long id, FuncionarioUpdateDTO funcionarioUpdateDTO) {
+        Funcionario funcionario = funcionarioRepository.findById(id)
                 .filter(Funcionario::isAtivo)
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
 
         Optional<Funcionario> funcionarioComEmail = funcionarioRepository
                 .findByEmailAndAtivoTrue(funcionarioUpdateDTO.getEmail());
-        if (funcionarioComEmail.isPresent() && !funcionarioComEmail.get().getCpf().equals(cpf)) {
+
+        if (funcionarioComEmail.isPresent() && !funcionarioComEmail.get().getId().equals(id)) {
             throw new RuntimeException("Este e-mail já está em uso");
         }
+
         funcionario.setNome(funcionarioUpdateDTO.getNome());
         funcionario.setEmail(funcionarioUpdateDTO.getEmail());
         funcionario.setTelefone(funcionarioUpdateDTO.getTelefone());
@@ -76,18 +76,18 @@ public class FuncionarioService {
     }
 
     @Transactional
-    public void removerFuncionario(String cpf) {
-        Funcionario funcionario = funcionarioRepository.findById(cpf)
+    public void removerFuncionario(Long id) {
+        Funcionario funcionario = funcionarioRepository.findById(id)
                 .filter(Funcionario::isAtivo)
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
 
         funcionario.setAtivo(false);
         funcionarioRepository.save(funcionario);
-
     }
 
     private FuncionarioDTO convertToDTO(Funcionario funcionario) {
         FuncionarioDTO dto = new FuncionarioDTO();
+        dto.setId(funcionario.getId());
         dto.setCpf(funcionario.getCpf());
         dto.setNome(funcionario.getNome());
         dto.setEmail(funcionario.getEmail());

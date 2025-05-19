@@ -32,21 +32,30 @@ const NewTripPage: React.FC = () => {
         { date: new Date('2024-02-15'), time: '14:30', origin: 'Rio de Janeiro', destination: 'Guarulhos', value: 1250 },
         { date: new Date('2024-03-20'), time: '09:00', origin: 'Brasília', destination: 'Belo Horizonte', value: 1700 },
         { date: new Date('2024-04-25'), time: '16:00', origin: 'Florianópolis', destination: 'Porto Alegre', value: 1000 },
-        { date: new Date('2024-05-30'), time: '11:45', origin: 'São Paulo', destination: 'Rio de Janeiro', value: 1150 },
+        { date: new Date('2025-08-30'), time: '11:45', origin: 'São Paulo', destination: 'Rio de Janeiro', value: 1150 },
+        { date: new Date('2025-05-15'), time: '11:45', origin: 'São Paulo', destination: 'Rio de Janeiro', value: 1150 },
+        { date: new Date('2025-08-29'), time: '11:45', origin: 'São Paulo', destination: 'Rio de Janeiro', value: 1150 },
+        { date: new Date('2025-05-30'), time: '11:45', origin: 'São Paulo', destination: 'Rio de Janeiro', value: 1150 },
+        { date: new Date('2025-08-30'), time: '11:45', origin: 'São Paulo', destination: 'Rio de Janeiro', value: 1150 },
+        { date: new Date('2025-05-15'), time: '11:45', origin: 'São Paulo', destination: 'Rio de Janeiro', value: 1150 },
+        { date: new Date('2025-05-30'), time: '11:45', origin: 'São Paulo', destination: 'Rio de Janeiro', value: 1150 },
     ];
 
     const originLocations = Array.from(new Set(allTrips.map(trip => trip.origin))).sort();
     const destinationLocations = Array.from(new Set(allTrips.map(trip => trip.destination))).sort();
 
+    const dateAtual = new Date();
+    const futureTrips = allTrips.filter(trip => trip.date > dateAtual);
     const [origin, setOrigin] = useState<string | null>(null);
     const [destination, setDestination] = useState<string | null>(null);
-    const [filteredTrips, setFilteredTrips] = useState(allTrips.slice(0, 20));
-
+    const [filteredTrips, setFilteredTrips] = useState(futureTrips.slice(0, 20));
+    
     const handleFilterTrips = () => {
         const filtered = allTrips.filter(trip => {
             return (
                 (!origin || trip.origin === origin) &&
-                (!destination || trip.destination === destination)
+                (!destination || trip.destination === destination) &&
+                trip.date > dateAtual
             );
         });
         setFilteredTrips(filtered);

@@ -1,7 +1,7 @@
 package org.skytads.msauth.integration;
 
 import lombok.RequiredArgsConstructor;
-import org.skytads.msauth.dtos.messages.CriarClienteMessageDto;
+import org.skytads.msauth.dtos.messages.CriarFuncionarioMessageDto;
 import org.skytads.msauth.mappers.UserMapper;
 import org.skytads.msauth.services.UserService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -13,9 +13,9 @@ public class FuncionarioConsumer {
 
     private final UserService userService;
 
-    @RabbitListener(queues = "criar-cliente-queue")
-    public void receberMensagem(CriarClienteMessageDto dto) {
-        System.out.println("Mensagem recebida: " + dto);
-        this.userService.createCliente(UserMapper.toDomain(dto));
+    @RabbitListener(queues = "criar-usuario-queue")
+    public void receberMensagem(CriarFuncionarioMessageDto dto) {
+        System.out.println("Mensagem recebida de funcionário: " + dto);
+        this.userService.createFuncionario(UserMapper.toDomain(dto));
     }
 }

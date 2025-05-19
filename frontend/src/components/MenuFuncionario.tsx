@@ -3,12 +3,12 @@ import Link from "next/link";
 import { useState } from "react";
 import BuyMilesDialog from "./BuyMilesDialog";
 
-export default function Header() {
+export default function MenuFuncionario () {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPointsModalOpen, setIsPointsModalOpen] = useState(false);
   const openPointsModal = () => setIsPointsModalOpen(true);
   const closePointsModal = () => setIsPointsModalOpen(false);
-  const handleSubmit = (amount: number) => {};
+  const handleSubmit = (amount: number) =>{}
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
     <div className="fixed flex min-w-[100%] bg-[#00000080] flex-row justify-between items-center p-4">
@@ -31,19 +31,13 @@ export default function Header() {
         />
         <ul className="space-y-4 pt-10">
           <li>
-            <Link href="/cliente-landing-page">Home</Link>
+            <Link href="/employee">Home</Link>
           </li>
           <li>
-            <Link href="/new-trip">Nova reserva</Link>
+            <Link href="/lista-funcionarios">Funcionarios</Link>
           </li>
           <li>
-            <Link href="/mileage-history">Extrato de milhas</Link>
-          </li>
-          <li>
-            <Link href="/search-reservation">Minhas reservas</Link>
-          </li>
-          <li>
-            <Link href="/check-in">Check-in</Link>
+            <Link href="/voo">Cadastrar Voo</Link>
           </li>
         </ul>
         <ul className="absolute bottom-4 left-4 space-y-4">
@@ -52,14 +46,6 @@ export default function Header() {
           </li>
         </ul>
       </nav>
-      <h2 className="text-white cursor-pointer" onClick={openPointsModal}>
-        1200 pts
-      </h2>
-      <BuyMilesDialog
-        isOpen={isPointsModalOpen}
-        onClose={closePointsModal}
-        onSubmit={handleSubmit}
-      />
     </div>
   );
 }

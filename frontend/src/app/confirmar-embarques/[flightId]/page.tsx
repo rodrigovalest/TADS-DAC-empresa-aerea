@@ -1,89 +1,72 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import HeaderBanner from "@/components/HeaderBanner";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomTableWhite from "@/components/CustomTableWhite";
-import { Reservation as BaseReservation } from "@/app/interfaces/reservation-types";
-
-// Atualizando a interface para estender a de reservation-types
-interface Reservation extends BaseReservation {
-  id: string;
-  flightId: string;
-  // Sobrescrevendo flightStatus para um tipo restrito
-  flightStatus: "CHECK-IN" | "EMBARCADO";
-  // Assume que "code" corresponde a reservationCode e "dateTime" a flightDateTime
-}
+import MenuFuncionario from "@/components/MenuFuncionario";
+import { Flight, Reservation } from "@/types/interfaces";
 
 const ConfirmarEmbarquesPage: React.FC = () => {
-  const searchParams = useSearchParams();
-  const flightId = searchParams.get("flightId");
+  const params = useParams();
+  const flightId = params.flightId as string;
 
+  const [flight, setFlight] = useState<Flight | null>(null);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [search, setSearch] = useState("");
 
+  // Mock data para o voo e reservas
+
   useEffect(() => {
-    // Dados mock atualizados para usar as propriedades da interface modificada
+    // Mock data para o voo
+    const mockFlight: Flight = {
+      id: flightId,
+      date: "24/05/2025",
+      time: "10:00",
+      origin: "Curitiba",
+      destination: "Rio de Janeiro",
+      status: "CONFIRMADO",
+      value: 500,
+      miles: 2500,
+    };
+
+    // Mock data para as reservas usando a interface Reservation
     const mockReservations: Reservation[] = [
       {
         id: "r1",
         code: "RES123",
-        flightId: flightId || "undefined",
-        flightStatus: "CHECK-IN",
-        dateTime: "2025-05-12T10:00",
-        destination: "Rio de Janeiro",
-        origin: "Curitiba",
-        amountSpent: 0,
-        milesSpent: 0,
+        flightId: flightId,
+        status: "CHECK-IN",
       },
       {
         id: "r2",
         code: "RES456",
-        flightId: flightId || "undefined",
-        flightStatus: "EMBARCADO",
-        dateTime: "2025-05-12T10:00",
-        destination: "Rio de Janeiro",
-        origin: "Curitiba",
-        amountSpent: 0,
-        milesSpent: 0,
+        flightId: flightId,
+        status: "EMBARCADO",
       },
       {
         id: "r3",
         code: "RES789",
-        flightId: flightId || "undefined",
-        flightStatus: "CHECK-IN",
-        dateTime: "2025-05-12T10:00",
-        destination: "Rio de Janeiro",
-        origin: "Curitiba",
-        amountSpent: 0,
-        milesSpent: 0,
+        flightId: flightId,
+        status: "CHECK-IN",
       },
       // Reserva que não pertence a este voo para testar
       {
         id: "r4",
         code: "RES321",
         flightId: "outro-voo",
-        flightStatus: "CHECK-IN",
-        dateTime: "2025-05-12T10:00",
-        destination: "São Paulo",
-        origin: "Curitiba",
-        amountSpent: 0,
-        milesSpent: 0,
+        status: "CHECK-IN",
       },
-      // Exemplo adicional
       {
         id: "r5",
         code: "RES000",
-        flightId: flightId || "undefined",
-        flightStatus: "CHECK-IN",
-        dateTime: "2025-05-12T10:00",
-        destination: "Belo Horizonte",
-        origin: "Curitiba",
-        amountSpent: 0,
-        milesSpent: 0,
+        flightId: flightId,
+        status: "CHECK-IN",
       },
     ];
+
+    setFlight(mockFlight);
     setReservations(mockReservations);
   }, [flightId]);
 
@@ -94,18 +77,18 @@ const ConfirmarEmbarquesPage: React.FC = () => {
       alert(`Erro: Reserva ${reservation.code} não pertence a este voo.`);
       return;
     }
-    if (reservation.flightStatus !== "CHECK-IN") {
+    if (reservation.status !== "CHECK-IN") {
       alert(`Erro: Reserva ${reservation.code} não está no status CHECK-IN.`);
       return;
     }
     alert(`Embarque confirmado para reserva ${reservation.code}`);
     setReservations((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, flightStatus: "EMBARCADO" } : r))
+      prev.map((r) => (r.id === id ? { ...r, status: "EMBARCADO" } : r))
     );
   };
 
   const fetchFilteredReservations = () => {
-    // Filtra as reservas com base no código digitado (agora "code")
+    // Filtra as reservas com base no código digitado
     return reservations.filter((reservation) =>
       reservation.code.toLowerCase().includes(search.toLowerCase())
     );
@@ -121,7 +104,18 @@ const ConfirmarEmbarquesPage: React.FC = () => {
     }
   };
 
-  // Definição das colunas para o CustomTableWhite com as propriedades atualizadas
+  // Aqui combino os dados do voo e da reserva para exibição na tabela
+  const reservationsWithFlightDetails = fetchFilteredReservations().map(
+    (reservation) => ({
+      ...reservation,
+      flightDate: flight?.date || "",
+      flightTime: flight?.time || "",
+      flightOrigin: flight?.origin || "",
+      flightDestination: flight?.destination || "",
+    })
+  );
+
+  // Definição das colunas para o CustomTableWhite
   const columns = [
     {
       header: "Código da Reserva",
@@ -130,41 +124,52 @@ const ConfirmarEmbarquesPage: React.FC = () => {
     },
     {
       header: "Check-in",
-      accessor: "flightStatus",
+      accessor: "status",
       sortable: false,
-      renderCell: (row: Reservation) =>
-        row.flightStatus === "EMBARCADO" ? "EMBARCADO" : "CHECK-IN",
+      renderCell: (row: any) =>
+        row.status === "EMBARCADO" ? "EMBARCADO" : "CHECK-IN",
     },
     {
       header: "Data/Hora",
       accessor: "dateTime",
       sortable: true,
-      renderCell: (row: Reservation) => new Date(row.dateTime).toLocaleString(),
+      renderCell: (row: any) => `${row.flightDate} ${row.flightTime}`,
     },
     {
       header: "Origem/Destino",
       accessor: "originDestination",
       sortable: true,
-      renderCell: (row: Reservation) => `${row.origin} -> ${row.destination}`,
+      renderCell: (row: any) =>
+        `${row.flightOrigin} -> ${row.flightDestination}`,
     },
     {
       header: "Ação",
       accessor: "action",
       sortable: false,
-      renderCell: (row: Reservation) => (
-        <button
-          onClick={() => handleConfirmBoarding(row.id)}
-          className="bg-oranged hover:bg-browned text-white text-xl py-2 px-4 rounded-lg "
-          disabled={row.flightStatus === "EMBARCADO"}
-        >
-          Confirmar Embarque
-        </button>
-      ),
+      renderCell: (row: any) => {
+        const isEmbarcado = row.status === "EMBARCADO";
+
+        return (
+          <button
+            onClick={() => handleConfirmBoarding(row.id)}
+            className={`text-white text-xl py-2 px-4 rounded-lg ${
+              isEmbarcado
+                ? "bg-gray-400 cursor-not-allowed opacity-70"
+                : "bg-oranged hover:bg-browned"
+            }`}
+            disabled={isEmbarcado}
+          >
+            {isEmbarcado ? "Já Embarcado" : "Confirmar Embarque"}
+          </button>
+        );
+      },
     },
   ];
 
   return (
     <div className="mb-10">
+      <MenuFuncionario />
+
       <HeaderBanner
         body={
           <div className="flex justify-center w-full">
@@ -191,7 +196,7 @@ const ConfirmarEmbarquesPage: React.FC = () => {
         <div className="flex flex-col px-20 justify-center">
           <CustomTableWhite
             columns={columns}
-            data={fetchFilteredReservations()}
+            data={reservationsWithFlightDetails}
             showHeader={true}
             hideSortButtons={true}
           />

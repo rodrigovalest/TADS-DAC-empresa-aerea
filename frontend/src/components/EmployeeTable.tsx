@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   TableContainer,
   Paper,
@@ -11,12 +11,13 @@ import {
   TableBody,
   TableSortLabel,
   IconButton,
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Employee from '../app/interfaces/employee';
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+// import Employee from '../app/interfaces/employee';
+import Employee from "@/types/interfaces";
 
-type Order = 'asc' | 'desc';
+type Order = "asc" | "desc";
 
 interface EmployeeTableProps {
   employees: Employee[];
@@ -24,59 +25,63 @@ interface EmployeeTableProps {
   onDelete: (cpf: string) => void;
 }
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees, onEdit, onDelete }) => {
-  const [order, setOrder] = useState<Order>('asc');
-  const [orderBy, setOrderBy] = useState<keyof Employee>('name');
+const EmployeeTable: React.FC<EmployeeTableProps> = ({
+  employees,
+  onEdit,
+  onDelete,
+}) => {
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<keyof Employee>("name");
 
   const handleSort = (property: keyof Employee) => {
-    const isAscending = orderBy === property && order === 'asc';
-    setOrder(isAscending ? 'desc' : 'asc');
+    const isAscending = orderBy === property && order === "asc";
+    setOrder(isAscending ? "desc" : "asc");
     setOrderBy(property);
   };
 
   const sortedEmployees = [...employees].sort((a, b) => {
-    if (a[orderBy] < b[orderBy]) return order === 'asc' ? -1 : 1;
-    if (a[orderBy] > b[orderBy]) return order === 'asc' ? 1 : -1;
+    if (a[orderBy] < b[orderBy]) return order === "asc" ? -1 : 1;
+    if (a[orderBy] > b[orderBy]) return order === "asc" ? 1 : -1;
     return 0;
   });
 
   return (
-    <TableContainer component={"div"}>
+    <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>
               <TableSortLabel
-                active={orderBy === 'name'}
-                direction={orderBy === 'name' ? order : 'asc'}
-                onClick={() => handleSort('name')}
+                active={orderBy === "name"}
+                direction={orderBy === "name" ? order : "asc"}
+                onClick={() => handleSort("name")}
               >
                 <span className="font-bold text-[20px]">Nome</span>
               </TableSortLabel>
             </TableCell>
             <TableCell>
               <TableSortLabel
-                active={orderBy === 'cpf'}
-                direction={orderBy === 'cpf' ? order : 'asc'}
-                onClick={() => handleSort('cpf')}
+                active={orderBy === "cpf"}
+                direction={orderBy === "cpf" ? order : "asc"}
+                onClick={() => handleSort("cpf")}
               >
                 <span className="font-bold text-[20px]">CPF</span>
               </TableSortLabel>
             </TableCell>
             <TableCell>
               <TableSortLabel
-                active={orderBy === 'email'}
-                direction={orderBy === 'email' ? order : 'asc'}
-                onClick={() => handleSort('email')}
+                active={orderBy === "email"}
+                direction={orderBy === "email" ? order : "asc"}
+                onClick={() => handleSort("email")}
               >
                 <span className="font-bold text-[20px]">Email</span>
               </TableSortLabel>
             </TableCell>
             <TableCell>
               <TableSortLabel
-                active={orderBy === 'phone'}
-                direction={orderBy === 'phone' ? order : 'asc'}
-                onClick={() => handleSort('phone')}
+                active={orderBy === "phone"}
+                direction={orderBy === "phone" ? order : "asc"}
+                onClick={() => handleSort("phone")}
               >
                 <span className="font-bold text-[20px]">Telefone</span>
               </TableSortLabel>
@@ -94,10 +99,25 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees, onEdit, onDele
               <TableCell>{employee.email}</TableCell>
               <TableCell>{employee.phone}</TableCell>
               <TableCell>
-                <IconButton onClick={() => onEdit(employee)} color="primary">
+                <IconButton
+                  className=" m-2"
+                  onClick={() => onEdit(employee)}
+                  style={{
+                    backgroundColor: "#FF3D00",
+                    color: "#FFFFFF",
+                    margin: "6px",
+                  }}
+                >
                   <EditIcon />
                 </IconButton>
-                <IconButton onClick={() => onDelete(employee.cpf)} color="warning">
+                <IconButton
+                  onClick={() => onDelete(employee.cpf)}
+                  style={{
+                    backgroundColor: "#FF3D00",
+                    color: "#FFFFFF",
+                    margin: "6px",
+                  }}
+                >
                   <DeleteIcon />
                 </IconButton>
               </TableCell>

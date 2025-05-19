@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/funcionarios")
 public class FuncionarioController {
-    
+
     @Autowired
     private FuncionarioService funcionarioService;
 
@@ -23,36 +23,36 @@ public class FuncionarioController {
         List<FuncionarioDTO> funcionarios = funcionarioService.listarFuncionarios();
         return ResponseEntity.ok(funcionarios);
     }
-    
-    @GetMapping("/{cpf}")
-    public ResponseEntity<FuncionarioDTO> buscarPorCpf(@PathVariable String cpf) {
-        return funcionarioService.buscarPorCpf(cpf)
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FuncionarioDTO> buscarPorId(@PathVariable Long id) {
+        return funcionarioService.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    
+
     @PostMapping
     public ResponseEntity<FuncionarioDTO> inserirFuncionario(@Valid @RequestBody FuncionarioDTO funcionarioDTO) {
         FuncionarioDTO novoFuncionario = funcionarioService.inserirFuncionario(funcionarioDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoFuncionario);
     }
-    
-    @PutMapping("/{cpf}")
+
+    @PutMapping("/{id}")
     public ResponseEntity<FuncionarioDTO> atualizarFuncionario(
-            @PathVariable String cpf,
+            @PathVariable Long id,
             @Valid @RequestBody FuncionarioUpdateDTO funcionarioUpdateDTO) {
         try {
-            FuncionarioDTO funcionarioAtualizado = funcionarioService.atualizarFuncionario(cpf, funcionarioUpdateDTO);
+            FuncionarioDTO funcionarioAtualizado = funcionarioService.atualizarFuncionario(id, funcionarioUpdateDTO);
             return ResponseEntity.ok(funcionarioAtualizado);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
-    
-    @DeleteMapping("/{cpf}")
-    public ResponseEntity<Void> removerFuncionario(@PathVariable String cpf) {
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removerFuncionario(@PathVariable Long id) {
         try {
-            funcionarioService.removerFuncionario(cpf);
+            funcionarioService.removerFuncionario(id);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
