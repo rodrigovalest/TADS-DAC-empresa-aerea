@@ -2,6 +2,7 @@ package org.skytads.msvoos.integration.consumer;
 
 import lombok.RequiredArgsConstructor;
 import org.skytads.msvoos.configs.RabbitMQConfig;
+import org.skytads.msvoos.dtos.messages.CriarReservaReverterPoltronasMessageDto;
 import org.skytads.msvoos.dtos.messages.CriarReservaVooMessageRequestDto;
 import org.skytads.msvoos.entities.VooEntity;
 import org.skytads.msvoos.exceptions.EntityNotFoundException;
@@ -68,5 +69,11 @@ public class CriarReservaConsumer {
                     null
             );
         }
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_REVERTER_RESERVA_POLTRONAS_VOO)
+    public void reverterReservaPoltronasVoo(CriarReservaReverterPoltronasMessageDto dto) {
+        System.out.println(dto);
+        this.vooService.reservarPoltronas(dto.getCodigoVoo(), dto.getQuantidadePoltronas());
     }
 }

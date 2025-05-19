@@ -121,4 +121,13 @@ public class VooService {
         voo.setQuantidadePoltronasOcupadas(voo.getQuantidadePoltronasOcupadas() + quantidadePoltronas);
         return this.vooRepository.save(voo);
     }
+
+    @Transactional
+    public VooEntity reverterReservaPoltronas(Long codigoVoo, Long quantidadePoltronas) {
+        VooEntity voo = this.vooRepository.findById(codigoVoo)
+                .orElseThrow(() -> new EntityNotFoundException("Reservar poltronas: voo com o codigo " + codigoVoo + " nao encontrado"));
+
+        voo.setQuantidadePoltronasOcupadas(voo.getQuantidadePoltronasOcupadas() - quantidadePoltronas);
+        return this.vooRepository.save(voo);
+    }
 }

@@ -5,7 +5,10 @@ import org.skytads.mscliente.exceptions.ClienteNaoEncontradoException;
 import org.skytads.mscliente.exceptions.SaldoInsuficienteException;
 import org.skytads.mscliente.mappers.ClienteMapper;
 import org.skytads.mscliente.models.Cliente;
+import org.skytads.mscliente.models.TipoTransacao;
+import org.skytads.mscliente.models.TransacaoMilhas;
 import org.skytads.mscliente.repositories.ClienteRepository;
+import org.skytads.mscliente.repositories.TransacaoMilhasRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,7 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final EmailService emailService;
     private final ClienteMessagePublisherService clienteMessagePublisherService;
+    private final TransacaoMilhasRepository transacaoMilhasRepository;
 
     @Transactional
     public Cliente autocadastro(Cliente novoCliente) {
@@ -65,17 +69,28 @@ public class ClienteService {
     }
 
     @Transactional
-    public void usarMilhas(Long codigoCliente, Long milhas) {
+    public void usarMilhas(Long codigoReserva, Long codigoCliente, Long milhas) {
         Cliente cliente = this.clienteRepository.findById(codigoCliente).orElseThrow(
                 () -> new ClienteNaoEncontradoException("cliente nao encontrado com ID: " + codigoCliente)
         );
 
-        System.out.println("Milhas utilizadas: " + milhas + " | Saldo milhas: " + cliente.getSaldoMilhas());
         if (milhas > cliente.getSaldoMilhas()) {
             throw new SaldoInsuficienteException("nao foi possivel usar as milhas. saldo insuficiente");
         }
 
-        cliente.setSaldoMilhas(cliente.getSaldoMilhas() - milhas);
+        Long saldoMilhasAntigo = cliente.getSaldoMilhas();
+        Long novoSaldoMilhas = cliente.getSaldoMilhas() - milhas;
+
+        cliente.setSaldoMilhas(novoSaldoMilhas);
         this.clienteRepository.save(cliente);
+
+        TransacaoMilhas transacaoMilhas = new TransacaoMilhas();
+        transacaoMilhas.setCliente(cliente);
+        transacaoMilhas.setQuantidadeMilhas(Math.toIntExact(milhas));
+        transacaoMilhas.setValorEmReais((double) (milhas * 5.0f));
+        transacaoMilhas.setTipo(TipoTransacao.SAIDA);
+        transacaoMilhas.setDescricao("Usar milhas para efetuar a reserva {" + codigoReserva + "}");
+        transacaoMilhas.setCodigoReserva(codigoReserva.toString());
+        this.transacaoMilhasRepository.save(transacaoMilhas);
     }
 }

@@ -16,6 +16,7 @@ import org.skytads.msreserva.repositories.HistoricoReservaRespository;
 import org.skytads.msreserva.repositories.ReservaRepository;
 import org.skytads.msreserva.repositories.ReservaResumoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class ReservaService {
     private final String msVoosBaseUrl = "http://localhost:8081";
     private final RestTemplate restTemplate = new RestTemplate();
 
+    @Transactional
     public void criarReserva(Float valor, Long milhas, Long quantidadePoltronas, Long codigoCliente, Long codigoVoo) {
         ReservaEntity novaReserva = this.reservaRepository.save(
                 new ReservaEntity(null, codigoCliente, codigoVoo, quantidadePoltronas, null, EstadoReservaEnum.CRIADA)
@@ -39,9 +41,10 @@ public class ReservaService {
         this.criarReservaProducer.sendReservarPoltronaToVoo(novaReserva.getCodigo(), codigoVoo, quantidadePoltronas);
     }
 
+    @Transactional
     public void cancelarReserva(Long reservaId) {
         ReservaEntity reserva = this.reservaRepository.findById(reservaId)
-                .orElseThrow(() -> new ReservaNotFoundException("Cancelar reserva: reserva com id " + reservaId + " nao encontrado"));
+                .orElseThrow(() -> new ReservaNotFoundException("Cancelar reserva: reserva com id " + reservaId + " nao encontrado", reservaId));
 
         HistoricoReservaEntity historicoReserva = new HistoricoReservaEntity(
                 null, reserva, null, reserva.getEstado(), EstadoReservaEnum.CANCELADA
@@ -52,16 +55,45 @@ public class ReservaService {
         this.reservaRepository.save(reserva);
     }
 
+    @Transactional
+    public void usarMilhasCliente(Long reservaId, Float valorPassagem) {
+        ReservaResumoEntity reservaResumo = this.reservaResumoService.findByCodigoReserva(reservaId);
+
+        float diferencaValor = valorPassagem - reservaResumo.getValor();
+        long milhasNecessarias = (long) Math.round(diferencaValor / 5.0f);
+
+        if (milhasNecessarias < 0) {
+            milhasNecessarias = 0L;
+        }
+
+        this.criarReservaProducer.sendUsarMilhasToCliente(
+                reservaId, reservaResumo.getCodigoCliente(), milhasNecessarias
+        );
+
+        reservaResumo.setMilhasUtilizadas(milhasNecessarias);
+
+        this.reservaResumoService.updateReservaResumoById(reservaId, reservaResumo);
+    }
+
+    @Transactional
+    public void reverterReservaPoltronasVoo(Long reservaId) {
+        ReservaResumoEntity reservaResumo = this.reservaResumoService.findByCodigoReserva(reservaId);
+
+        this.criarReservaProducer.reverterReservaToPoltronasVoo(
+                reservaResumo.getCodigoReserva(), reservaResumo.getCodigoVoo(), reservaResumo.getQuantidadePoltronas()
+        );
+    }
+
     public ConsultaReservaResponseDto consultarReserva(Long reservaId) {
         ReservaEntity reserva = this.reservaRepository.findById(reservaId)
-                .orElseThrow(() -> new ReservaNotFoundException("Reserva not found with id " + reservaId));
-                
+                .orElseThrow(() -> new ReservaNotFoundException("Reserva not found with id " + reservaId, reservaId));
+
         VooDto voo = VooDto.builder()
                            .codigo(reserva.getCodigoVoo())
                            .aeroportoOrigem(AeroportoDto.builder().codigo(getAeroportoOrigem(reserva.getCodigoVoo())).build())
                            .aeroportoDestino(AeroportoDto.builder().codigo(getAeroportoDestino(reserva.getCodigoVoo())).build())
                            .build();
-                
+
         return ConsultaReservaResponseDto.builder()
                                          .codigo(reserva.getCodigo())
                                          .codigoCliente(reserva.getCodigoCliente())
@@ -69,7 +101,7 @@ public class ReservaService {
                                          .voo(voo)
                                          .build();
     }
-    
+
     private Long getAeroportoOrigem(Long codigoVoo) {
         String aeroportoCodigo = String.valueOf(codigoVoo + 1000);
         String url = msVoosBaseUrl + "/aeroportos/" + aeroportoCodigo;
@@ -86,7 +118,7 @@ public class ReservaService {
 //TODO
     public void mudarEstadoReserva(Long reservaId, EstadoReservaEnum novoEstado) {
     ReservaEntity reserva = this.reservaRepository.findById(reservaId)
-            .orElseThrow(() -> new ReservaNotFoundException("Reserva com id " + reservaId + " não encontrada"));
+            .orElseThrow(() -> new ReservaNotFoundException("Reserva com id " + reservaId + " não encontrada", reservaId));
 
     HistoricoReservaEntity historicoReserva = new HistoricoReservaEntity(
             null, reserva, null, reserva.getEstado(), novoEstado

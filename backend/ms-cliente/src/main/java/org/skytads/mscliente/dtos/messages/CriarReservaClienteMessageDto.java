@@ -12,5 +12,4 @@ public class CriarReservaClienteMessageDto {
     private Long reservaId;
     private Long codigoCliente;
     private Long milhasUtilizadas;
-    private Float valor;
 }

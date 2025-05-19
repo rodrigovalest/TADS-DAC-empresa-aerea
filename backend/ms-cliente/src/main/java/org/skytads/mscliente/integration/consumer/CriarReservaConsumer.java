@@ -22,7 +22,7 @@ public class CriarReservaConsumer {
         System.out.println("Consumer criar reserva cliente: " + dto);
 
         try {
-            this.clienteService.usarMilhas(dto.getCodigoCliente(), dto.getMilhasUtilizadas());
+            this.clienteService.usarMilhas(dto.getReservaId(), dto.getCodigoCliente(), dto.getMilhasUtilizadas());
             this.criarReservaProducer.sendUsarMilhasToReserva(
                     dto.getReservaId(), dto.getCodigoCliente(), true, "cliente valido e milhas utilizadas com sucesso"
             );
