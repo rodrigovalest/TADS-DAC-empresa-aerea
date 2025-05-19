@@ -1,3 +1,5 @@
+// Acho que esse arquivo está sobrando. O teste de milhas do professor vai ser direto no ClienteController.java
+
 package org.skytads.mscliente.controllers;
 
 import lombok.RequiredArgsConstructor;

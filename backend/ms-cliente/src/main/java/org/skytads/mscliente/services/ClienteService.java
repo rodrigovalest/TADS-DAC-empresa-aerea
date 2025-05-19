@@ -78,4 +78,11 @@ public class ClienteService {
         cliente.setSaldoMilhas(cliente.getSaldoMilhas() - milhas);
         this.clienteRepository.save(cliente);
     }
+
+    @Transactional(readOnly = true)
+    public Long buscarSaldoMilhas(String cpf) {
+        Cliente cliente = clienteRepository.findByCpf(cpf)
+                                           .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado com CPF: " + cpf));
+        return cliente.getSaldoMilhas();
+    }
 }
