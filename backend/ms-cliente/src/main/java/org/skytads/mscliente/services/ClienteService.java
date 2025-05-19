@@ -93,4 +93,11 @@ public class ClienteService {
         transacaoMilhas.setCodigoReserva(codigoReserva.toString());
         this.transacaoMilhasRepository.save(transacaoMilhas);
     }
+
+    @Transactional(readOnly = true)
+    public Long buscarSaldoMilhas(String cpf) {
+        Cliente cliente = clienteRepository.findByCpf(cpf)
+                                           .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado com CPF: " + cpf));
+        return cliente.getSaldoMilhas();
+    }
 }
