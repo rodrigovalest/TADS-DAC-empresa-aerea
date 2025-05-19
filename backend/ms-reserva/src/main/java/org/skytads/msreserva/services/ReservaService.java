@@ -86,7 +86,7 @@ public class ReservaService {
 
     public ConsultaReservaResponseDto consultarReserva(Long reservaId) {
         ReservaEntity reserva = this.reservaRepository.findById(reservaId)
-                .orElseThrow(() -> new ReservaNotFoundException("Reserva not found with id " + reservaId));
+                .orElseThrow(() -> new ReservaNotFoundException("Reserva not found with id " + reservaId, reservaId));
 
         VooDto voo = VooDto.builder()
                            .codigo(reserva.getCodigoVoo())
@@ -118,7 +118,7 @@ public class ReservaService {
 //TODO
     public void mudarEstadoReserva(Long reservaId, EstadoReservaEnum novoEstado) {
     ReservaEntity reserva = this.reservaRepository.findById(reservaId)
-            .orElseThrow(() -> new ReservaNotFoundException("Reserva com id " + reservaId + " não encontrada"));
+            .orElseThrow(() -> new ReservaNotFoundException("Reserva com id " + reservaId + " não encontrada", reservaId));
 
     HistoricoReservaEntity historicoReserva = new HistoricoReservaEntity(
             null, reserva, null, reserva.getEstado(), novoEstado
