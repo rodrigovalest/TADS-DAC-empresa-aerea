@@ -24,12 +24,16 @@ public class JwtService {
     }
 
     public String extrairTipo(String token) {
-        return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("tipo", String.class);
+        Claims claims = Jwts.parser()
+            .verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
+        String tipo = claims.get("tipo", String.class);
+        if (tipo == null) {
+            tipo = claims.get("role", String.class); // fallback para "role"
+        }
+        return tipo;
     }
 
     public boolean validarToken(String token, String idFuncionario) {

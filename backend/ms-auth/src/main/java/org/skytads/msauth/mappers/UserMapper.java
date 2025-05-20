@@ -3,6 +3,7 @@ package org.skytads.msauth.mappers;
 import org.skytads.msauth.domain.User;
 import org.skytads.msauth.domain.UserType;
 import org.skytads.msauth.dtos.messages.CriarClienteMessageDto;
+import org.skytads.msauth.dtos.messages.CriarFuncionarioMessageDto;
 import org.skytads.msauth.dtos.responses.ClienteResponseDto;
 import org.skytads.msauth.dtos.responses.LoginResponseDto;
 import org.skytads.msauth.dtos.responses.UsuarioResponseDto;
