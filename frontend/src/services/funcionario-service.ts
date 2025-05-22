@@ -19,7 +19,7 @@ const funcionarioService = {
   findAllFuncionarios: async (): Promise<IFuncionarioResponse []> => {
     throw new Error("Not implemented yet");
   },
-s
+
   removerFuncionario: async (): Promise<void> => {
     throw new Error("Not implemented yet");
   },

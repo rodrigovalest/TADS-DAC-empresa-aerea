@@ -6,14 +6,14 @@ import HeaderBanner from "@/components/HeaderBanner";
 import EmployeeTable from "@/components/EmployeeTable";
 import AddIcon from "@mui/icons-material/Add";
 import { Button, Dialog } from "@mui/material";
-import StaffRegister from "../cadastrar-funcionario/page";
+import StaffRegister from "@/components/StaffRegister";
 import Employee from "@/types/interfaces";
 import MenuFuncionario from "@/components/MenuFuncionario";
 
 const EmployeePage: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
-  const [employees, setEmployees] = useState([
+  const [employees, setEmployees] = useState<Employee[]>([
     {
       name: "Paulo",
       cpf: "111.111.111-11",
@@ -30,7 +30,47 @@ const EmployeePage: React.FC = () => {
       user: "ana",
       password: "password",
     },
+        {
+      name: "Carlos",
+      cpf: "333.333.333-33",
+      email: "carlos@example.com",
+      phone: "456789123",
+      user: "carlos",
+      password: "password",
+    },
     {
+      name: "Maria",
+      cpf: "444.444.444-44",
+      email: "maria@example.com",
+      phone: "789123456",
+      user: "maria",
+      password: "password",
+    },
+    {
+      name: "João",
+      cpf: "555.555.555-55",
+      email: "joao@example.com",
+      phone: "321654987",
+      user: "joao",
+      password: "password",
+    },
+    {
+      name: "Fernanda",
+      cpf: "666.666.666-66",
+      email: "fernanda@example.com",
+      phone: "654987321",
+      user: "fernanda",
+      password: "password",
+    },
+    {
+      name: "Lucas",
+      cpf: "777.777.777-77",
+      email: "lucas@example.com",
+      phone: "987321654",
+      user: "lucas",
+      password: "password",
+    },
+        {
       name: "Carlos",
       cpf: "333.333.333-33",
       email: "carlos@example.com",
