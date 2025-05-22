@@ -1,3 +1,4 @@
+version: '3.9'
 
 services:
   db-cliente:
@@ -78,24 +79,7 @@ services:
     networks:
       - private_network
 
-  frontend:
-    build: ./frontend
-    container_name: frontend_service
-    restart: always
-    ports:
-      - "3000:3000"
-    networks:
-    - public_network
-    - private_network
-    depends_on:
-    - db-cliente
-    - db-funcionario
-    - db-reserva
-    - db-voos
-    - db-auth
-    - rabbitmq
-
-ms-auth:
+  ms-auth:
     build:
       context: ./backend
       dockerfile: ms-auth/Dockerfile
@@ -106,7 +90,7 @@ ms-auth:
       - db-auth
       - rabbitmq
 
-ms-cliente:
+  ms-cliente:
     build:
       context: ./backend
       dockerfile: ms-cliente/Dockerfile
@@ -117,7 +101,7 @@ ms-cliente:
       - db-cliente
       - rabbitmq
 
-ms-reserva:
+  ms-reserva:
     build:
       context: ./backend
       dockerfile: ms-reserva/Dockerfile
@@ -128,7 +112,7 @@ ms-reserva:
       - db-reserva
       - rabbitmq
 
-ms-voos:
+  ms-voos:
     build:
       context: ./backend
       dockerfile: ms-voos/Dockerfile
@@ -137,6 +121,23 @@ ms-voos:
       - "8083:8083"
     depends_on:
       - db-voos
+      - rabbitmq
+
+  frontend:
+    build: ./frontend
+    container_name: frontend_service
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - public_network
+      - private_network
+    depends_on:
+      - db-cliente
+      - db-funcionario
+      - db-reserva
+      - db-voos
+      - db-auth
       - rabbitmq
 
 networks:
