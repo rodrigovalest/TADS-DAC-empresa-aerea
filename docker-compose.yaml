@@ -95,6 +95,50 @@ services:
     - db-auth
     - rabbitmq
 
+ms-auth:
+    build:
+      context: ./backend
+      dockerfile: ms-auth/Dockerfile
+    container_name: ms-auth
+    ports:
+      - "8084:8084"
+    depends_on:
+      - db-auth
+      - rabbitmq
+
+ms-cliente:
+    build:
+      context: ./backend
+      dockerfile: ms-cliente/Dockerfile
+    container_name: ms-cliente
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db-cliente
+      - rabbitmq
+
+ms-reserva:
+    build:
+      context: ./backend
+      dockerfile: ms-reserva/Dockerfile
+    container_name: ms-reserva
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db-reserva
+      - rabbitmq
+
+ms-voos:
+    build:
+      context: ./backend
+      dockerfile: ms-voos/Dockerfile
+    container_name: ms-voos
+    ports:
+      - "8083:8083"
+    depends_on:
+      - db-voos
+      - rabbitmq
+
 networks:
   private_network:
     driver: bridge
