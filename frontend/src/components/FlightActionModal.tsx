@@ -1,5 +1,5 @@
+import { Flight } from "@/types/interfaces";
 import React, { useState, useEffect } from "react";
-import { Flight } from "./EmployeeDashboard";
 
 interface FlightActionModalProps {
   flight: Flight;
@@ -16,8 +16,7 @@ const FlightActionModal: React.FC<FlightActionModalProps> = ({
 }) => {
   const [reservationCode, setReservationCode] = useState<string>(""); // Código de reserva digitado
   const [errorMessage, setErrorMessage] = useState<string>(""); // Mensagem de erro
-  const [confirmCancellation, setConfirmCancellation] =
-    useState<boolean>(false); // Confirmação para cancelamento
+  const [confirmCancellation, setConfirmCancellation] = useState<boolean>(false); // Confirmação para cancelamento
 
   // Reset form states when the modal opens or changes flight/action
   useEffect(() => {
@@ -26,24 +25,29 @@ const FlightActionModal: React.FC<FlightActionModalProps> = ({
     setConfirmCancellation(false);
   }, [flight.id, actionType]);
 
-  // Função específica para confirmar embarque
+
+  const getFlightDateTime = () => {
+    // Exemplo: date = "2023-07-20", time = "13:30"
+    // Cria string "2023-07-20T13:30:00"
+    const dateTimeString = `${flight.date}T${flight.time}:00`;
+    return new Date(dateTimeString);
+  };
+
   const handleConfirmBoarding = () => {
     if (!reservationCode) {
       setErrorMessage("Por favor, insira o código de reserva.");
       return false;
     }
 
-    // Simulação de validação do código de reserva
     if (reservationCode !== "RES123") {
       setErrorMessage("Código de reserva inválido ou não pertence a este voo.");
       return false;
     }
 
-    setErrorMessage(""); // Limpar mensagem de erro
+    setErrorMessage("");
     return true;
   };
 
-  // Função específica para cancelar voo
   const handleCancelFlight = () => {
     if (!confirmCancellation) {
       setErrorMessage(
@@ -52,19 +56,15 @@ const FlightActionModal: React.FC<FlightActionModalProps> = ({
       return false;
     }
 
-    setErrorMessage(""); // Limpar mensagem de erro
+    setErrorMessage("");
     return true;
   };
 
-  // Função específica para realizar voo
   const handleCompleteFlight = () => {
-    // Aqui você pode adicionar validações específicas para a realização do voo
-    // Nenhuma condição específica para realizar voo neste momento
-    setErrorMessage(""); // Limpar mensagem de erro
+    setErrorMessage("");
     return true;
   };
 
-  // Função para fechar o modal e resetar os estados
   const handleClose = () => {
     setReservationCode("");
     setErrorMessage("");
@@ -72,11 +72,9 @@ const FlightActionModal: React.FC<FlightActionModalProps> = ({
     onClose();
   };
 
-  // Função principal que chama as funções específicas de acordo com o tipo de ação
   const handleConfirm = () => {
     let success = false;
 
-    // Chama a função específica de acordo com o tipo de ação
     if (actionType === "confirmar") {
       success = handleConfirmBoarding();
     } else if (actionType === "cancelar") {
@@ -85,10 +83,8 @@ const FlightActionModal: React.FC<FlightActionModalProps> = ({
       success = handleCompleteFlight();
     }
 
-    // Se a ação foi bem-sucedida, chama onConfirm e fecha o modal
     if (success) {
       onConfirm();
-      // Reset states before closing
       setReservationCode("");
       setErrorMessage("");
       setConfirmCancellation(false);
@@ -96,18 +92,17 @@ const FlightActionModal: React.FC<FlightActionModalProps> = ({
     }
   };
 
-  // Verifica se o botão deve estar desativado com base no tipo de ação
   const isButtonDisabled = () => {
     if (actionType === "confirmar") {
-      return reservationCode.trim() === ""; // Desativado se o código de reserva estiver vazio
+      return reservationCode.trim() === "";
     } else if (actionType === "cancelar") {
-      return !confirmCancellation; // Desativado se a confirmação não estiver marcada
+      return !confirmCancellation;
     }
-    return false; // Para "realizar", o botão sempre estará habilitado
+    return false;
   };
 
   return (
-    <div className="fixed inset-0 bg-blackopacity50 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-[60vw] text-black relative">
         <div className="flex justify-between items-center">
           <h3 className="text-2xl font-semibold mb-4 text-black">
@@ -120,7 +115,7 @@ const FlightActionModal: React.FC<FlightActionModalProps> = ({
         </div>
         <p>
           <strong>Data/Hora:</strong>{" "}
-          {new Date(flight.dateTime).toLocaleString()}
+          {getFlightDateTime().toLocaleString()}
         </p>
         <p>
           <strong>Origem:</strong> {flight.origin}
@@ -129,7 +124,6 @@ const FlightActionModal: React.FC<FlightActionModalProps> = ({
           <strong>Destino:</strong> {flight.destination}
         </p>
 
-        {/* Campo para digitar o código de reserva (apenas para confirmar embarque) */}
         {actionType === "confirmar" && (
           <div className="mt-6">
             <label
@@ -149,7 +143,6 @@ const FlightActionModal: React.FC<FlightActionModalProps> = ({
           </div>
         )}
 
-        {/* Confirmação para cancelamento de voo */}
         {actionType === "cancelar" && (
           <div className="mt-6">
             <p className="text-red-600 font-medium mb-4">
@@ -174,7 +167,6 @@ const FlightActionModal: React.FC<FlightActionModalProps> = ({
           </div>
         )}
 
-        {/* Mensagem específica para realizar voo */}
         {actionType === "realizar" && (
           <div className="mt-6">
             <p className="text-amber-600 font-medium">
@@ -184,7 +176,6 @@ const FlightActionModal: React.FC<FlightActionModalProps> = ({
           </div>
         )}
 
-        {/* Mensagem de erro */}
         {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
 
         <div className="mt-6 flex justify-between gap-4">

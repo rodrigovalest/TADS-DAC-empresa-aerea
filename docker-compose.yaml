@@ -1,0 +1,147 @@
+version: '3.9'
+
+services:
+  db-cliente:
+    image: postgres:17.4
+    container_name: db-cliente
+    ports:
+      - '14000:5432'
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_CLIENTE}
+    networks:
+      - private_network
+
+  db-funcionario:
+    image: postgres:17.4
+    container_name: db-funcionario
+    ports:
+      - '14001:5432'
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_FUNCIONARIO}
+    networks:
+      - private_network
+
+  db-reserva:
+    image: postgres:17.4
+    container_name: db-reserva
+    ports:
+      - '14002:5432'
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_RESERVA}
+    networks:
+      - private_network
+
+  db-voos:
+    image: postgres:17.4
+    container_name: db-voos
+    ports:
+      - '14003:5432'
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_VOOS}
+    networks:
+      - private_network
+
+  db-auth:
+    image: mongo:latest
+    container_name: db-auth
+    ports:
+      - '14004:27017'
+    env_file: .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+    networks:
+      - private_network
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    ports:
+      - "14005:5672"
+      - "15672:15672"
+    env_file: .env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    networks:
+      - private_network
+
+  ms-auth:
+    build:
+      context: ./backend
+      dockerfile: ms-auth/Dockerfile
+    container_name: ms-auth
+    ports:
+      - "8084:8084"
+    depends_on:
+      - db-auth
+      - rabbitmq
+
+  ms-cliente:
+    build:
+      context: ./backend
+      dockerfile: ms-cliente/Dockerfile
+    container_name: ms-cliente
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db-cliente
+      - rabbitmq
+
+  ms-reserva:
+    build:
+      context: ./backend
+      dockerfile: ms-reserva/Dockerfile
+    container_name: ms-reserva
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db-reserva
+      - rabbitmq
+
+  ms-voos:
+    build:
+      context: ./backend
+      dockerfile: ms-voos/Dockerfile
+    container_name: ms-voos
+    ports:
+      - "8083:8083"
+    depends_on:
+      - db-voos
+      - rabbitmq
+
+  frontend:
+    build: ./frontend
+    container_name: frontend_service
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - public_network
+      - private_network
+    depends_on:
+      - db-cliente
+      - db-funcionario
+      - db-reserva
+      - db-voos
+      - db-auth
+      - rabbitmq
+
+networks:
+  private_network:
+    driver: bridge
+  public_network:
+    driver: bridge
