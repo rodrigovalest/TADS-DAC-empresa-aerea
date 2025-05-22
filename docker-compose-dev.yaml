@@ -68,22 +68,6 @@ services:
     depends_on:
       - db-auth
       - rabbitmq
-    environment:
-      SPRING_DATA_MONGODB_HOST: db-auth
-      SPRING_DATA_MONGODB_PORT: 27017
-      SPRING_DATA_MONGODB_DATABASE: auth
-      SPRING_DATA_MONGODB_USERNAME: 123mudar
-      SPRING_DATA_MONGODB_PASSWORD: 123mudar
-      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
-
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_PORT: 5672
-      SPRING_RABBITMQ_USERNAME: 123mudar
-      SPRING_RABBITMQ_PASSWORD: 123mudar
-
-      API_JWT_SECRET: H/JRasY4dHW7tWhKiUdEoQJaPJKdAl6mHh6MOIJXMknlI1x/RZBvfdPc2fAvqD4yFJgXquQASOi5BXPhcagPLA==
-
-      INTEGRATION_CLIENT_MSCLIENTE_URL: http://ms-cliente:8080/clientes
   ms-cliente:
     build:
       context: ./backend
@@ -94,11 +78,23 @@ services:
     depends_on:
       - db-cliente
       - rabbitmq
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db-cliente:5432/cliente
-      SPRING_DATASOURCE_USERNAME: 123mudar
-      SPRING_DATASOURCE_PASSWORD: 123mudar
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_PORT: 5672
-      SPRING_RABBITMQ_USERNAME: 123mudar
-      SPRING_RABBITMQ_PASSWORD: 123mudar
+  ms-reserva:
+    build:
+      context: ./backend
+      dockerfile: ms-reserva/Dockerfile
+    container_name: ms-reserva
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db-reserva
+      - rabbitmq
+  ms-voos:
+    build:
+      context: ./backend
+      dockerfile: ms-voos/Dockerfile
+    container_name: ms-voos
+    ports:
+      - "8083:8083"
+    depends_on:
+      - db-voos
+      - rabbitmq
