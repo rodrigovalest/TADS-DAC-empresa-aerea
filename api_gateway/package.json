@@ -8,9 +8,11 @@
     "serve": "node dist/index.js"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "http-proxy-middleware": "^3.0.3"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.18",
     "@types/express": "^5.0.1",
     "@types/node": "^22.13.14",
     "express": "^5.1.0",

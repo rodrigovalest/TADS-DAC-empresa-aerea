@@ -1,53 +1,51 @@
 import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import cors from 'cors';
 
 const app = express();
 const port = 3000;
 
+app.use(cors());
+
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.originalUrl}`);
+  next();
+});
+
 const services = {
-  cliente: 'http://localhost:8080',
-  funcionario: 'http://localhost:8081',
-  reserva: 'http://localhost:8082',
+  clientes: 'http://localhost:8080',
+  funcionarios: 'http://localhost:8081',
+  reservas: 'http://localhost:8082',
   voos: 'http://localhost:8083',
   auth: 'http://localhost:8084',
 };
 
-app.use('/clientes', createProxyMiddleware({
-  target: services.cliente,
-  changeOrigin: true,
-  pathRewrite: {
-    '^/': '/clientes/'
-  },
-  logger: console
-}));
 
-app.use('/funcionarios', createProxyMiddleware({
-  target: services.funcionario,
-  changeOrigin: true,
-  pathRewrite: {
-    '^/': '/clientes/'
-  },
-  logger: console
-}));
+Object.entries(services).forEach(([route, target]) => {
+  app.use(`/${route}`, createProxyMiddleware({
+    target,
+    changeOrigin: true,
+    pathRewrite: {
+      [`^/${route}`]: '', 
+    },
+    logger: console,
+  }));
+});
 
-app.use('/reservas', createProxyMiddleware({
-  target: services.reserva,
-  changeOrigin: true,
-  pathRewrite: {
-    '^/': '/clientes/'
-  },
-  logger: console
-}));
+app.get('/', (req, res) => {
+  res.json({ services: Object.keys(services) });
+});
 
-app.use('/voos', createProxyMiddleware({
-  target: services.voos,
-  changeOrigin: true,
-  pathRewrite: {
-    '^/': '/clientes/'
-  },
-  logger: console
-}));
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+
+app.use((req, res) => {
+  res.status(404).json({ error: 'Rota não encontrada no API Gateway.' });
+});
 
 app.listen(port, () => {
-    console.log(`Api gateway listening at http://localhost:${port}`)
-})
+  console.log(`🛡️ API Gateway rodando em http://localhost:${port}`);
+});
