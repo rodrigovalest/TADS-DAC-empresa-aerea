@@ -1,4 +1,4 @@
-package org.skytads.msvoos.configs;
+/*package org.skytads.msvoos.configs;
 
 import org.skytads.msvoos.entities.AeroportoEntity;
 import org.skytads.msvoos.entities.VooEntity;
@@ -74,7 +74,7 @@ public class DataSeeder {
                         new VooEntity(
                             LocalDateTime.of(2025, 2, 16, 4, 30),
                             cnf, bsb, 1000.0f, 400L, 0L, StatusVooEnum.CONFIRMADO
-                        ),
+                        )
                     ));
                 }
             }
@@ -82,3 +82,4 @@ public class DataSeeder {
     }
 }
 
+*/
