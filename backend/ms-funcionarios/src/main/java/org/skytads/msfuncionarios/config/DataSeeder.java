@@ -1,4 +1,4 @@
-package org.skytads.msfuncionarios.config;
+/*package org.skytads.msfuncionarios.config;
 
 import org.skytads.msfuncionarios.model.Funcionario;
 import org.skytads.msfuncionarios.repository.FuncionarioRepository;
@@ -24,3 +24,4 @@ public class DataSeeder {
         };
     }
 }
+ */

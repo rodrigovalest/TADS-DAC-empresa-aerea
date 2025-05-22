@@ -7,7 +7,7 @@ import org.skytads.msauth.dtos.responses.ClienteResponseDto;
 import org.skytads.msauth.dtos.responses.LoginResponseDto;
 import org.skytads.msauth.dtos.responses.UsuarioResponseDto;
 import org.skytads.msauth.entities.UserEntity;
-
+import org.skytads.msauth.dtos.messages.CriarFuncionarioMessageDto;
 import java.time.Instant;
 
 public class UserMapper {
