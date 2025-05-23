@@ -98,6 +98,11 @@ public class TransacaoMilhasService {
         
         return TransacaoMilhasMapper.toDTO(transacao);
     }
+
+    @Transactional(readOnly = true)
+    public List<TransacaoMilhas> findAllTransacaoMilhasByClienteId(Long clienteId) {
+        return transacaoMilhasRepository.findAllByClienteId(clienteId);
+    }
     
     @Transactional(readOnly = true)
     public List<TransacaoMilhasDTO> listarExtrato(String cpf) {

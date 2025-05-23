@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.skytads.mscliente.dtos.responses.ErrorResponseDto;
 import org.skytads.mscliente.exceptions.BadCredentialsException;
 import org.skytads.mscliente.exceptions.ClienteNaoEncontradoException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +34,24 @@ public class RestExceptionHandler {
     private ResponseEntity<ErrorResponseDto> runtimeExceptionHandler(
             RuntimeException e
     ) {
-        log.info("{} | {} | {}", String.valueOf(e.getCause()), e.getMessage(), e.getClass());
+        log.error("{} | {} | {}", String.valueOf(e.getCause()), e.getMessage(), e.getClass());
 
         ErrorResponseDto restErrorDto = new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, "something went wrong");
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(restErrorDto);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    private ResponseEntity<ErrorResponseDto> dataIntegrityViolationExceptionHandler(
+            DataIntegrityViolationException e
+    ) {
+        log.info("{} | {} | {}", String.valueOf(e.getCause()), e.getMessage(), e.getClass());
+
+        ErrorResponseDto restErrorDto = new ErrorResponseDto(HttpStatus.CONFLICT, "email or cpf already registered");
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(restErrorDto);
     }
