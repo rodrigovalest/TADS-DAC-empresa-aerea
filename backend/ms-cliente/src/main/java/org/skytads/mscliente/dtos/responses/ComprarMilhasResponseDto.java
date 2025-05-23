@@ -1,5 +1,6 @@
 package org.skytads.mscliente.dtos.responses;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClienteMilhasResponseDto {
-    private String codigo;
+public class ComprarMilhasResponseDto {
+    private Long codigo;
+
+    @JsonProperty(namespace = "saldo_milhas")
     private Long saldoMilhas;
 }

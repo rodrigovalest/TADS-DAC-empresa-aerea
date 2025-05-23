@@ -2,9 +2,12 @@ package org.skytads.mscliente.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.skytads.mscliente.dtos.requests.AutocadastroRequestDto;
+import org.skytads.mscliente.dtos.requests.ComprarMilhasRequestDto;
+import org.skytads.mscliente.dtos.requests.TransacaoMilhasDTO;
 import org.skytads.mscliente.dtos.responses.AutocadastroResponseDto;
 import org.skytads.mscliente.dtos.responses.ClienteMilhasResponseDto;
 import org.skytads.mscliente.dtos.responses.ClienteResponseDto;
+import org.skytads.mscliente.dtos.responses.ComprarMilhasResponseDto;
 import org.skytads.mscliente.mappers.ClienteMapper;
 import org.skytads.mscliente.models.Cliente;
 import org.skytads.mscliente.services.ClienteService;
@@ -52,21 +55,27 @@ public class ClienteController {
         return ResponseEntity.ok(ClienteMapper.toClienteResponseDto(cliente));
     }
     
-    @PutMapping("/{codigo}/milhas")
-    public ResponseEntity<ClienteMilhasResponseDto> comprarMilhas(@PathVariable String codigo, @RequestBody Map<String, Integer> body) {
-        Integer quantidade = body.get("quantidade");
-        transacaoMilhasService.comprarMilhas(codigo, quantidade);
-        Long saldoMilhas = clienteService.buscarSaldoMilhas(codigo);
-        List<?> transacoes = transacaoMilhasService.listarExtrato(codigo);
-        ClienteMilhasResponseDto dto = new ClienteMilhasResponseDto(codigo, saldoMilhas, transacoes);
-        return ResponseEntity.ok(dto);
+    @PutMapping("/{codigo_cliente}/milhas")
+    public ResponseEntity<ComprarMilhasResponseDto> comprarMilhas(
+            @PathVariable("codigo_cliente") Long codigoCliente,
+            @RequestBody ComprarMilhasRequestDto requestDto
+    ) {
+        Long saldoMilhas = this.transacaoMilhasService.comprarMilhas(
+                codigoCliente, Math.toIntExact(requestDto.getQuantidade())
+        );
+
+        return ResponseEntity.ok(
+                ClienteMapper.toComprarMilhasRequestDto(codigoCliente, saldoMilhas)
+        );
     }
     
-    @GetMapping("/{codigo}/milhas")
-    public ResponseEntity<ClienteMilhasResponseDto> extratoMilhas(@PathVariable String codigo) {
-        Long saldoMilhas = clienteService.buscarSaldoMilhas(codigo);
-        List<?> transacoes = transacaoMilhasService.listarExtrato(codigo);
-        ClienteMilhasResponseDto dto = new ClienteMilhasResponseDto(codigo, saldoMilhas, transacoes);
-        return ResponseEntity.ok(dto);
-    }
+//    @GetMapping("/{codigo_cliente}/milhas")
+//    public ResponseEntity<ClienteMilhasResponseDto> extratoMilhas(
+//            @PathVariable("codigo_cliente") Long codigoCliente
+//    ) {
+//        Long saldoMilhas = clienteService.buscarSaldoMilhas(codigoCliente);
+//        List<?> transacoes = transacaoMilhasService.listarExtrato(codigoCliente);
+//        ClienteMilhasResponseDto dto = new ClienteMilhasResponseDto(codigoCliente, saldoMilhas, transacoes);
+//        return ResponseEntity.ok(dto);
+//    }
 }

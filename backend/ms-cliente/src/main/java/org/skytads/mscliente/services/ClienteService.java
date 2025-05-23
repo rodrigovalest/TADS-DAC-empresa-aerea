@@ -60,7 +60,14 @@ public class ClienteService {
     }
 
     @Transactional
-    public void atualizarMilhas(String cpf, Integer milhas) {
+    public Cliente atualizarMilhas(Long clienteId, Integer milhas) {
+        Cliente cliente = this.findClienteById(clienteId);
+        cliente.setSaldoMilhas(cliente.getSaldoMilhas() + milhas);
+        return clienteRepository.save(cliente);
+    }
+
+    @Transactional
+    public void atualizarMilhasByCpf(String cpf, Integer milhas) {
         Cliente cliente = clienteRepository.findByCpf(cpf)
                 .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado com CPF: " + cpf));
         

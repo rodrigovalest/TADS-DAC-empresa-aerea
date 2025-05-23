@@ -2,8 +2,10 @@ package org.skytads.mscliente.mappers;
 
 import org.skytads.mscliente.dtos.messages.CriarClienteMessageDto;
 import org.skytads.mscliente.dtos.requests.AutocadastroRequestDto;
+import org.skytads.mscliente.dtos.requests.ComprarMilhasRequestDto;
 import org.skytads.mscliente.dtos.responses.AutocadastroResponseDto;
 import org.skytads.mscliente.dtos.responses.ClienteResponseDto;
+import org.skytads.mscliente.dtos.responses.ComprarMilhasResponseDto;
 import org.skytads.mscliente.dtos.responses.EnderecoResponseDto;
 import org.skytads.mscliente.models.Cliente;
 
@@ -64,6 +66,12 @@ public class ClienteMapper {
                 cliente.getCpf(),
                 cliente.getEmail(),
                 cliente.getSenha()
+        );
+    }
+
+    public static ComprarMilhasResponseDto toComprarMilhasRequestDto(Long codigoCliente, Long quantidadeMilhas) {
+        return new ComprarMilhasResponseDto(
+            codigoCliente, quantidadeMilhas
         );
     }
 }
