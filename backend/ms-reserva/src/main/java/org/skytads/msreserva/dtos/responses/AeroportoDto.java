@@ -1,4 +1,4 @@
-package org.skytads.msreserva.entities;
+package org.skytads.msreserva.dtos.responses;
 
 import lombok.Builder;
 import lombok.Data;

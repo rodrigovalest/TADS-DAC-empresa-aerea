@@ -31,8 +31,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/voos/*").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/voos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/voos/*").hasAnyAuthority("ROLE_FUNCIONARIO", "ROLE_CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/voos").hasAnyAuthority("ROLE_FUNCIONARIO", "ROLE_CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/aeroportos").hasAuthority("ROLE_FUNCIONARIO")
+                        .requestMatchers(HttpMethod.PATCH, "/voos/*/estado").hasAuthority("ROLE_FUNCIONARIO")
+                        .requestMatchers(HttpMethod.PUT, "/voos/*/reservar-poltronas").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();

@@ -24,8 +24,9 @@ public class ReservaEntity {
     @Column(name = "codigo_cliente", nullable = false)
     private Long codigoCliente;
 
-    @Column(name = "codigo_voo", nullable = false)
-    private Long codigoVoo;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "codigo_voo", referencedColumnName = "codigo", nullable = false)
+    private VooEntity voo;
 
     @Column(name = "quantidade_poltronas", nullable = false)
     private Long quantidadePoltronas;

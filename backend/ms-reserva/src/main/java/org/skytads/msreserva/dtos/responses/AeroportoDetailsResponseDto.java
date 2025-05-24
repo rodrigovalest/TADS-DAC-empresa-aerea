@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AeroportoResponseDto {
+public class AeroportoDetailsResponseDto {
     private String codigo;
     private String nome;
     private String cidade;

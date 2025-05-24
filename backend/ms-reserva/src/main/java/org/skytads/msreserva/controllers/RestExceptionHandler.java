@@ -1,5 +1,6 @@
 package org.skytads.msreserva.controllers;
 
+import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import lombok.extern.slf4j.Slf4j;
@@ -86,6 +87,19 @@ public class RestExceptionHandler {
         ErrorResponseDto restErrorDto = new ErrorResponseDto(HttpStatus.NOT_FOUND, e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(restErrorDto);
+    }
+
+    @ExceptionHandler(FeignException.class)
+    private ResponseEntity<ErrorResponseDto> feignExceptionHandler(
+            FeignException e
+    ) {
+        log.error("Feign exception | {}", e.getMessage());
+
+        ErrorResponseDto restErrorDto = new ErrorResponseDto(HttpStatus.BAD_REQUEST, e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(restErrorDto);
     }
