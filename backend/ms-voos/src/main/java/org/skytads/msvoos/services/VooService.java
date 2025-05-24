@@ -45,10 +45,6 @@ public class VooService {
         return this.vooRepository.save(voo);
     }
 
-    public List<VooEntity> findAll() {
-        return vooRepository.findAll();
-    }
-
     public List<VooEntity> findByAeroportoOrigem(String aeroportoOrigemCodigo) {
         return vooRepository.findByAeroportoOrigemCodigo(aeroportoOrigemCodigo);
     }
@@ -60,10 +56,6 @@ public class VooService {
     public VooEntity findById(Long id) {
         return vooRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("voo nao encontrado"));
-    }
-
-    public Optional<VooEntity> findByCodigo(Long codigo) {
-        return vooRepository.findByCodigo(codigo);
     }
 
     @Transactional
