@@ -1,29 +1,33 @@
 package org.skytads.msfuncionarios.services;
 
+import lombok.RequiredArgsConstructor;
 import org.skytads.msfuncionarios.dto.FuncionarioDTO;
 import org.skytads.msfuncionarios.dto.FuncionarioUpdateDTO;
+import org.skytads.msfuncionarios.dto.CreateFuncionarioRequestDto;
+import org.skytads.msfuncionarios.dto.UpdateFuncionarioRequestDto;
+import org.skytads.msfuncionarios.exception.FuncionarioConflictException;
+import org.skytads.msfuncionarios.exception.FuncionarioNotFoundException;
+import org.skytads.msfuncionarios.messaging.RabbitMQProducer;
 import org.skytads.msfuncionarios.model.Funcionario;
 import org.skytads.msfuncionarios.repository.FuncionarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class FuncionarioService {
 
-    @Autowired
-    private FuncionarioRepository funcionarioRepository;
+    private final FuncionarioRepository funcionarioRepository;
+    private final RabbitMQProducer rabbitMQProducer;
 
-    public List<FuncionarioDTO> listarFuncionarios() {
-        return funcionarioRepository.findByAtivoTrueOrderByNomeAsc()
-                .stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Funcionario> listarFuncionarios() {
+        return funcionarioRepository.findByAtivoTrueOrderByNomeAsc();
     }
 
     public Optional<FuncionarioDTO> buscarPorId(Long id) {
@@ -33,56 +37,70 @@ public class FuncionarioService {
     }
 
     @Transactional
-    public FuncionarioDTO inserirFuncionario(FuncionarioDTO funcionarioDTO) {
-        if (funcionarioRepository.existsByCpf(funcionarioDTO.getCpf())) {
-            throw new RuntimeException("Já existe um funcionário com este CPF");
+    public Funcionario inserirFuncionario(Funcionario funcionario) {
+        if (funcionarioRepository.existsByCpf(funcionario.getCpf())) {
+            throw new FuncionarioConflictException("Já existe um funcionário com este CPF");
         }
 
-        if (funcionarioRepository.existsByEmail(funcionarioDTO.getEmail())) {
-            throw new RuntimeException("Já existe um funcionário com este e-mail");
+        if (funcionarioRepository.existsByEmail(funcionario.getEmail())) {
+            throw new FuncionarioConflictException("Já existe um funcionário com este e-mail");
         }
 
-        Funcionario funcionario = convertToEntity(funcionarioDTO);
-        funcionario.setAtivo(true);
+        Funcionario savedFuncionario = this.funcionarioRepository.save(funcionario);
 
-        String senha = String.format("%04d", new Random().nextInt(10000));
-        funcionario.setSenha(senha);
+        this.rabbitMQProducer.enviarParaCriacaoUsuario(
+                savedFuncionario.getId(), savedFuncionario.getCpf(), savedFuncionario.getEmail(), savedFuncionario.getSenha()
+        );
 
-        System.out.println("Senha criada para o funcionário " + funcionario.getEmail() + ": " + senha);
-
-        Funcionario savedFuncionario = funcionarioRepository.save(funcionario);
-        return convertToDTO(savedFuncionario);
+        return savedFuncionario;
     }
 
     @Transactional
-    public FuncionarioDTO atualizarFuncionario(Long id, FuncionarioUpdateDTO funcionarioUpdateDTO) {
+    public Funcionario atualizarFuncionario(Long id, UpdateFuncionarioRequestDto requestDto) {
         Funcionario funcionario = funcionarioRepository.findById(id)
-                .filter(Funcionario::isAtivo)
-                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+                .orElseThrow(() -> new FuncionarioNotFoundException("Funcionário não encontrado"));
 
-        Optional<Funcionario> funcionarioComEmail = funcionarioRepository
-                .findByEmailAndAtivoTrue(funcionarioUpdateDTO.getEmail());
-
-        if (funcionarioComEmail.isPresent() && !funcionarioComEmail.get().getId().equals(id)) {
-            throw new RuntimeException("Este e-mail já está em uso");
+        if (!funcionario.isAtivo()) {
+            throw new FuncionarioNotFoundException("Funcionário não encontrado");
         }
 
-        funcionario.setNome(funcionarioUpdateDTO.getNome());
-        funcionario.setEmail(funcionarioUpdateDTO.getEmail());
-        funcionario.setTelefone(funcionarioUpdateDTO.getTelefone());
+        if (!Objects.equals(funcionario.getCpf(), requestDto.getCpf()) && funcionarioRepository.existsByCpf(requestDto.getCpf())) {
+            throw new FuncionarioConflictException("Já existe um funcionário com este CPF");
+        }
+
+        if (!Objects.equals(funcionario.getEmail(), requestDto.getEmail()) && funcionarioRepository.existsByEmail(requestDto.getEmail())) {
+            throw new FuncionarioConflictException("Já existe um funcionário com este e-mail");
+        }
+
+        String oldEmail = funcionario.getEmail();
+
+        funcionario.setCpf(requestDto.getCpf());
+        funcionario.setNome(requestDto.getNome());
+        funcionario.setEmail(requestDto.getEmail());
+        funcionario.setTelefone(requestDto.getTelefone());
+        funcionario.setSenha(requestDto.getSenha());
 
         Funcionario updatedFuncionario = funcionarioRepository.save(funcionario);
-        return convertToDTO(updatedFuncionario);
+        this.rabbitMQProducer.enviarParaAtualizacaoUsuario(
+                updatedFuncionario.getId(),
+                oldEmail,
+                updatedFuncionario.getEmail(),
+                updatedFuncionario.getCpf(),
+                updatedFuncionario.getSenha()
+        );
+
+        return updatedFuncionario;
     }
 
     @Transactional
     public void removerFuncionario(Long id) {
         Funcionario funcionario = funcionarioRepository.findById(id)
                 .filter(Funcionario::isAtivo)
-                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+                .orElseThrow(() -> new FuncionarioNotFoundException("Funcionário não encontrado"));
 
         funcionario.setAtivo(false);
-        funcionarioRepository.save(funcionario);
+        this.funcionarioRepository.save(funcionario);
+        this.rabbitMQProducer.enviarParaInativacaoUsuario(funcionario.getEmail());
     }
 
     private FuncionarioDTO convertToDTO(Funcionario funcionario) {

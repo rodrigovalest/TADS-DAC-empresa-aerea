@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CriarFuncionarioMessageDto {
+public class AtualizarFuncionarioMessageDto {
     private String codigo;
     private String cpf;
-    private String email;
+    private String oldEmail;
+    private String newEmail;
     private String senha;
 }

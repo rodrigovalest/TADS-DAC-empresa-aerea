@@ -1,4 +1,4 @@
-package org.skytads.msauth.dtos.messages;
+package org.skytads.msfuncionarios.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CriarFuncionarioMessageDto {
-    private String codigo;
+public class FuncionarioResponseDto {
+    private Long codigo;
     private String cpf;
     private String email;
-    private String senha;
+    private String nome;
+    private String telefone;
 }

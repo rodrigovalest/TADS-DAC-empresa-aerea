@@ -32,7 +32,6 @@ public class SecurityConfig {
                 .addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/funcionarios").permitAll()
-                        .requestMatchers("/auth/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();

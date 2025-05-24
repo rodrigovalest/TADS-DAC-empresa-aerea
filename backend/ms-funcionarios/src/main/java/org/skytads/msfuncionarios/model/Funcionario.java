@@ -42,4 +42,11 @@ public class Funcionario {
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
 
+    public Funcionario(String cpf, String email, String nome, String telefone, String senha) {
+        this.cpf = cpf;
+        this.email = email;
+        this.nome = nome;
+        this.telefone = telefone;
+        this.senha = senha;
+    }
 }

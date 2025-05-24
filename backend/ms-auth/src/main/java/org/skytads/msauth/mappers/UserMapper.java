@@ -2,6 +2,7 @@ package org.skytads.msauth.mappers;
 
 import org.skytads.msauth.domain.User;
 import org.skytads.msauth.domain.UserType;
+import org.skytads.msauth.dtos.messages.AtualizarFuncionarioMessageDto;
 import org.skytads.msauth.dtos.messages.CriarClienteMessageDto;
 import org.skytads.msauth.dtos.responses.ClienteResponseDto;
 import org.skytads.msauth.dtos.responses.LoginResponseDto;
@@ -92,7 +93,7 @@ public class UserMapper {
         user.setCpf(dto.getCpf());
         user.setEmail(dto.getEmail());
         user.setSenha(dto.getSenha());
-        user.setTipo(UserType.valueOf(dto.getTipo()));
+        user.setTipo(UserType.FUNCIONARIO);
         user.setAccessToken(null);
         user.setTokenType(null);
         user.setCreatedAt(Instant.now());
