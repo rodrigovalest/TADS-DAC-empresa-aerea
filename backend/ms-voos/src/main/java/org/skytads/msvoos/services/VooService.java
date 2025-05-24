@@ -22,7 +22,7 @@ public class VooService {
     private final VooRepository vooRepository;
     private final AeroportoService aeroportoService;
 
-    public void inserirVoo(
+    public VooEntity inserirVoo(
             LocalDateTime data,
             Float valorPassagem,
             Long quantidadePoltronasTotal,
@@ -42,16 +42,12 @@ public class VooService {
                 quantidadePoltronasOcupadas,
                 StatusVooEnum.CONFIRMADO
         );
-        this.vooRepository.save(voo);
+        return this.vooRepository.save(voo);
     }
 
     public List<VooEntity> findAll() {
         return vooRepository.findAll();
     }
-
-//    public List<VooEntity> findByFilters(LocalDateTime data, Long origem, Long destino) {
-//        return vooRepository.findByData(data, origem, destino);
-//    }
 
     public List<VooEntity> findByAeroportoOrigem(String aeroportoOrigemCodigo) {
         return vooRepository.findByAeroportoOrigemCodigo(aeroportoOrigemCodigo);
@@ -61,46 +57,29 @@ public class VooService {
         return vooRepository.findByAeroportoDestinoCodigo(aeroportoDestinoCodigo);
     }
 
+    public VooEntity findById(Long id) {
+        return vooRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("voo nao encontrado"));
+    }
+
     public Optional<VooEntity> findByCodigo(Long codigo) {
         return vooRepository.findByCodigo(codigo);
     }
 
-    public VooEntity updateEstadoVoo(Long codigo, String novoEstado) {
+    @Transactional
+    public VooEntity updateEstadoVoo(Long codigo, StatusVooEnum novoEstado) {
         VooEntity voo = vooRepository.findByCodigo(codigo)
-                .orElseThrow(() -> new IllegalArgumentException("Voo não encontrado"));
-    
-        StatusVooEnum statusVooEnum;
-        try {
-            statusVooEnum = StatusVooEnum.valueOf(novoEstado);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Estado inválido: " + novoEstado);
+                .orElseThrow(() -> new EntityNotFoundException("Voo não encontrado"));
+
+        StatusVooEnum estadoAtual = voo.getStatusVoo();
+        boolean transicaoValida = StatusVooEnum.CONFIRMADO.equals(estadoAtual) && (StatusVooEnum.CANCELADO.equals(novoEstado) || StatusVooEnum.REALIZADO.equals(novoEstado));
+
+        if (!transicaoValida) {
+            throw new StatusVooInvalidoException("Transição de status do voo inválida: " + estadoAtual + " → " + novoEstado);
         }
-    
-        if (voo.getStatusVoo() == StatusVooEnum.CONFIRMADO &&
-                (statusVooEnum == StatusVooEnum.CANCELADO || statusVooEnum == StatusVooEnum.REALIZADO)) {
-            voo.setStatusVoo(statusVooEnum);
-            vooRepository.save(voo);
-    
-            // Notificar o microsserviço de reserva
-            notifyReservationService(voo.getCodigo(), statusVooEnum);
-        } else {
-            throw new IllegalStateException("Estado inválido para a transição");
-        }
-    
-        return voo;
-    }
-    
-    private void notifyReservationService(Long vooCodigo, StatusVooEnum novoEstado) {
-        // Adicionar aqui a lógica de se comunicar com o microsserviço de reservas
 
-        // Pensei em algo tipo assim:
-
-        // String reservationServiceUrl = "http://nosso-link-para-ms-reservas/reservas/voo/" + vooCodigo + "/estado";
-        // Map<String, String> payload = new HashMap<>();
-        // payload.put("estado", novoEstado.toString());
-
-        // RestTemplate restTemplate = new RestTemplate();
-        // restTemplate.patchForObject(reservationServiceUrl, payload, Void.class);
+        voo.setStatusVoo(novoEstado);
+        return vooRepository.save(voo);
     }
 
     @Transactional

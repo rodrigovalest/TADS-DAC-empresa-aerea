@@ -3,6 +3,7 @@ package org.skytads.msvoos.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.skytads.msvoos.dtos.responses.ErrorResponseDto;
 import org.skytads.msvoos.exceptions.EntityNotFoundException;
+import org.skytads.msvoos.exceptions.StatusVooInvalidoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +64,19 @@ public class RestExceptionHandler {
         ErrorResponseDto restErrorDto = new ErrorResponseDto(HttpStatus.NOT_FOUND, e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(restErrorDto);
+    }
+
+    @ExceptionHandler(StatusVooInvalidoException.class)
+    private ResponseEntity<ErrorResponseDto> statusVooInvalidoExceptionHandler(
+            StatusVooInvalidoException e
+    ) {
+        log.info("{} | {} | {}", String.valueOf(e.getCause()), e.getMessage(), e.getClass());
+
+        ErrorResponseDto restErrorDto = new ErrorResponseDto(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(restErrorDto);
     }
