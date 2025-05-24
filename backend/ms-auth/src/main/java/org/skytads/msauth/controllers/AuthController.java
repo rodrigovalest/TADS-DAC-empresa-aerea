@@ -6,6 +6,7 @@ import org.skytads.msauth.domain.User;
 import org.skytads.msauth.dtos.requests.LoginRequestDto;
 import org.skytads.msauth.dtos.requests.LogoutRequestDto;
 import org.skytads.msauth.dtos.responses.LoginResponseDto;
+import org.skytads.msauth.dtos.responses.LogoutResponseDto;
 import org.skytads.msauth.mappers.UserMapper;
 import org.skytads.msauth.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +24,9 @@ public class AuthController {
         return ResponseEntity.ok(UserMapper.toLoginResponseDto(user));
     }
 
-    @PatchMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestBody @Valid LogoutRequestDto requestDto) {
+    @PostMapping("/logout")
+    public ResponseEntity<LogoutResponseDto> logout(@RequestBody @Valid LogoutRequestDto requestDto) {
         this.userService.logout(requestDto.getLogin());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new LogoutResponseDto(requestDto.getLogin()));
     }
 }

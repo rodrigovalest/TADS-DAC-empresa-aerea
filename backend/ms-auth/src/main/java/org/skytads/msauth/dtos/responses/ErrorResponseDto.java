@@ -1,6 +1,8 @@
 package org.skytads.msauth.dtos.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -9,6 +11,7 @@ import org.springframework.validation.FieldError;
 import java.util.HashMap;
 import java.util.Map;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Data
 public class ErrorResponseDto {
     private int status;

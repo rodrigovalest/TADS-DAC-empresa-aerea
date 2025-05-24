@@ -7,14 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
-public class ClienteResponseDto {
-    private String codigo;
-    private String cpf;
-    private String email;
-    private String nome;
-    private Long saldoMilhas;
-    private EnderecoResponseDto endereco;
+@AllArgsConstructor
+@NoArgsConstructor
+public class LogoutResponseDto {
+    private String login;
 }
