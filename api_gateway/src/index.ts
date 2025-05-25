@@ -13,10 +13,10 @@ app.use((req, res, next) => {
 });
 
 const services = {
-  clientes: 'http://localhost:8080',
-  funcionarios: 'http://localhost:8081',
-  reservas: 'http://localhost:8082',
-  voos: 'http://localhost:8083',
+  clientes: 'http://localhost:8080/clientes',
+  funcionarios: 'http://localhost:8081/funcionarios',
+  reservas: 'http://localhost:8082/reservas',
+  voos: 'http://localhost:8083/voos',
   auth: 'http://localhost:8084',
 };
 
@@ -26,7 +26,7 @@ Object.entries(services).forEach(([route, target]) => {
     target,
     changeOrigin: true,
     pathRewrite: {
-      [`^/${route}`]: '', 
+      [`^/${route}`]: '',
     },
     logger: console,
   }));

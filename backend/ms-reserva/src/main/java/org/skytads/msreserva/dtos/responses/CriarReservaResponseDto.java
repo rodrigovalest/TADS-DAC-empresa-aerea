@@ -1,20 +1,22 @@
 package org.skytads.msreserva.dtos.responses;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.skytads.msreserva.enums.EstadoReservaEnum;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CriarReservaResponseDto {
     private Long codigo;
-
-    @JsonProperty("codigo_cliente")
+    private String data;
+    private Float valor;
+    private Long milhasUtilizadas;
+    private Long quantidadePoltronas;
     private Long codigoCliente;
-
-    private String estado;
-
-    private VooResponseDto voo;
+    private EstadoReservaEnum estado;
+    private Long codigoVoo;
+    private AeroportoResponseDto aeroportoOrigem;
+    private AeroportoResponseDto aeroportoDestino;
 }

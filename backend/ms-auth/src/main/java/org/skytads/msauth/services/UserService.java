@@ -1,6 +1,7 @@
 package org.skytads.msauth.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.skytads.msauth.domain.User;
 import org.skytads.msauth.domain.UserType;
 import org.skytads.msauth.entities.UserEntity;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -68,5 +71,26 @@ public class UserService {
     public void createFuncionario(User user) {
         user.setTipo(UserType.FUNCIONARIO);
         this.userRepository.save(UserMapper.toEntity(user));
+    }
+
+    @Transactional
+    public void atualizarFuncionario(String codigo, String cpf, String oldEmail, String newEmail, String senha) {
+        Optional<UserEntity> optionalUserEntity = this.userRepository.findByEmail(oldEmail);
+
+        if (optionalUserEntity.isEmpty()) {
+            log.error("[atualizar funcionario - user service] usuario com o email {{}} nao encontrado", oldEmail);
+            throw new UserNotFoundException("usuario nao encontrado");
+        }
+
+        UserEntity funcionarioEntity = optionalUserEntity.get();
+        funcionarioEntity.setCpf(cpf);
+        funcionarioEntity.setEmail(newEmail);
+        funcionarioEntity.setSenha(senha);
+        this.userRepository.save(funcionarioEntity);
+    }
+
+    @Transactional
+    public void deletarFuncionario(String email) {
+        this.userRepository.deleteByEmail(email);
     }
 }

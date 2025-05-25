@@ -1,6 +1,7 @@
 package org.skytads.msreserva.integration.consumer;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.skytads.msreserva.config.RabbitMQConfig;
 import org.skytads.msreserva.dtos.messages.CriarReservaUsarMilhasMessageDto;
 import org.skytads.msreserva.dtos.messages.CriarReservaVooResponseMessageDto;
@@ -9,6 +10,7 @@ import org.skytads.msreserva.services.ReservaService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class CriarReservaConsumer {
@@ -18,23 +20,26 @@ public class CriarReservaConsumer {
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_RESERVAR_POLTRONA_RESERVA)
     public void reservarPoltronaVoo(CriarReservaVooResponseMessageDto dto) {
-        System.out.println("Reservar poltrona criar reserva. Mensagem recebida: " + dto);
+        log.info("[SAGA criar reserva (2)] Reservar poltrona. {}", dto);
 
         if (dto.getSuccess()) {
+            log.info("[SAGA criar reserva (2)] Sucesso reservar poltrona. Usando milhas do cliente {}", dto);
             this.reservaService.usarMilhasCliente(dto.getReservaId(), dto.getValorPassagem());
         } else {
+            log.error("[SAGA criar reserva (2)] Falha ao efetuar reserva {} | {}", dto.getReservaId(), dto);
             this.reservaService.cancelarReserva(dto.getReservaId());
         }
     }
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_USAR_MILHAS_RESERVA)
     public void usarMilhas(CriarReservaUsarMilhasMessageDto dto) {
-        System.out.println("Usar milhas criar reserva. Mensagem recebida: " + dto);
+        log.info("[SAGA criar reserva (4)] Usar milhas criar reserva. {}", dto);
 
         if (dto.getSuccess()) {
-            System.out.println("RESERVA {" + dto.getReservaId() + "} efetuada com sucesso");
+            log.info("[SAGA criar reserva (4)] RESERVA {} efetuada com sucesso", dto.getReservaId());
             this.reservaResumoService.finalizarCriarReserva(dto.getReservaId());
         } else {
+            log.error("[SAGA criar reserva (4)] Falha ao efetuar reserva {} | {}", dto.getReservaId(), dto);
             this.reservaService.cancelarReserva(dto.getReservaId());
             this.reservaService.reverterReservaPoltronasVoo(dto.getReservaId());
         }

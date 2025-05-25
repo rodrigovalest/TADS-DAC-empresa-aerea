@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MensagemCriarUsuarioDTO {
+    private Long codigo;
+    private String cpf;
     private String email;
     private String senha;
-    private String tipo;
 }

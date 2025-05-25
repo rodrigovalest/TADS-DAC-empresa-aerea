@@ -10,4 +10,5 @@ import java.util.List;
 public interface TransacaoMilhasRepository extends JpaRepository<TransacaoMilhas, Long> {
     List<TransacaoMilhas> findByClienteOrderByDataHoraDesc(Cliente cliente);
     List<TransacaoMilhas> findByClienteCpfOrderByDataHoraDesc(String cpf);
+    List<TransacaoMilhas> findAllByClienteId(Long clienteId);
 }

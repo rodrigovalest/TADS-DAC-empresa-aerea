@@ -12,5 +12,4 @@ public class CriarFuncionarioMessageDto {
     private String cpf;
     private String email;
     private String senha;
-    private String tipo; 
 }

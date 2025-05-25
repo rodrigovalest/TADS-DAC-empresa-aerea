@@ -26,8 +26,6 @@ public class RabbitMQConfig {
     public static final String ROUTING_KEY_CANCELAR_VOO = "cancelar.voo";
     public static final String ROUTING_KEY_REALIZAR_VOO = "realizar.voo";
 
-
-    
     @Bean
     public Queue filaCriarUsuario() {
         return new Queue(FILA_CRIAR_USUARIO, true);

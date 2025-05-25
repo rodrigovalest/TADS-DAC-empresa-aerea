@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.skytads.msauth.domain.UserDetailsImpl;
 import org.skytads.msauth.domain.UserType;
 import org.skytads.msauth.services.JwtService;
-import org.skytads.msauth.services.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,8 +20,6 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-
-    private final UserService userService;
 
     @Override
     protected void doFilterInternal(

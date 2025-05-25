@@ -32,11 +32,14 @@ public class TransacaoMilhasService {
     private static final String ERRO_QUANTIDADE_MILHAS = "A quantidade de milhas deve ser maior que zero";
     private static final String ERRO_CLIENTE_NAO_ENCONTRADO = "Cliente não encontrado com CPF: ";
 
+    /**
+     * Returns: saldo de milhas do cliente
+     * **/
     @Transactional
-    public TransacaoMilhasDTO comprarMilhas(String cpf, Integer quantidadeMilhas) {
+    public Long comprarMilhas(Long clienteId, Integer quantidadeMilhas) {
         validarQuantidadeMilhas(quantidadeMilhas);
         
-        Cliente cliente = buscarClientePorCpf(cpf);
+        Cliente cliente = this.clienteService.findClienteById(clienteId);
         double valorEmReais = calcularValorEmReais(quantidadeMilhas);
         
         TransacaoMilhas transacao = criarTransacao(
@@ -48,9 +51,9 @@ public class TransacaoMilhasService {
             valorEmReais
         );
         
-        clienteService.atualizarMilhas(cpf, quantidadeMilhas);
+        cliente = clienteService.atualizarMilhas(cliente.getId(), quantidadeMilhas);
         
-        return TransacaoMilhasMapper.toDTO(transacao);
+        return cliente.getSaldoMilhas();
     }
     
     @Transactional
@@ -70,7 +73,7 @@ public class TransacaoMilhasService {
             valorEmReais
         );
         
-        clienteService.atualizarMilhas(cpf, -milhasUtilizadas);
+        clienteService.atualizarMilhasByCpf(cpf, -milhasUtilizadas);
         
         return TransacaoMilhasMapper.toDTO(transacao);
     }
@@ -91,9 +94,14 @@ public class TransacaoMilhasService {
             null
         );
         
-        clienteService.atualizarMilhas(cpf, milhasUtilizadas);
+        clienteService.atualizarMilhasByCpf(cpf, milhasUtilizadas);
         
         return TransacaoMilhasMapper.toDTO(transacao);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TransacaoMilhas> findAllTransacaoMilhasByClienteId(Long clienteId) {
+        return transacaoMilhasRepository.findAllByClienteId(clienteId);
     }
     
     @Transactional(readOnly = true)

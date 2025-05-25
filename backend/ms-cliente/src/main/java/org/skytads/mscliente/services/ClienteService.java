@@ -3,6 +3,7 @@ package org.skytads.mscliente.services;
 import lombok.RequiredArgsConstructor;
 import org.skytads.mscliente.exceptions.ClienteNaoEncontradoException;
 import org.skytads.mscliente.exceptions.SaldoInsuficienteException;
+import org.skytads.mscliente.integration.consumer.ClienteMessageProducerService;
 import org.skytads.mscliente.mappers.ClienteMapper;
 import org.skytads.mscliente.models.Cliente;
 import org.skytads.mscliente.models.TipoTransacao;
@@ -21,7 +22,7 @@ public class ClienteService {
 
     private final ClienteRepository clienteRepository;
     private final EmailService emailService;
-    private final ClienteMessagePublisherService clienteMessagePublisherService;
+    private final ClienteMessageProducerService clienteMessageProducerService;
     private final TransacaoMilhasRepository transacaoMilhasRepository;
 
     @Transactional
@@ -35,7 +36,7 @@ public class ClienteService {
         System.out.println("senha criada para o usuario " + novoCliente.getEmail() + ": " + senha);
 
         novoCliente = this.clienteRepository.save(novoCliente);
-        this.clienteMessagePublisherService.sendToCriarClienteQueue(ClienteMapper.toCriarClienteMessageDto(novoCliente));
+        this.clienteMessageProducerService.sendToCriarClienteQueue(ClienteMapper.toCriarClienteMessageDto(novoCliente));
 
         return novoCliente;
     }
@@ -60,7 +61,14 @@ public class ClienteService {
     }
 
     @Transactional
-    public void atualizarMilhas(String cpf, Integer milhas) {
+    public Cliente atualizarMilhas(Long clienteId, Integer milhas) {
+        Cliente cliente = this.findClienteById(clienteId);
+        cliente.setSaldoMilhas(cliente.getSaldoMilhas() + milhas);
+        return clienteRepository.save(cliente);
+    }
+
+    @Transactional
+    public void atualizarMilhasByCpf(String cpf, Integer milhas) {
         Cliente cliente = clienteRepository.findByCpf(cpf)
                 .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado com CPF: " + cpf));
         
