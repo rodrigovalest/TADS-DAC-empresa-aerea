@@ -3,7 +3,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import cors from 'cors';
 
 const app = express();
-const port = 3000;
+const port = 8000;
 
 app.use(cors());
 
@@ -19,7 +19,6 @@ const services = {
   voos: 'http://localhost:8083/voos',
   auth: 'http://localhost:8084',
 };
-
 
 Object.entries(services).forEach(([route, target]) => {
   app.use(`/${route}`, createProxyMiddleware({

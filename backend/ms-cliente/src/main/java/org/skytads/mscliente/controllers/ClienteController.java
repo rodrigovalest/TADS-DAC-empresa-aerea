@@ -9,6 +9,7 @@ import org.skytads.mscliente.models.Cliente;
 import org.skytads.mscliente.models.TransacaoMilhas;
 import org.skytads.mscliente.services.ClienteService;
 import org.skytads.mscliente.services.TransacaoMilhasService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +25,17 @@ public class ClienteController {
     private final TransacaoMilhasService transacaoMilhasService;
     private final ClienteService clienteService;
 
+    // @PostMapping
+    // public ResponseEntity<AutocadastroResponseDto> autocadastro(@RequestBody @Valid AutocadastroRequestDto requestDto) {
+    //     Cliente novoCliente = this.clienteService.autocadastro(ClienteMapper.toModel(requestDto));
+    //     return ResponseEntity.ok(ClienteMapper.toAutocadastroResponseDto(novoCliente));
+    // }
+
     @PostMapping
     public ResponseEntity<AutocadastroResponseDto> autocadastro(@RequestBody @Valid AutocadastroRequestDto requestDto) {
         Cliente novoCliente = this.clienteService.autocadastro(ClienteMapper.toModel(requestDto));
-        return ResponseEntity.ok(ClienteMapper.toAutocadastroResponseDto(novoCliente));
+        AutocadastroResponseDto response = ClienteMapper.toAutocadastroResponseDto(novoCliente);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/email/{email}")
