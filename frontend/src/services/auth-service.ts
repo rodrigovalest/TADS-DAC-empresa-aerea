@@ -1,41 +1,69 @@
-import Cookies from 'js-cookie';
+import axios from "axios";
+import Cookies from "js-cookie";
+import ILoginRequest from "@/models/requests/login-request";
 import ILoginResponse from "@/models/response/login-response";
-import seedService from "./seed-service";
-import ILoginRequest from '@/models/requests/login-request';
-import ILogoutRequest from '@/models/requests/logout-request';
+import ILogoutRequest from "@/models/requests/logout-request";
+
+// Depois mudar para a url do Api Gateway
+const API_BASE_URL = "https://localhost:8084";
 
 const authService = {
   login: async (data: ILoginRequest): Promise<ILoginResponse> => {
-    seedService.createUsers();
-    
-    const usersJson = localStorage.getItem("users");
-    const users = usersJson ? JSON.parse(usersJson) : [];
+    try {
+      const response = await axios.post<ILoginResponse>(
+        `${API_BASE_URL}/login`,
+        data
+      );
 
-    const usuarioEncontrado = users.find((user: ILoginResponse) => user.usuario.email === data.login);
+      const { access_token, token_type, tipo, usuario } = response.data;
 
-    if (usuarioEncontrado) {
-      localStorage.setItem("logged_user", JSON.stringify(usuarioEncontrado));
-      localStorage.setItem("user_role", usuarioEncontrado.tipo);
-      localStorage.setItem("token", "fake_token");
+      // Armazenar dados localmente
+      localStorage.setItem("logged_user", JSON.stringify(usuario));
+      localStorage.setItem("user_role", tipo);
+      localStorage.setItem("token", access_token);
 
-      return usuarioEncontrado;
-    } else {
+      Cookies.set("token", access_token);
+      Cookies.set("role", tipo);
+
+      return response.data;
+    } catch (error: any) {
       localStorage.clear();
-
       Cookies.remove("token");
       Cookies.remove("role");
 
-      return Promise.reject("Usuário não encontrado");
+      throw new Error(error.response?.data?.message || "Erro ao fazer login");
     }
   },
 
   logout: async (): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
-    localStorage.clear();
-    Cookies.remove("token");
-    Cookies.remove("role");
-  }
-}
+    try {
+      const loggedUserJson = localStorage.getItem("logged_user");
+
+      if (!loggedUserJson) {
+        throw new Error("Usuário não encontrado no localStorage");
+      }
+
+      const loggedUser = JSON.parse(loggedUserJson);
+      const email = loggedUser?.usuario?.email;
+
+      const logoutData: ILogoutRequest = {
+        login: email,
+      };
+
+      await axios.post(`${API_BASE_URL}/auth/logout`, logoutData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      localStorage.clear();
+      Cookies.remove("token");
+      Cookies.remove("role");
+    } catch (error: any) {
+      console.error("Erro ao fazer logout:", error);
+      throw error;
+    }
+  },
+};
 
 export default authService;

@@ -6,9 +6,10 @@ import { useEffect } from "react";
 
 const Logout = () => {
   useEffect(() => {
-    authService.logout()
-    .then(() => window.location.href = "/")
-    .catch((err) => console.error(err));
+    authService
+      .logout()
+      .then(() => (window.location.href = "/"))
+      .catch((err) => console.error(err));
   }, []);
 
   return (
