@@ -1,73 +1,92 @@
+import axios from "axios";
 import IAutocadastroRequest from "@/models/requests/autocadastro-request";
 import IComprarMilhasRequest from "@/models/requests/comprar-milhas-request";
 import IAutocadastroResponse from "@/models/response/autocadastro-response";
 import IClienteResponse from "@/models/response/cliente-response";
 
+// Depois mudar para a url do Api Gateway
+const API_BASE_URL = "https://localhost:8080";
+
 const clienteService = {
   autocadastro: async (
     autocadastroRequest: IAutocadastroRequest
   ): Promise<IAutocadastroResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  
-    const usersJson = localStorage.getItem("users");
-    const users = usersJson ? JSON.parse(usersJson) : [];
-  
-    const existente = users.find(
-      (u: any) => u.usuario.email === autocadastroRequest.email
-    );
-  
-    if (existente) {
-      return {
-        codigo: existente.usuario.codigo,
-        cpf: existente.usuario.cpf,
-        email: existente.usuario.email,
-        nome: existente.usuario.nome ?? "",
-      };
+    try {
+      const response = await axios.post<IAutocadastroResponse>(
+        `${API_BASE_URL}/clientes`,
+        autocadastroRequest
+      );
+
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || "Erro no autocadastro");
     }
-  
-    const novoCodigo = users.length + 1;
-  
-    const novoUsuario = {
-      access_token: "fake_token",
-      token_type: "bearer",
-      tipo: "CLIENTE",
-      usuario: {
-        codigo: novoCodigo,
-        cpf: autocadastroRequest.cpf,
-        email: autocadastroRequest.email,
-        nome: autocadastroRequest.nome,
-      },
-    };
-  
-    users.push(novoUsuario);
-    localStorage.setItem("users", JSON.stringify(users));
-  
-    return {
-      codigo: novoCodigo,
-      cpf: autocadastroRequest.cpf,
-      email: autocadastroRequest.email,
-      nome: autocadastroRequest.nome,
-    };
   },
 
-  findAllClientes: async (): Promise<IClienteResponse []> => {
-    throw new Error("Not implemented yet");
+  findAllClientes: async (): Promise<IClienteResponse[]> => {
+    const response = await axios.get<IClienteResponse[]>(
+      `${API_BASE_URL}/clientes`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    return response.data;
   },
 
   findClienteById: async (clienteId: number): Promise<IClienteResponse> => {
-    throw new Error("Not implemented yet");
+    const response = await axios.get<IClienteResponse>(
+      `${API_BASE_URL}/clientes/${clienteId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    return response.data;
   },
 
   findAllReservasByClienteId: async (clienteId: number) => {
-    throw new Error("Not implemented yet");
+    const response = await axios.get(
+      `${API_BASE_URL}/clientes/${clienteId}/reservas`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    return response.data;
   },
 
-  comprarMilhas: async (data: IComprarMilhasRequest) => {
-    throw new Error("Not implemented yet");
+  comprarMilhas: async (clienteId: number, data: IComprarMilhasRequest) => {
+    const response = await axios.put(
+      `${API_BASE_URL}/clientes/${clienteId}/milhas`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    return response.data;
   },
 
   extratoMilhas: async () => {
-    throw new Error("Not implemented yet");
+    const response = await axios.get(
+      `${API_BASE_URL}/clientes/extrato-milhas`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    return response.data;
   },
 };
 
