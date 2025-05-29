@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   db-cliente:
     image: postgres:17.4
@@ -76,6 +74,11 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - private_network
 
@@ -86,9 +89,15 @@ services:
     container_name: ms-auth
     ports:
       - "8084:8084"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
     depends_on:
-      - db-auth
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+      db-auth:
+        condition: service_started
+    networks:
+      - private_network
 
   ms-cliente:
     build:
@@ -98,8 +107,14 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db-cliente
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+      db-auth:
+        condition: service_started
+      db-cliente:
+        condition: service_started
+    networks:
+      - private_network
 
   ms-reserva:
     build:
@@ -109,8 +124,12 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      - db-reserva
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+      db-auth:
+        condition: service_started
+    networks:
+      - private_network
 
   ms-voos:
     build:
@@ -120,8 +139,14 @@ services:
     ports:
       - "8083:8083"
     depends_on:
-      - db-voos
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+      db-auth:
+        condition: service_started
+      db-voos:
+        condition: service_started
+    networks:
+      - private_network
 
   frontend:
     build: ./frontend
