@@ -1,6 +1,7 @@
 package org.skytads.msreserva.mappers;
 
 import org.skytads.msreserva.dtos.responses.AeroportoResponseDto;
+import org.skytads.msreserva.dtos.responses.ConsultaReservaResponseDto;
 import org.skytads.msreserva.dtos.responses.CriarReservaResponseDto;
 import org.skytads.msreserva.entities.ReservaEntity;
 import org.skytads.msreserva.entities.VooEntity;
@@ -38,5 +39,13 @@ public class ReservaMapper {
                 aeroportoOrigemEntity,
                 aeroportoDestinoEntity
         );
+    }
+    public static ConsultaReservaResponseDto toConsultaReservaResponseDto(ReservaEntity reserva) {
+        return ConsultaReservaResponseDto.builder()
+                .codigo(reserva.getCodigo())
+                .codigoCliente(reserva.getCodigoCliente())
+                .estado(reserva.getEstado().name())
+                .voo(null)
+                .build();
     }
 }
