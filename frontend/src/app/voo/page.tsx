@@ -49,7 +49,7 @@ const RegisterFly = () => {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     // Validate form data
@@ -74,12 +74,29 @@ const RegisterFly = () => {
       valorPassagem: parseFloat(valor),
       valorMilhas: milhas,
     };
+    
+    try{
+      const response = await fetch("http://localhost:8000/voos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(vooData),
+    });
 
-    // Here you would call your API service
-    console.log("Dados do voo para cadastro:", vooData);
+    if (!response.ok) {
+      throw new Error("Erro ao cadastrar voo.");
+    }
 
-    alert("Voo criado");
-    window.location.href = "/employee";
+      const result = await response.json();
+      console.log("Resposta da API:", result);
+      alert("Voo criado com sucesso!");
+      window.location.href = "/employee";
+
+    }catch (error) {
+      console.error("Erro na requisição:", error);
+      alert("Erro ao cadastrar voo. Tente novamente.");
+    }
   };
 
   return (
