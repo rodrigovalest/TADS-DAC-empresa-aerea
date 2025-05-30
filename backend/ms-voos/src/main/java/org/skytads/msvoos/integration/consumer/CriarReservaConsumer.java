@@ -12,7 +12,9 @@ import org.skytads.msvoos.integration.producer.CriarReservaProducer;
 import org.skytads.msvoos.services.VooService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class CriarReservaConsumer {
@@ -76,4 +78,16 @@ public class CriarReservaConsumer {
         System.out.println(dto);
         this.vooService.reservarPoltronas(dto.getCodigoVoo(), dto.getQuantidadePoltronas());
     }
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_CANCELAR_RESERVA_POLTRONAS_VOO)
+    public void liberarPoltronas(CriarReservaReverterPoltronasMessageDto dto) {
+        log.info("[SAGA cancelar reserva] Liberar poltronas no voo. {}", dto);
+
+        try {
+            this.vooService.liberarPoltronas(dto.getCodigoVoo(), dto.getQuantidadePoltronas());
+            log.info("[SAGA cancelar reserva] Poltronas liberadas com sucesso para a reserva {}", dto.getReservaId());
+        } catch (Exception e) {
+            log.error("[SAGA cancelar reserva] Falha ao liberar poltronas para a reserva {}", dto.getReservaId(), e);
+        }
+    }
+
 }

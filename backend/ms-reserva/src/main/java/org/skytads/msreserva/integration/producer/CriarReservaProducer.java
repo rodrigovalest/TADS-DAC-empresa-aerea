@@ -3,9 +3,7 @@ package org.skytads.msreserva.integration.producer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.skytads.msreserva.config.RabbitMQConfig;
-import org.skytads.msreserva.dtos.messages.CriarReservaClienteMessageDto;
-import org.skytads.msreserva.dtos.messages.CriarReservaReverterPoltronasMessageDto;
-import org.skytads.msreserva.dtos.messages.CriarReservaVooRequestMessageDto;
+import org.skytads.msreserva.dtos.messages.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
@@ -52,4 +50,29 @@ public class CriarReservaProducer {
         log.info("[SAGA criar reserva (5)] Algo deu errado. Reverter reserva de poltronas {}", message);
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_RESERVA, RabbitMQConfig.ROUTING_KEY_REVERTER_RESERVA_POLTRONAS_VOO, message);
     }
+
+    public void sendCancelarMilhasToCliente(Long reservaId, Long codigoCliente, Long milhasUtilizadas) {
+        CriarReservaClienteMessageDto message = new CriarReservaClienteMessageDto(
+                "Cancelar reserva: reverter milhas do cliente",
+                reservaId,
+                codigoCliente,
+                milhasUtilizadas
+        );
+
+        log.info("[SAGA cancelar reserva] Reverter milhas do cliente. {}", message);
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_RESERVA, RabbitMQConfig.ROUTING_KEY_CANCELAR_RESERVA_MILHAS_CLIENTE, message);
+    }
+
+    public void sendCancelarPoltronasToVoo(Long reservaId, Long codigoVoo, Long quantidadePoltronas) {
+        CriarReservaReverterPoltronasMessageDto message = new CriarReservaReverterPoltronasMessageDto(
+                "Cancelar reserva: liberar poltronas no voo",
+                reservaId,
+                codigoVoo,
+                quantidadePoltronas
+        );
+
+        log.info("[SAGA cancelar reserva] Liberar poltronas no voo. {}", message);
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_RESERVA, RabbitMQConfig.ROUTING_KEY_CANCELAR_RESERVA_POLTRONAS_VOO, message);
+    }
+
 }

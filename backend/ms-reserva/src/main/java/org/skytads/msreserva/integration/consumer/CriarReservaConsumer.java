@@ -3,6 +3,7 @@ package org.skytads.msreserva.integration.consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.skytads.msreserva.config.RabbitMQConfig;
+import org.skytads.msreserva.dtos.messages.CriarReservaReverterPoltronasMessageDto;
 import org.skytads.msreserva.dtos.messages.CriarReservaUsarMilhasMessageDto;
 import org.skytads.msreserva.dtos.messages.CriarReservaVooResponseMessageDto;
 import org.skytads.msreserva.services.ReservaResumoService;
@@ -44,4 +45,23 @@ public class CriarReservaConsumer {
             this.reservaService.reverterReservaPoltronasVoo(dto.getReservaId());
         }
     }
+
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_CANCELAR_RESERVA_MILHAS_CLIENTE)
+    public void cancelarMilhasCliente(CriarReservaUsarMilhasMessageDto dto) {
+        log.info("[SAGA cancelar reserva] Reverter milhas do cliente. {}", dto);
+
+        if (dto.getSuccess()) {
+            log.info("[SAGA cancelar reserva] Milhas revertidas com sucesso para a reserva {}", dto.getReservaId());
+        } else {
+            log.error("[SAGA cancelar reserva] Falha ao reverter milhas para a reserva {}", dto.getReservaId());
+        }
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_CANCELAR_RESERVA_POLTRONAS_VOO)
+    public void cancelarPoltronasVoo(CriarReservaReverterPoltronasMessageDto dto) {
+        log.info("[SAGA cancelar reserva] Liberar poltronas no voo. {}", dto);
+
+        log.info("[SAGA cancelar reserva] Poltronas liberadas com sucesso para a reserva {}", dto.getReservaId());
+    }
+
 }
