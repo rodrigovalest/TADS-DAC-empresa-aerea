@@ -27,6 +27,8 @@ public class ClienteService {
 
     @Transactional
     public Cliente autocadastro(Cliente novoCliente) {
+        novoCliente.setCpf(novoCliente.getCpf());
+
         String senha = String.format("%04d", new Random().nextInt(10000));
         novoCliente.setSenha(senha);
         this.emailService.sendEmail(novoCliente.getEmail(), "Cadastro na plataforma SkyTADS", "Sua senha é: " + senha);

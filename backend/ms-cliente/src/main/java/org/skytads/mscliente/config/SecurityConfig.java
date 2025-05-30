@@ -22,6 +22,22 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    // @Bean
+    // public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    //     return httpSecurity
+    //             .csrf(AbstractHttpConfigurer::disable)
+    //             .formLogin(AbstractHttpConfigurer::disable)
+    //             .httpBasic(AbstractHttpConfigurer::disable)
+    //             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    //             .addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+    //             .authorizeHttpRequests(auth -> auth
+    //                     .requestMatchers(HttpMethod.POST, "/clientes", "/clientes/").permitAll()
+    //                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+    //                     .anyRequest().authenticated()
+    //             )
+    //             .build();
+    // }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -31,9 +47,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/clientes").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .anyRequest().authenticated()
+                                               .requestMatchers(HttpMethod.POST, "/clientes", "/clientes/").permitAll()
+                                               .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                               .anyRequest().authenticated()
                 )
                 .build();
     }
