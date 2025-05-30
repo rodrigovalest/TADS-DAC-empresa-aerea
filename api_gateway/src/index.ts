@@ -12,21 +12,28 @@ app.use((req, res, next) => {
   next();
 });
 
+// Dedicated proxy for /clientes:
+app.use('/clientes', createProxyMiddleware({
+  target: 'http://ms-cliente:8080',
+  changeOrigin: true,
+  pathRewrite: (path, req) => {
+    return path === '/' ? '/clientes' : `/clientes${path}`;
+  },
+  logger: console,
+}));
+
 const services = {
-  clientes: 'http://localhost:8080/clientes',
-  funcionarios: 'http://localhost:8081/funcionarios',
-  reservas: 'http://localhost:8082/reservas',
-  voos: 'http://localhost:8083/voos',
-  auth: 'http://localhost:8084',
+  funcionarios: 'http://ms-funcionarios:8081',
+  reservas: 'http://ms-reserva:8082',
+  voos: 'http://ms-voos:8083',
+  auth: 'http://ms-auth:8084',
 };
 
 Object.entries(services).forEach(([route, target]) => {
   app.use(`/${route}`, createProxyMiddleware({
     target,
     changeOrigin: true,
-    pathRewrite: {
-      [`^/${route}`]: '',
-    },
+    pathRewrite: (path, req) => `/${route}${path}`,
     logger: console,
   }));
 });

@@ -25,12 +25,6 @@ public class ClienteController {
     private final TransacaoMilhasService transacaoMilhasService;
     private final ClienteService clienteService;
 
-    // @PostMapping
-    // public ResponseEntity<AutocadastroResponseDto> autocadastro(@RequestBody @Valid AutocadastroRequestDto requestDto) {
-    //     Cliente novoCliente = this.clienteService.autocadastro(ClienteMapper.toModel(requestDto));
-    //     return ResponseEntity.ok(ClienteMapper.toAutocadastroResponseDto(novoCliente));
-    // }
-
     @PostMapping
     public ResponseEntity<AutocadastroResponseDto> autocadastro(@RequestBody @Valid AutocadastroRequestDto requestDto) {
         Cliente novoCliente = this.clienteService.autocadastro(ClienteMapper.toModel(requestDto));
