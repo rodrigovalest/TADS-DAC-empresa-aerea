@@ -32,6 +32,7 @@ const RegisterForm: React.FC<{
             setValue("endereco.complemento", data.complemento || "");
             setValue("endereco.cidade", data.localidade || "");
             setValue("endereco.uf", data.uf || "");
+            setValue("endereco.bairro", data.bairro || "");
           }
         } catch (err) {
           console.error("Erro ao buscar endereço no ViaCEP:", err);
@@ -96,26 +97,7 @@ const RegisterForm: React.FC<{
       </div>
 
       <div className="mb-2">
-        <label htmlFor="usuario" className="block font-light text-white pb-2">
-          Usuário
-        </label>
-        <input
-          type="text"
-          id="usuario"
-          {...register("usuario", { required: "Usuário é obrigatório" })}
-          className="w-full p-2 rounded bg-gray-100 border-0 text-gray-800 focus:outline-none"
-          autoComplete="off"
-        />
-        {errors.usuario && (
-          <p className="text-red-800">{errors.usuario.message}</p>
-        )}
-      </div>
-
-      <div className="mb-2">
-        <label
-          htmlFor="endereco.cep"
-          className="block font-light text-white pb-2"
-        >
+        <label htmlFor="endereco.cep" className="block font-light text-white pb-2">
           CEP
         </label>
         <input
@@ -130,10 +112,7 @@ const RegisterForm: React.FC<{
       </div>
 
       <div className="mb-2">
-        <label
-          htmlFor="endereco.uf"
-          className="block font-light text-white pb-2"
-        >
+        <label htmlFor="endereco.uf" className="block font-light text-white pb-2">
           UF
         </label>
         <input
@@ -148,10 +127,7 @@ const RegisterForm: React.FC<{
       </div>
 
       <div className="mb-2">
-        <label
-          htmlFor="endereco.cidade"
-          className="block font-light text-white pb-2"
-        >
+        <label htmlFor="endereco.cidade" className="block font-light text-white pb-2">
           Cidade
         </label>
         <input
@@ -166,10 +142,22 @@ const RegisterForm: React.FC<{
       </div>
 
       <div className="mb-2">
-        <label
-          htmlFor="endereco.rua"
-          className="block font-light text-white pb-2"
-        >
+        <label htmlFor="endereco.bairro" className="block font-light text-white pb-2">
+          Bairro
+        </label>
+        <input
+          type="text"
+          id="endereco.bairro"
+          {...register("endereco.bairro", { required: "Bairro é obrigatório" })}
+          className="w-full p-2 rounded bg-gray-100 border-0 text-gray-800 focus:outline-none"
+        />
+        {errors.endereco?.bairro && (
+          <p className="text-red-800">{errors.endereco.bairro.message}</p>
+        )}
+      </div>
+
+      <div className="mb-2">
+        <label htmlFor="endereco.rua" className="block font-light text-white pb-2">
           Rua
         </label>
         <input
@@ -184,10 +172,7 @@ const RegisterForm: React.FC<{
       </div>
 
       <div className="mb-2">
-        <label
-          htmlFor="endereco.numero"
-          className="block font-light text-white pb-2"
-        >
+        <label htmlFor="endereco.numero" className="block font-light text-white pb-2">
           Número
         </label>
         <input
@@ -202,10 +187,7 @@ const RegisterForm: React.FC<{
       </div>
 
       <div className="mb-4">
-        <label
-          htmlFor="endereco.complemento"
-          className="block font-light text-white pb-2"
-        >
+        <label htmlFor="endereco.complemento" className="block font-light text-white pb-2">
           Complemento
         </label>
         <input
@@ -218,7 +200,7 @@ const RegisterForm: React.FC<{
 
       <button
         type="submit"
-        className="w-full bg-amber-800 text-white py-2 rounded font-pathway"
+        className="w-full bg-amber-800 text-white py-2 rounded font-pathway transition duration-200 hover:bg-amber-700 active:bg-amber-900 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
       >
         Registrar
       </button>
