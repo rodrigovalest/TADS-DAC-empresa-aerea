@@ -147,6 +147,23 @@ services:
         condition: service_started
     networks:
       - private_network
+  
+  ms-funcionarios:
+    build:
+      context: ./backend
+      dockerfile: ms-funcionarios/Dockerfile
+    container_name: ms-funcionarios
+    ports:
+      - "8081:8081"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      db-auth:
+        condition: service_started
+      db-funcionario:
+        condition: service_started
+    networks:
+      - private_network
 
   frontend:
     build: ./frontend
@@ -164,6 +181,23 @@ services:
       - db-voos
       - db-auth
       - rabbitmq
+
+  api_gateway:
+    build: 
+      context: ./api_gateway
+      dockerfile: Dockerfile
+    container_name: api_gateway
+    ports:
+      - "8000:8000"
+    networks:
+      - public_network
+      - private_network
+    depends_on:
+      - ms-cliente
+      - ms-funcionarios
+      - ms-reserva
+      - ms-voos
+      - ms-auth
 
 networks:
   private_network:

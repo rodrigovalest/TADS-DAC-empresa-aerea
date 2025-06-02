@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class AutocadastroRequestDto {
 
     @NotBlank(message = "CPF must not be blank")
-    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "CPF must be in the format XXX.XXX.XXX-XX")
+    // @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "CPF must be in the format XXX.XXX.XXX-XX") Paulo: Comentei porque o teste do prof não está formatado
     private String cpf;
 
     @NotBlank(message = "Email must not be blank")
