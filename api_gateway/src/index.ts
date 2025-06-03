@@ -34,16 +34,14 @@ Object.entries(services).forEach(([route, target]) => {
     target,
     changeOrigin: true,
     pathRewrite: (path, req) => {
-      // Remove o prefixo /auth para chamadas ao ms-auth
       if (route === 'auth') {
         return path.replace(/^\/auth/, '');
       }
-      return `/${route}${path}`;
+      return path === '/' ? `/${route}` : `/${route}${path}`;
     },
     logger: console,
   }));
 });
-
 app.get('/', (req, res) => {
   res.json({ services: Object.keys(services).concat('clientes') });
 });
