@@ -69,10 +69,7 @@ const EmployeeHomePage: React.FC = () => {
       <div className="max-w-4xl mx-auto -mt-20 pb-10">
         <div className="bg-white rounded-2xl shadow-xl border border-gray-700 mx-4">
           <div className="p-6">
-            <FlightsList
-              flights={upcomingFlights}
-              onOpenModal={handleOpenModal}
-            />
+            <FlightsList onOpenModal={handleOpenModal} />
           </div>
         </div>
 

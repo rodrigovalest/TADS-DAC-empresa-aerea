@@ -12,7 +12,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Dedicated proxy for /clientes:
+// Proxy dedicado para /clientes
 app.use('/clientes', createProxyMiddleware({
   target: 'http://ms-cliente:8080',
   changeOrigin: true,
@@ -33,20 +33,25 @@ Object.entries(services).forEach(([route, target]) => {
   app.use(`/${route}`, createProxyMiddleware({
     target,
     changeOrigin: true,
-    pathRewrite: (path, req) => `/${route}${path}`,
+    pathRewrite: (path, req) => {
+      // Remove o prefixo /auth para chamadas ao ms-auth
+      if (route === 'auth') {
+        return path.replace(/^\/auth/, '');
+      }
+      return `/${route}${path}`;
+    },
     logger: console,
   }));
 });
 
 app.get('/', (req, res) => {
-  res.json({ services: Object.keys(services) });
+  res.json({ services: Object.keys(services).concat('clientes') });
 });
 
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
-
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Rota não encontrada no API Gateway.' });

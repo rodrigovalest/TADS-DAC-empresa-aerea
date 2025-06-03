@@ -1,41 +1,55 @@
-import Cookies from 'js-cookie';
+import axios from "axios";
+import Cookies from "js-cookie";
 import ILoginResponse from "@/models/response/login-response";
-import seedService from "./seed-service";
-import ILoginRequest from '@/models/requests/login-request';
-import ILogoutRequest from '@/models/requests/logout-request';
+import ILoginRequest from "@/models/requests/login-request";
+
+const API_GATEWAY_URL = "http://localhost:8000"; 
 
 const authService = {
   login: async (data: ILoginRequest): Promise<ILoginResponse> => {
-    seedService.createUsers();
-    
-    const usersJson = localStorage.getItem("users");
-    const users = usersJson ? JSON.parse(usersJson) : [];
+    try {
+      const response = await axios.post<ILoginResponse>(`${API_GATEWAY_URL}/auth/login`, data);
+      const loginResponse: ILoginResponse = response.data;
 
-    const usuarioEncontrado = users.find((user: ILoginResponse) => user.usuario.email === data.login);
+      localStorage.setItem("logged_user", JSON.stringify(loginResponse));
+      localStorage.setItem("user_role", loginResponse.tipo);
+      localStorage.setItem("token", loginResponse.access_token);
 
-    if (usuarioEncontrado) {
-      localStorage.setItem("logged_user", JSON.stringify(usuarioEncontrado));
-      localStorage.setItem("user_role", usuarioEncontrado.tipo);
-      localStorage.setItem("token", "fake_token");
+      Cookies.set("token", loginResponse.access_token);
+      Cookies.set("role", loginResponse.tipo);
 
-      return usuarioEncontrado;
-    } else {
+      return loginResponse;
+    } catch (error) {
       localStorage.clear();
-
       Cookies.remove("token");
       Cookies.remove("role");
 
-      return Promise.reject("Usuário não encontrado");
+      return Promise.reject("Usuário ou senha incorretos");
     }
   },
 
   logout: async (): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
-    localStorage.clear();
-    Cookies.remove("token");
-    Cookies.remove("role");
-  }
-}
+    try {
+      const token = Cookies.get("token");
+      if (token) {
+        await axios.post(
+          `${API_GATEWAY_URL}/auth/logout`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    } finally {
+      localStorage.clear();
+      Cookies.remove("token");
+      Cookies.remove("role");
+    }
+  },
+};
 
 export default authService;

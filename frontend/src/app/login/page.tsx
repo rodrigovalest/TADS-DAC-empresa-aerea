@@ -3,19 +3,11 @@
 import Cookies from "js-cookie";
 import React, { useState } from "react";
 import "../../../public/styles/login.css";
-import Image from "next/image";
-import ILoginRequest from "@/models/requests/login-request";
 import { useForm } from "react-hook-form";
 import authService from "@/services/auth-service";
+import ILoginRequest from "@/models/requests/login-request";
 import ILoginResponse from "@/models/response/login-response";
-import {
-  TextField,
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-} from "@mui/material";
+import { TextField, Button } from "@mui/material";
 
 const Login = () => {
   const [isFormInvalid, setFormInvalid] = useState(false);
