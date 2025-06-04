@@ -12,12 +12,28 @@ app.use((req, res, next) => {
   next();
 });
 
-// Proxy dedicado para /clientes
+// Proxy dedicado para /login
+app.use('/login', createProxyMiddleware({
+  target: 'http://ms-auth:8084',
+  changeOrigin: true,
+  pathRewrite: (path, req) => '/login',
+  logger: console,
+}));
+
+// Proxy dedicado para /logout
+app.use('/logout', createProxyMiddleware({
+  target: 'http://ms-auth:8084',
+  changeOrigin: true,
+  pathRewrite: (path, req) => '/logout',
+  logger: console,
+}));
+
 app.use('/clientes', createProxyMiddleware({
   target: 'http://ms-cliente:8080',
   changeOrigin: true,
   pathRewrite: (path, req) => {
-    return path === '/' ? '/clientes' : `/clientes${path}`;
+    const fullPath = `/clientes${path}`;
+    return fullPath.endsWith('/') ? fullPath.slice(0, -1) : fullPath; // Tive que adicionar isso aqui porque por algum motivo para /clientes ele manda para /clientes/ e quebra tudo
   },
   logger: console,
 }));

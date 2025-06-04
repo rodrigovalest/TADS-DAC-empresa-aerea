@@ -25,23 +25,32 @@ public class ClienteService {
     private final ClienteMessageProducerService clienteMessageProducerService;
     private final TransacaoMilhasRepository transacaoMilhasRepository;
 
-    @Transactional
-    public Cliente autocadastro(Cliente novoCliente) {
-        novoCliente.setCpf(novoCliente.getCpf());
+@Transactional
+public Cliente autocadastro(Cliente novoCliente) {
+    novoCliente.setCpf(novoCliente.getCpf());
 
-        String senha = String.format("%04d", new Random().nextInt(10000));
-        novoCliente.setSenha(senha);
-        this.emailService.sendEmail(novoCliente.getEmail(), "Cadastro na plataforma SkyTADS", "Sua senha é: " + senha);
+    String senha = String.format("%04d", new Random().nextInt(10000));
+    novoCliente.setSenha(senha);
+    novoCliente.setSaldoMilhas(0L);
 
-        novoCliente.setSaldoMilhas(0L);
+    // Save the client first
+    novoCliente = this.clienteRepository.save(novoCliente);
+    
+    // Now send the email only if the save was successful
+    this.emailService.sendEmail(
+        novoCliente.getEmail(), 
+        "Cadastro na plataforma SkyTADS", 
+        "Sua senha é: " + senha
+    );
 
-        System.out.println("senha criada para o usuario " + novoCliente.getEmail() + ": " + senha);
+    System.out.println("Senha criada para o usuário " + novoCliente.getEmail() + ": " + senha);
 
-        novoCliente = this.clienteRepository.save(novoCliente);
-        this.clienteMessageProducerService.sendToCriarClienteQueue(ClienteMapper.toCriarClienteMessageDto(novoCliente));
+    this.clienteMessageProducerService.sendToCriarClienteQueue(
+        ClienteMapper.toCriarClienteMessageDto(novoCliente)
+    );
 
-        return novoCliente;
-    }
+    return novoCliente;
+}
 
     @Transactional(readOnly = true)
     public Cliente findClienteByEmail(String email) {
