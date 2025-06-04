@@ -33,6 +33,12 @@ public class RabbitMQConfig {
     public static final String QUEUE_REVERTER_RESERVA_POLTRONAS_VOO = "reverter-reserva-poltronas.voo.queue";
     public static final String ROUTING_KEY_REVERTER_RESERVA_POLTRONAS_VOO = "reverter-reserva-poltronas.voo.routing";
 
+    public static final String QUEUE_CANCELAR_RESERVA_MILHAS_CLIENTE = "cancelar-reserva.milhas.cliente.queue";
+    public static final String ROUTING_KEY_CANCELAR_RESERVA_MILHAS_CLIENTE = "cancelar-reserva.milhas.cliente.routing";
+
+    public static final String QUEUE_CANCELAR_RESERVA_POLTRONAS_VOO = "cancelar-reserva.poltronas.voo.queue";
+    public static final String ROUTING_KEY_CANCELAR_RESERVA_POLTRONAS_VOO = "cancelar-reserva.poltronas.voo.routing";
+
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
@@ -109,4 +115,29 @@ public class RabbitMQConfig {
                 .to(exchangeReserva())
                 .with(ROUTING_KEY_USAR_MILHAS_RESERVA);
     }
+
+    @Bean
+    public Queue filaCancelarReservaMilhasCliente() {
+        return new Queue(QUEUE_CANCELAR_RESERVA_MILHAS_CLIENTE, true);
+    }
+
+    @Bean
+    public Binding bindingCancelarReservaMilhasCliente() {
+        return BindingBuilder.bind(filaCancelarReservaMilhasCliente())
+                .to(exchangeReserva())
+                .with(ROUTING_KEY_CANCELAR_RESERVA_MILHAS_CLIENTE);
+    }
+
+    @Bean
+    public Queue filaCancelarReservaPoltronasVoo() {
+        return new Queue(QUEUE_CANCELAR_RESERVA_POLTRONAS_VOO, true);
+    }
+
+    @Bean
+    public Binding bindingCancelarReservaPoltronasVoo() {
+        return BindingBuilder.bind(filaCancelarReservaPoltronasVoo())
+                .to(exchangeReserva())
+                .with(ROUTING_KEY_CANCELAR_RESERVA_POLTRONAS_VOO);
+    }
+
 }

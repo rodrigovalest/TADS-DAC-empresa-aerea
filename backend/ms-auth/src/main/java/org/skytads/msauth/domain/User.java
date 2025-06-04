@@ -12,7 +12,7 @@ import java.time.Instant;
 public class User {
 
     private String id;
-    private String codigo;
+    private int codigo;
     private String cpf;
     private String email;
     private String senha;

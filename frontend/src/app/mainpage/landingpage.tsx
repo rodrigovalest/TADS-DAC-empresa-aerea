@@ -69,8 +69,26 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-      <section className="section3 h-full p-10 bg-[#D63000]">
-        <div className="title text-2xl text-white">Empresas parceiras</div>
+      <section className="section4 h-full p-10 bg-white text-[#D63000] flex flex-col border-t-4 border-orange-500 ">
+      <div className="title text-2xl">Empresas parceiras</div>
+        <div className="flex justify-around items-center gap-4">
+          <img src="images/latam.png" className="max-w-[300px] h-auto object-contain" />
+          <img src="images/azul.png" className="max-w-[300px] h-auto object-contain" />
+          <img src="images/gol.png" className="max-w-[300px] h-auto object-contain" />
+          <img src="images/airfrance.png" className="max-w-[300px] h-auto object-contain" />
+        </div>
+
+      </section>
+      <section className="section4 h-full p-10 bg-black flex justify-between">
+        <img width="250px" src="images/ufpr.png" />
+        <div className="text-white">
+            <h1>Desenvolvido por:</h1>
+            <h3>Matheus Grego do Amaral</h3>
+            <h3>Matheus Nunes Santana</h3>
+            <h3>Paulo Eduardo Bayer Kresko</h3>
+            <h3>Janaina Nogueira</h3>
+            <h3>Rodrigo do Vale Stankowicz</h3>
+        </div>        
       </section>
     </div>
   );

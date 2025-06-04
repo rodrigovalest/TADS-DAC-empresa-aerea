@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UsuarioResponseDto {
-    private String codigo;
+    private int codigo;
     private String cpf;
     private String email;
 }

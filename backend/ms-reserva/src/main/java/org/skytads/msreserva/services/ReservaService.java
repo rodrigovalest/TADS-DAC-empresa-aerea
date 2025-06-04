@@ -3,6 +3,7 @@ package org.skytads.msreserva.services;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.skytads.msreserva.dtos.responses.ConsultaReservaResponseDto;
 import org.skytads.msreserva.entities.HistoricoReservaEntity;
 import org.skytads.msreserva.entities.ReservaEntity;
 import org.skytads.msreserva.entities.ReservaResumoEntity;
@@ -10,10 +11,14 @@ import org.skytads.msreserva.entities.VooEntity;
 import org.skytads.msreserva.enums.EstadoReservaEnum;
 import org.skytads.msreserva.exceptions.ReservaNotFoundException;
 import org.skytads.msreserva.integration.producer.CriarReservaProducer;
+import org.skytads.msreserva.mappers.ReservaMapper;
 import org.skytads.msreserva.repositories.HistoricoReservaRespository;
 import org.skytads.msreserva.repositories.ReservaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -76,5 +81,33 @@ public class ReservaService {
         this.criarReservaProducer.reverterReservaToPoltronasVoo(
                 reservaResumo.getCodigoReserva(), reservaResumo.getCodigoVoo(), reservaResumo.getQuantidadePoltronas()
         );
+    }
+
+    public List<ConsultaReservaResponseDto> listarReservas() {
+        List<ReservaEntity> reservas = reservaRepository.findAll();
+        return reservas.stream()
+                .map(ReservaMapper::toConsultaReservaResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void cancelarReservaSaga(Long reservaId) {
+        ReservaResumoEntity reservaResumo = this.reservaResumoService.findByCodigoReserva(reservaId);
+
+        log.info("[SAGA cancelar reserva] Iniciando cancelamento da reserva {}", reservaId);
+
+        this.criarReservaProducer.sendCancelarMilhasToCliente(
+                reservaId,
+                reservaResumo.getCodigoCliente(),
+                reservaResumo.getMilhasUtilizadas()
+        );
+
+        this.criarReservaProducer.sendCancelarPoltronasToVoo(
+                reservaId,
+                reservaResumo.getCodigoVoo(),
+                reservaResumo.getQuantidadePoltronas()
+        );
+
+        cancelarReserva(reservaId);
     }
 }

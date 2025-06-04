@@ -23,7 +23,7 @@ public class UserEntity {
     private String id;
 
     @Field("codigo")
-    private String codigo;
+    private int codigo;
 
     @Indexed(unique = true)
     @Field("cpf")

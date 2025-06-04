@@ -4,8 +4,7 @@ import IComprarMilhasRequest from "@/models/requests/comprar-milhas-request";
 import IAutocadastroResponse from "@/models/response/autocadastro-response";
 import IClienteResponse from "@/models/response/cliente-response";
 
-// Depois mudar para a url do Api Gateway
-const API_BASE_URL = "https://localhost:8080";
+const API_GATEWAY_URL = "http://localhost:8000";
 
 const clienteService = {
   autocadastro: async (
@@ -13,27 +12,18 @@ const clienteService = {
   ): Promise<IAutocadastroResponse> => {
     try {
       const response = await axios.post<IAutocadastroResponse>(
-        `${API_BASE_URL}/clientes`,
+        `${API_GATEWAY_URL}/clientes`,
         autocadastroRequest
       );
-
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Erro no autocadastro");
+    } catch (error) {
+      console.error("Erro ao realizar autocadastro:", error);
+      throw new Error("Erro ao realizar autocadastro");
     }
   },
 
-  findAllClientes: async (): Promise<IClienteResponse[]> => {
-    const response = await axios.get<IClienteResponse[]>(
-      `${API_BASE_URL}/clientes`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-
-    return response.data;
+  findAllClientes: async (): Promise<IClienteResponse []> => {
+    throw new Error("Not implemented yet");
   },
 
   findClienteById: async (clienteId: number): Promise<IClienteResponse> => {

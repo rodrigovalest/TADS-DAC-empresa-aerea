@@ -16,7 +16,7 @@ const RegisterPage: React.FC = () => {
       })
       .catch((error) => {
         console.error("Autocadastro error:", error);
-        alert(error);
+        alert("Erro ao realizar cadastro. Tente novamente.");
       });
   };
 
