@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CriarClienteMessageDto {
-    private String codigo;
+    private int codigo;
     private String cpf;
     private String email;
     private String senha;
