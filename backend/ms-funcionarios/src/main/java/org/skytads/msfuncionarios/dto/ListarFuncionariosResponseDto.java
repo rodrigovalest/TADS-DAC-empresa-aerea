@@ -1,17 +1,17 @@
-package org.skytads.mscliente.dtos.responses;
+package org.skytads.msfuncionarios.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
-public class ClienteResponseDto {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ListarFuncionariosResponseDto {
     private Long codigo;
     private String cpf;
     private String email;
     private String nome;
-    private Long saldoMilhas;
-    private EnderecoResponseDto endereco;
+    private String telefone;
+    private String tipo;
 }

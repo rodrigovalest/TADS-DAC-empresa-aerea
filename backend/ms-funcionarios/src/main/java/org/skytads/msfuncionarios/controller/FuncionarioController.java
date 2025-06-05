@@ -26,9 +26,9 @@ public class FuncionarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FuncionarioResponseDto>> listarFuncionarios() {
+    public ResponseEntity<List<ListarFuncionariosResponseDto>> listarFuncionarios() {
         List<Funcionario> funcionarios = funcionarioService.listarFuncionarios();
-        return ResponseEntity.ok(FuncionarioMapper.toFuncionarioResponseDto(funcionarios));
+        return ResponseEntity.ok(FuncionarioMapper.toListarFuncionariosResponseDto(funcionarios));
     }
 
     @GetMapping("/{id}")
@@ -49,10 +49,10 @@ public class FuncionarioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removerFuncionario(
+    public ResponseEntity<FuncionarioResponseDto> removerFuncionario(
             @PathVariable("id") Long id
     ) {
-        this.funcionarioService.removerFuncionario(id);
-        return ResponseEntity.noContent().build();
+        Funcionario funcionario = this.funcionarioService.removerFuncionario(id);
+        return ResponseEntity.ok(FuncionarioMapper.toFuncionarioResponseDto(funcionario));
     }
 }

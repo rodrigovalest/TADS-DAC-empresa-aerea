@@ -55,7 +55,7 @@ public class ClienteMapper {
         );
 
         return new ClienteResponseDto(
-                cliente.getId().toString(),
+                cliente.getId(),
                 cliente.getCpf(),
                 cliente.getEmail(),
                 cliente.getNome(),

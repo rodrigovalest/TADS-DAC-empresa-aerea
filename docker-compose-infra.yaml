@@ -43,13 +43,11 @@ services:
     image: mongo:latest
     container_name: db-auth
     ports:
-      - '14004:27017'
+      - '27017:27017'
     environment:
       MONGO_INITDB_ROOT_USERNAME: 123mudar
       MONGO_INITDB_ROOT_PASSWORD: 123mudar
       MONGO_INITDB_DATABASE: auth
-    networks:
-      - private_network
 
   rabbitmq:
     image: rabbitmq:4.0.7-management
@@ -60,5 +58,3 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: 123mudar
       RABBITMQ_DEFAULT_PASS: 123mudar
-    networks:
-      - private_network
