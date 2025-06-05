@@ -12,9 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateFuncionarioRequestDto {
 
-    @NotNull
-    private Long codigo;
-
     @NotBlank(message = "CPF must not be blank")
     private String cpf;
 

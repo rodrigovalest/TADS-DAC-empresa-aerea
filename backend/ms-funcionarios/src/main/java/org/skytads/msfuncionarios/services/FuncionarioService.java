@@ -93,14 +93,16 @@ public class FuncionarioService {
     }
 
     @Transactional
-    public void removerFuncionario(Long id) {
+    public Funcionario removerFuncionario(Long id) {
         Funcionario funcionario = funcionarioRepository.findById(id)
                 .filter(Funcionario::isAtivo)
                 .orElseThrow(() -> new FuncionarioNotFoundException("Funcionário não encontrado"));
 
         funcionario.setAtivo(false);
-        this.funcionarioRepository.save(funcionario);
+        funcionario = this.funcionarioRepository.save(funcionario);
         this.rabbitMQProducer.enviarParaInativacaoUsuario(funcionario.getEmail());
+
+        return funcionario;
     }
 
     private FuncionarioDTO convertToDTO(Funcionario funcionario) {

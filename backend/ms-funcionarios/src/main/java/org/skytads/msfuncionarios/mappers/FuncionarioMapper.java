@@ -2,6 +2,7 @@ package org.skytads.msfuncionarios.mappers;
 
 import org.skytads.msfuncionarios.dto.CreateFuncionarioRequestDto;
 import org.skytads.msfuncionarios.dto.FuncionarioResponseDto;
+import org.skytads.msfuncionarios.dto.ListarFuncionariosResponseDto;
 import org.skytads.msfuncionarios.model.Funcionario;
 
 import java.util.List;
@@ -25,5 +26,18 @@ public class FuncionarioMapper {
         );
         funcionario.setAtivo(true);
         return funcionario;
+    }
+
+    public static List<ListarFuncionariosResponseDto> toListarFuncionariosResponseDto(List<Funcionario> funcionarios) {
+        return funcionarios.stream()
+                .map(func -> new ListarFuncionariosResponseDto(
+                        func.getId(),
+                        func.getCpf(),
+                        func.getEmail(),
+                        func.getNome(),
+                        func.getTelefone(),
+                        "FUNCIONARIO"
+                ))
+                .toList();
     }
 }
