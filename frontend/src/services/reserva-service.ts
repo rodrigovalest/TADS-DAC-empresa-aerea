@@ -3,7 +3,6 @@ import IMudarEstadoReservaRequest from "@/models/requests/mudar-estado-reserva-r
 import IEstadoReservaResponse from "@/models/response/estado-reserva-response";
 import IReservaResponse from "@/models/response/reserva-response";
 
-const API_GATEWAY_URL = "http://localhost:8082";
 const reservaService = {
   criarReserva: async (data: ICriarReservaRequest): Promise<IReservaResponse> => {
     throw new Error("Not implemented yet");
@@ -14,7 +13,7 @@ const reservaService = {
   },
 
   cancelarReserva: async (id: number): Promise<IEstadoReservaResponse> => {
-    const response = await fetch(`${API_GATEWAY_URL}/reservas/${id}/cancelar`, {
+    const response = await fetch(`http://localhost:8082/reservas/${id}/cancelar`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -29,7 +28,7 @@ const reservaService = {
   },
 //TODO
   mudarEstadoReserva: async (data: IMudarEstadoReservaRequest): Promise<IEstadoReservaResponse> => {
-    const response = await fetch(`${API_GATEWAY_URL}/reservas/${data.estado}/estado`, {
+    const response = await fetch(`http://localhost:8082/reservas/${data.estado}/estado`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
