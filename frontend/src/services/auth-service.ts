@@ -2,13 +2,12 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import ILoginResponse from "@/models/response/login-response";
 import ILoginRequest from "@/models/requests/login-request";
-
-const API_GATEWAY_URL = "http://localhost:8000"; 
+import { API_CONFIG } from "@/config/api";
 
 const authService = {
   login: async (data: ILoginRequest): Promise<ILoginResponse> => {
     try {
-      const response = await axios.post<ILoginResponse>(`${API_GATEWAY_URL}/auth/login`, data);
+      const response = await axios.post<ILoginResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.LOGIN}`, data);
       const loginResponse: ILoginResponse = response.data;
 
       localStorage.setItem("logged_user", JSON.stringify(loginResponse));
@@ -33,7 +32,7 @@ const authService = {
       const token = Cookies.get("token");
       if (token) {
         await axios.post(
-          `${API_GATEWAY_URL}/auth/logout`,
+          `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.LOGOUT}`,
           {},
           {
             headers: {
