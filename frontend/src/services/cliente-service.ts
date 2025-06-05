@@ -3,8 +3,7 @@ import IAutocadastroRequest from "@/models/requests/autocadastro-request";
 import IComprarMilhasRequest from "@/models/requests/comprar-milhas-request";
 import IAutocadastroResponse from "@/models/response/autocadastro-response";
 import IClienteResponse from "@/models/response/cliente-response";
-
-const API_GATEWAY_URL = "http://localhost:8000";
+import { API_CONFIG } from "@/config/api";
 
 const clienteService = {
   autocadastro: async (
@@ -12,7 +11,7 @@ const clienteService = {
   ): Promise<IAutocadastroResponse> => {
     try {
       const response = await axios.post<IAutocadastroResponse>(
-        `${API_GATEWAY_URL}/clientes`,
+        `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CLIENTES}`,
         autocadastroRequest
       );
       return response.data;
@@ -28,7 +27,7 @@ const clienteService = {
 
   findClienteById: async (clienteId: number): Promise<IClienteResponse> => {
     const response = await axios.get<IClienteResponse>(
-      `${API_BASE_URL}/clientes/${clienteId}`,
+      `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CLIENTES}/${clienteId}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -41,7 +40,7 @@ const clienteService = {
 
   findAllReservasByClienteId: async (clienteId: number) => {
     const response = await axios.get(
-      `${API_BASE_URL}/clientes/${clienteId}/reservas`,
+      `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CLIENTES}/${clienteId}/reservas`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -54,7 +53,7 @@ const clienteService = {
 
   comprarMilhas: async (clienteId: number, data: IComprarMilhasRequest) => {
     const response = await axios.put(
-      `${API_BASE_URL}/clientes/${clienteId}/milhas`,
+      `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CLIENTES}/${clienteId}/milhas`,
       data,
       {
         headers: {
@@ -68,7 +67,7 @@ const clienteService = {
 
   extratoMilhas: async () => {
     const response = await axios.get(
-      `${API_BASE_URL}/clientes/extrato-milhas`,
+      `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CLIENTES}/extrato-milhas`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
