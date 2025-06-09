@@ -11,6 +11,7 @@ import org.skytads.msvoos.dtos.responses.VooResponseDto;
 import org.skytads.msvoos.entities.VooEntity;
 import org.skytads.msvoos.mappers.VooMapper;
 import org.skytads.msvoos.services.VooService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,7 @@ public class VooController {
                 requestDto.getCodigoAeroportoOrigem(),
                 requestDto.getCodigoAeroportoDestino()
         );
-        return ResponseEntity.ok(VooMapper.toCriarVooResponseDto(voo));
+        return ResponseEntity.status(HttpStatus.CREATED).body(VooMapper.toCriarVooResponseDto(voo));
     }
 
     @GetMapping("/{codigo}")
