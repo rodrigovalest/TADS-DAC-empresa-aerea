@@ -11,6 +11,7 @@ import org.skytads.msvoos.repositories.VooRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -109,5 +110,28 @@ public class VooService {
 
         voo.setQuantidadePoltronasOcupadas(voo.getQuantidadePoltronasOcupadas() - quantidadePoltronas);
         return this.vooRepository.save(voo);
+    }
+
+    public List<VooEntity> buscarVoosPorParametros(
+            String origem,
+            String destino,
+            LocalDate data,
+            LocalDate inicio,
+            LocalDate fim
+    ) {
+        List<VooEntity> voos = vooRepository.findAll();
+
+        return voos.stream()
+                .filter(voo -> origem == null || voo.getAeroportoOrigem().getCodigo().equalsIgnoreCase(origem))
+                .filter(voo -> destino == null || voo.getAeroportoDestino().getCodigo().equalsIgnoreCase(destino))
+                .filter(voo -> {
+                    LocalDate dataVoo = voo.getData().toLocalDate();
+                    if (data != null) return dataVoo.equals(data);
+                    if (inicio != null && fim != null) return !dataVoo.isBefore(inicio) && !dataVoo.isAfter(fim);
+                    if (inicio != null) return !dataVoo.isBefore(inicio);
+                    if (fim != null) return !dataVoo.isAfter(fim);
+                    return true;
+                })
+                .toList();
     }
 }

@@ -1,13 +1,13 @@
 package org.skytads.msvoos.mappers;
 
-import org.skytads.msvoos.dtos.responses.AeroportoResponseDto;
-import org.skytads.msvoos.dtos.responses.CriarReservaVooResponseDto;
-import org.skytads.msvoos.dtos.responses.CriarVooResponseDto;
-import org.skytads.msvoos.dtos.responses.VooResponseDto;
+import org.skytads.msvoos.dtos.responses.*;
 import org.skytads.msvoos.entities.VooEntity;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class VooMapper {
     public static CriarVooResponseDto toCriarVooResponseDto(VooEntity voo) {
@@ -75,6 +75,28 @@ public class VooMapper {
                         voo.getAeroportoDestino().getCidade(),
                         voo.getAeroportoDestino().getUf()
                 )
+        );
+    }
+
+    public static ListarVoosPorParamsResponseDto toListarVooPorParamsResponseDto(
+            String origem,
+            String destino,
+            LocalDate inicio,
+            LocalDate fim,
+            LocalDate data,
+            List<VooEntity> voos
+    ) {
+        List<VooResponseDto> voosDto = voos.stream()
+                .map(VooMapper::toVooResponseDto)
+                .collect(Collectors.toList());
+
+        return new ListarVoosPorParamsResponseDto(
+                inicio != null ? inicio.toString() : null,
+                fim != null ? fim.toString() : null,
+                data != null ? data.toString() : null,
+                origem,
+                destino,
+                voosDto
         );
     }
 }
