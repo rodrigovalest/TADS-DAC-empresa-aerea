@@ -19,7 +19,7 @@ public class ListarVooParamsRequestDto {
     @Size(min = 3, max = 3)
     private String destino;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDate data;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

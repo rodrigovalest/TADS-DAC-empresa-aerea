@@ -119,17 +119,22 @@ public class VooService {
             LocalDate inicio,
             LocalDate fim
     ) {
-        List<VooEntity> voos = vooRepository.findAll();
-
-        return voos.stream()
+        return vooRepository.findAll().stream()
                 .filter(voo -> origem == null || voo.getAeroportoOrigem().getCodigo().equalsIgnoreCase(origem))
                 .filter(voo -> destino == null || voo.getAeroportoDestino().getCodigo().equalsIgnoreCase(destino))
                 .filter(voo -> {
                     LocalDate dataVoo = voo.getData().toLocalDate();
-                    if (data != null) return dataVoo.equals(data);
-                    if (inicio != null && fim != null) return !dataVoo.isBefore(inicio) && !dataVoo.isAfter(fim);
-                    if (inicio != null) return !dataVoo.isBefore(inicio);
-                    if (fim != null) return !dataVoo.isAfter(fim);
+
+                    if (data != null) {
+                        return dataVoo.isEqual(data);
+                    } else if (inicio != null && fim != null) {
+                        return !dataVoo.isBefore(inicio) && !dataVoo.isAfter(fim);
+                    } else if (inicio != null) {
+                        return !dataVoo.isBefore(inicio);
+                    } else if (fim != null) {
+                        return !dataVoo.isAfter(fim);
+                    }
+
                     return true;
                 })
                 .toList();

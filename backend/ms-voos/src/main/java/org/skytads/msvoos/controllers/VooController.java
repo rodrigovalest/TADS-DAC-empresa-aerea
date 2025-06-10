@@ -82,6 +82,28 @@ public class VooController {
 
     @GetMapping
     public ResponseEntity<ListarVoosPorParamsResponseDto> listarVoosPorParametros(
+            ListarVooParamsRequestDto params
+    ) {
+        List<VooEntity> voos = this.vooService.buscarVoosPorParametros(
+                params.getOrigem(),
+                params.getDestino(),
+                params.getData(),
+                params.getInicio(),
+                params.getFim()
+        );
+
+        return ResponseEntity.ok(VooMapper.toListarVooPorParamsResponseDto(
+                params.getOrigem(),
+                params.getDestino(),
+                params.getInicio(),
+                params.getFim(),
+                params.getData(),
+                voos
+        ));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<ListarVoosPorParamsResponseDto> listarVoosPorParametros2(
            ListarVooParamsRequestDto params
     ) {
         List<VooEntity> voos = this.vooService.buscarVoosPorParametros(
