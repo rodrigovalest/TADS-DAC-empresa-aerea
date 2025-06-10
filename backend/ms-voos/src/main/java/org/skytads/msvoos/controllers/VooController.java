@@ -5,15 +5,20 @@ import lombok.RequiredArgsConstructor;
 import org.skytads.msvoos.dtos.requests.AlterarEstadoVooRequestDto;
 import org.skytads.msvoos.dtos.requests.CriarReservaVooRequestDto;
 import org.skytads.msvoos.dtos.requests.CriarVooRequestDto;
+import org.skytads.msvoos.dtos.requests.ListarVooParamsRequestDto;
 import org.skytads.msvoos.dtos.responses.CriarReservaVooResponseDto;
 import org.skytads.msvoos.dtos.responses.CriarVooResponseDto;
+import org.skytads.msvoos.dtos.responses.ListarVoosPorParamsResponseDto;
 import org.skytads.msvoos.dtos.responses.VooResponseDto;
 import org.skytads.msvoos.entities.VooEntity;
 import org.skytads.msvoos.mappers.VooMapper;
 import org.skytads.msvoos.services.VooService;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -34,7 +39,7 @@ public class VooController {
                 requestDto.getCodigoAeroportoOrigem(),
                 requestDto.getCodigoAeroportoDestino()
         );
-        return ResponseEntity.ok(VooMapper.toCriarVooResponseDto(voo));
+        return ResponseEntity.status(HttpStatus.CREATED).body(VooMapper.toCriarVooResponseDto(voo));
     }
 
     @GetMapping("/{codigo}")
@@ -73,5 +78,49 @@ public class VooController {
     ) {
         VooEntity voo = this.vooService.reservarPoltronas(codigo, dto.getQuantidadePoltronas());
         return ResponseEntity.ok(VooMapper.toCriarReservaVooResponseDto(voo));
+    }
+
+    @GetMapping
+    public ResponseEntity<ListarVoosPorParamsResponseDto> listarVoosPorParametros(
+            ListarVooParamsRequestDto params
+    ) {
+        List<VooEntity> voos = this.vooService.buscarVoosPorParametros(
+                params.getOrigem(),
+                params.getDestino(),
+                params.getData(),
+                params.getInicio(),
+                params.getFim()
+        );
+
+        return ResponseEntity.ok(VooMapper.toListarVooPorParamsResponseDto(
+                params.getOrigem(),
+                params.getDestino(),
+                params.getInicio(),
+                params.getFim(),
+                params.getData(),
+                voos
+        ));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<ListarVoosPorParamsResponseDto> listarVoosPorParametros2(
+           ListarVooParamsRequestDto params
+    ) {
+        List<VooEntity> voos = this.vooService.buscarVoosPorParametros(
+                params.getOrigem(),
+                params.getDestino(),
+                params.getData(),
+                params.getInicio(),
+                params.getFim()
+        );
+
+        return ResponseEntity.ok(VooMapper.toListarVooPorParamsResponseDto(
+                params.getOrigem(),
+                params.getDestino(),
+                params.getInicio(),
+                params.getFim(),
+                params.getData(),
+                voos
+        ));
     }
 }
