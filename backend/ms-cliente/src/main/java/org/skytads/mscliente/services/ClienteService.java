@@ -1,9 +1,11 @@
 package org.skytads.mscliente.services;
 
 import lombok.RequiredArgsConstructor;
+import org.skytads.mscliente.dtos.responses.ReservaResponseDto;
 import org.skytads.mscliente.exceptions.ClienteNaoEncontradoException;
 import org.skytads.mscliente.exceptions.SaldoInsuficienteException;
 import org.skytads.mscliente.integration.consumer.ClienteMessageProducerService;
+import org.skytads.mscliente.integration.producer.ReservaProducer;
 import org.skytads.mscliente.mappers.ClienteMapper;
 import org.skytads.mscliente.models.Cliente;
 import org.skytads.mscliente.models.TipoTransacao;
@@ -13,8 +15,10 @@ import org.skytads.mscliente.repositories.TransacaoMilhasRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +28,7 @@ public class ClienteService {
     private final EmailService emailService;
     private final ClienteMessageProducerService clienteMessageProducerService;
     private final TransacaoMilhasRepository transacaoMilhasRepository;
+    private final ReservaProducer reservaProducer;
 
 @Transactional
 public Cliente autocadastro(Cliente novoCliente) {
@@ -118,5 +123,10 @@ public Cliente autocadastro(Cliente novoCliente) {
         Cliente cliente = clienteRepository.findByCpf(cpf)
                                            .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado com CPF: " + cpf));
         return cliente.getSaldoMilhas();
+    }
+    @Transactional(readOnly = true)
+    public List<ReservaResponseDto> getReservasByCliente(Long codigoCliente) {
+        reservaProducer.requestReservasByCliente(codigoCliente);
+        return new ArrayList<>();
     }
 }

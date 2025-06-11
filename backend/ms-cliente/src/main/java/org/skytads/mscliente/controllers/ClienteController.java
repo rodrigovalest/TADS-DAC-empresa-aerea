@@ -37,7 +37,7 @@ public class ClienteController {
         Cliente cliente = this.clienteService.findClienteByEmail(email);
         return ResponseEntity.ok(ClienteMapper.toClienteResponseDto(cliente));
     }
-    
+
     @GetMapping
     public ResponseEntity<List<ClienteResponseDto>> findAll() {
         List<Cliente> clientes = this.clienteService.findAllClientes();
@@ -46,13 +46,13 @@ public class ClienteController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(clientesDto);
     }
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<ClienteResponseDto> findById(@PathVariable("id") Long id) {
         Cliente cliente = this.clienteService.findClienteById(id);
         return ResponseEntity.ok(ClienteMapper.toClienteResponseDto(cliente));
     }
-    
+
     @PutMapping("/{codigo_cliente}/milhas")
     public ResponseEntity<ComprarMilhasResponseDto> comprarMilhas(
             @PathVariable("codigo_cliente") Long codigoCliente,
@@ -66,7 +66,7 @@ public class ClienteController {
                 ClienteMapper.toComprarMilhasRequestDto(codigoCliente, saldoMilhas)
         );
     }
-    
+
     @GetMapping("/{codigo_cliente}/milhas")
     public ResponseEntity<ExtratoMilhasResponseDto> extratoMilhas(
             @PathVariable("codigo_cliente") Long codigoCliente
@@ -77,4 +77,14 @@ public class ClienteController {
     }
 
 
+    @GetMapping("/{codigo_cliente}/reservas")
+    public ResponseEntity<List<ReservaResponseDto>> getReservasByCliente(@PathVariable("codigo_cliente") Long codigoCliente) {
+        List<ReservaResponseDto> reservas = clienteService.getReservasByCliente(codigoCliente);
+
+        if (reservas.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(reservas);
+    }
 }
