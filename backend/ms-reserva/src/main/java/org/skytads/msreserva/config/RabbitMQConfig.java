@@ -39,6 +39,9 @@ public class RabbitMQConfig {
     public static final String QUEUE_CANCELAR_RESERVA_POLTRONAS_VOO = "cancelar-reserva.poltronas.voo.queue";
     public static final String ROUTING_KEY_CANCELAR_RESERVA_POLTRONAS_VOO = "cancelar-reserva.poltronas.voo.routing";
 
+    public static final String QUEUE_REQUEST_RESERVAS = "request-reservas.queue";
+    public static final String ROUTING_KEY_REQUEST_RESERVAS = "request-reservas.routing";
+
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
@@ -139,5 +142,15 @@ public class RabbitMQConfig {
                 .to(exchangeReserva())
                 .with(ROUTING_KEY_CANCELAR_RESERVA_POLTRONAS_VOO);
     }
+    @Bean
+    public Queue queueRequestReservas() {
+        return new Queue(QUEUE_REQUEST_RESERVAS, true);
+    }
 
+    @Bean
+    public Binding bindingRequestReservas() {
+        return BindingBuilder.bind(queueRequestReservas())
+                .to(exchangeReserva())
+                .with(ROUTING_KEY_REQUEST_RESERVAS);
+    }
 }

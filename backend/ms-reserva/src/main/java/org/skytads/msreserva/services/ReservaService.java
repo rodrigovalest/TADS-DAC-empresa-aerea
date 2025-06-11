@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.skytads.msreserva.dtos.responses.ConsultaReservaResponseDto;
+import org.skytads.msreserva.dtos.responses.ReservaResponseDto;
 import org.skytads.msreserva.entities.HistoricoReservaEntity;
 import org.skytads.msreserva.entities.ReservaEntity;
 import org.skytads.msreserva.entities.ReservaResumoEntity;
@@ -109,5 +110,12 @@ public class ReservaService {
         );
 
         cancelarReserva(reservaId);
+    }
+    @Transactional(readOnly = true)
+    public List<ReservaResponseDto> getReservasByCliente(Long codigoCliente) {
+        List<ReservaEntity> reservas = reservaRepository.findByCodigoCliente(codigoCliente);
+        return reservas.stream()
+                .map(ReservaMapper::toReservaResponseDto)
+                .collect(Collectors.toList());
     }
 }
