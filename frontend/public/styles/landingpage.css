@@ -43,3 +43,40 @@
     padding: 20px;  
 }
 
+#depoimentos {
+  scroll-margin-top: 100px; 
+}
+
+.depoimentos-section {
+  background-color: #f3f4f6;
+}
+
+.depoimentos-title {
+  color: #D63000;
+  font-weight: bold;
+}
+
+.depoimentos-cards {
+  gap: 2rem;
+}
+
+.depoimento-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.depoimento-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.depoimento-text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.depoimento-nome {
+  color: #D63000;
+}
+
+

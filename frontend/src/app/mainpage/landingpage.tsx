@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import HomeHeader from "./homeheader";
 import "../../../public/styles/landingpage.css";
+import { FaPlaneDeparture } from "react-icons/fa"
 
 const LandingPage = () => {
   return (
@@ -79,6 +80,59 @@ const LandingPage = () => {
         </div>
 
       </section>
+      <section id="vantagens" className="vantagens-section h-full p-10 bg-[#fff7f5] text-[#D63000]">
+        <div className="vantagens-title text-2xl mb-8 text-center">Por que escolher a AirTads?</div>
+        <div className="vantagens-grid grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <div className="vantagem-card bg-white rounded-xl shadow-md p-6 text-center">
+            <img src="/images/icon-dinheiro.png" className="mx-auto w-12 h-12 mb-3" alt="Ícone dinheiro" />
+            <h3 className="text-xl font-bold mb-2">Pagamento Rápido</h3>
+            <p className="text-gray-700">Você recebe o valor direto na conta em poucas horas após a venda.</p>
+          </div>
+
+          <div className="vantagem-card bg-white rounded-xl shadow-md p-6 text-center">
+            <img src="/images/icon-seguro.png" className="mx-auto w-12 h-12 mb-3" alt="Ícone segurança" />
+            <h3 className="text-xl font-bold mb-2">Transações Seguras</h3>
+            <p className="text-gray-700">Garantimos sigilo e proteção em todas as etapas do processo.</p>
+          </div>
+
+          <div className="vantagem-card bg-white rounded-xl shadow-md p-6 text-center">
+            <img src="/images/icon-suporte.png" className="mx-auto w-12 h-12 mb-3" alt="Ícone suporte" />
+            <h3 className="text-xl font-bold mb-2">Suporte Humanizado</h3>
+            <p className="text-gray-700">Nossa equipe está sempre pronta para ajudar, via chat, e-mail ou telefone.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="depoimentos" className="depoimentos-section h-full p-10 bg-gray-100 text-[#D63000]">
+        <div className="depoimentos-title text-2xl mb-6 text-center">O que dizem nossos clientes</div>
+        <div className="depoimentos-cards flex flex-col md:flex-row gap-6 justify-center items-stretch">
+          
+          <div className="depoimento-card bg-white shadow-md rounded-2xl p-6 w-full md:w-1/3">
+            <p className="depoimento-text italic text-gray-700">
+              “Vendi minhas milhas em menos de 10 minutos. Atendimento excelente e pagamento super rápido!”
+            </p>
+            <div className="depoimento-nome mt-4 font-bold">— Ana Paula, SP</div>
+          </div>
+
+          <div className="depoimento-card bg-white shadow-md rounded-2xl p-6 w-full md:w-1/3">
+            <p className="depoimento-text italic text-gray-700">
+              “Muito mais fácil do que imaginei. Processo transparente e sem complicações.”
+            </p>
+            <div className="depoimento-nome mt-4 font-bold">— João Ricardo, RJ</div>
+          </div>
+
+          <div className="depoimento-card bg-white shadow-md rounded-2xl p-6 w-full md:w-1/3">
+            <p className="depoimento-text italic text-gray-700">
+              “Consegui transformar pontos parados em dinheiro! Recomendo a todos.”
+            </p>
+            <div className="depoimento-nome mt-4 font-bold">— Letícia Martins, PR</div>
+          </div>
+
+        </div>
+      </section>
+
       <section className="section4 h-full p-10 bg-black flex justify-between">
         <img width="250px" src="images/ufpr.png" />
         <div className="text-white">
