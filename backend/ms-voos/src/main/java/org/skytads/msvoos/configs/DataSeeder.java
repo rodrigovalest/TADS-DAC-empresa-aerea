@@ -41,13 +41,11 @@ public class DataSeeder {
 
                 var agora = OffsetDateTime.now(java.time.ZoneOffset.of("-03:00"));
                 var voosAtuais = List.of(
-                        new Object[]{agora.toString(), "POA", "CWB"},
+                        // Using plusDays for all entries so they are strictly in the future relative to now
                         new Object[]{agora.plusDays(1).toString(), "POA", "CWB"},
-                        new Object[]{agora.toString(), "CWB", "GIG"},
                         new Object[]{agora.plusDays(1).toString(), "CWB", "GIG"},
                         new Object[]{agora.plusDays(1).toString(), "CWB", "BSB"},
                         new Object[]{agora.plusDays(2).toString(), "SDU", "CGH"},
-                        new Object[]{agora.toString(), "CWB", "POA"},
                         new Object[]{agora.plusDays(1).toString(), "CWB", "POA"}
                 );
 

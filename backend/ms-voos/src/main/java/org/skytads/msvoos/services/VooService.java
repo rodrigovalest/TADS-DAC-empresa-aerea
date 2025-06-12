@@ -126,7 +126,7 @@ public class VooService {
                     LocalDate dataVoo = voo.getData().toLocalDate();
 
                     if (data != null) {
-                        return dataVoo.isEqual(data);
+                        return dataVoo.isAfter(data);
                     } else if (inicio != null && fim != null) {
                         return !dataVoo.isBefore(inicio) && !dataVoo.isAfter(fim);
                     } else if (inicio != null) {
