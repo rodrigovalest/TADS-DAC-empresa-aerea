@@ -1,116 +1,35 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../app/globals.css";
 import HeaderBanner from "@/components/HeaderBanner";
 import EmployeeTable from "@/components/EmployeeTable";
 import AddIcon from "@mui/icons-material/Add";
 import { Button, Dialog } from "@mui/material";
 import StaffRegister from "@/components/StaffRegister";
-import Employee from "@/types/interfaces";
 import MenuFuncionario from "@/components/MenuFuncionario";
+import funcionarioService from "@/services/funcionario-service";
+import IFuncionarioResponse from "@/models/response/funcionario-response";
+import IInserirFuncionarioRequest from "@/models/requests/inserir-funcionario-request";
+import IAtualizarFuncionarioRequest from "@/models/requests/atualizar-funcionario-request";
 
 const EmployeePage: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
-  const [employees, setEmployees] = useState<Employee[]>([
-    {
-      name: "Paulo",
-      cpf: "111.111.111-11",
-      email: "paulo@example.com",
-      phone: "123456789",
-      user: "paulo",
-      password: "password",
-    },
-    {
-      name: "Ana",
-      cpf: "222.222.222-22",
-      email: "ana@example.com",
-      phone: "987654321",
-      user: "ana",
-      password: "password",
-    },
-        {
-      name: "Carlos",
-      cpf: "333.333.333-33",
-      email: "carlos@example.com",
-      phone: "456789123",
-      user: "carlos",
-      password: "password",
-    },
-    {
-      name: "Maria",
-      cpf: "444.444.444-44",
-      email: "maria@example.com",
-      phone: "789123456",
-      user: "maria",
-      password: "password",
-    },
-    {
-      name: "João",
-      cpf: "555.555.555-55",
-      email: "joao@example.com",
-      phone: "321654987",
-      user: "joao",
-      password: "password",
-    },
-    {
-      name: "Fernanda",
-      cpf: "666.666.666-66",
-      email: "fernanda@example.com",
-      phone: "654987321",
-      user: "fernanda",
-      password: "password",
-    },
-    {
-      name: "Lucas",
-      cpf: "777.777.777-77",
-      email: "lucas@example.com",
-      phone: "987321654",
-      user: "lucas",
-      password: "password",
-    },
-        {
-      name: "Carlos",
-      cpf: "333.333.333-33",
-      email: "carlos@example.com",
-      phone: "456789123",
-      user: "carlos",
-      password: "password",
-    },
-    {
-      name: "Maria",
-      cpf: "444.444.444-44",
-      email: "maria@example.com",
-      phone: "789123456",
-      user: "maria",
-      password: "password",
-    },
-    {
-      name: "João",
-      cpf: "555.555.555-55",
-      email: "joao@example.com",
-      phone: "321654987",
-      user: "joao",
-      password: "password",
-    },
-    {
-      name: "Fernanda",
-      cpf: "666.666.666-66",
-      email: "fernanda@example.com",
-      phone: "654987321",
-      user: "fernanda",
-      password: "password",
-    },
-    {
-      name: "Lucas",
-      cpf: "777.777.777-77",
-      email: "lucas@example.com",
-      phone: "987321654",
-      user: "lucas",
-      password: "password",
-    },
-  ]);
+  const [editEmployee, setEditEmployee] = useState<IFuncionarioResponse | null>(null);
+  const [employees, setEmployees] = useState<IFuncionarioResponse[]>([]);
+
+  const fetchEmployees = async () => {
+    try {
+      const data = await funcionarioService.findAllFuncionarios();
+      setEmployees(data);
+    } catch (error) {
+      console.error("Erro ao buscar funcionários:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
 
   const addEmployee = () => {
     setEditEmployee(null);
@@ -119,30 +38,53 @@ const EmployeePage: React.FC = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setEditEmployee(null);
   };
 
-  const handleAddOrEditEmployee = (newEmployee: Employee) => {
-    if (editEmployee) {
-      setEmployees((prevEmployees) =>
-        prevEmployees.map((emp) =>
-          emp.cpf === newEmployee.cpf ? newEmployee : emp
-        )
-      );
-    } else {
-      setEmployees((prevEmployees) => [...prevEmployees, newEmployee]);
+  const handleAddEmployee = async (employee: IInserirFuncionarioRequest) => {
+    try {
+      await funcionarioService.inserirFuncionario(employee);
+      await fetchEmployees(); 
+      handleClose();
+    } catch (error) {
+      console.error("Erro ao adicionar funcionário:", error);
     }
-    setOpen(false);
   };
 
-  const handleEdit = (employee: Employee) => {
+  // Atualizar funcionário na lista local após edição
+  const handleEditEmployee = async (employee: IAtualizarFuncionarioRequest) => {
+    if (!employee.codigo) {
+      console.error("Código do funcionário não disponível para edição");
+      return;
+    }
+
+    try {
+      const updated = await funcionarioService.atualizarFuncionario(
+        employee.codigo,
+        employee
+      );
+
+      setEmployees((prev) =>
+        prev.map((emp) => (emp.codigo === updated.codigo ? updated : emp))
+      );
+      handleClose();
+    } catch (error) {
+      console.error("Erro ao editar funcionário:", error);
+    }
+  };
+
+  const handleEdit = (employee: IFuncionarioResponse) => {
     setEditEmployee(employee);
     setOpen(true);
   };
 
-  const handleDelete = (cpf: string) => {
-    setEmployees((prevEmployees) =>
-      prevEmployees.filter((emp) => emp.cpf !== cpf)
-    );
+  const handleDelete = async (codigo: number) => {
+    try {
+      await funcionarioService.removerFuncionario(codigo);
+      setEmployees((prev) => prev.filter((emp) => emp.codigo !== codigo));
+    } catch (error) {
+      console.error("Erro ao deletar funcionário:", error);
+    }
   };
 
   return (
@@ -173,7 +115,8 @@ const EmployeePage: React.FC = () => {
 
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
         <StaffRegister
-          onAddEmployee={handleAddOrEditEmployee}
+          onAddEmployee={handleAddEmployee}
+          onEditEmployee={handleEditEmployee}
           initialData={editEmployee}
         />
       </Dialog>

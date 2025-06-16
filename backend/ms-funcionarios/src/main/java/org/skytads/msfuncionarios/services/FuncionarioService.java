@@ -12,7 +12,6 @@ import org.skytads.msfuncionarios.model.Funcionario;
 import org.skytads.msfuncionarios.repository.FuncionarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,6 +24,7 @@ public class FuncionarioService {
 
     private final FuncionarioRepository funcionarioRepository;
     private final RabbitMQProducer rabbitMQProducer;
+    private final EmailService emailService;
 
     public List<Funcionario> listarFuncionarios() {
         return funcionarioRepository.findByAtivoTrueOrderByNomeAsc();
@@ -38,14 +38,26 @@ public class FuncionarioService {
 
     @Transactional
     public Funcionario inserirFuncionario(Funcionario funcionario) {
-        if (funcionarioRepository.existsByCpf(funcionario.getCpf())) {
+        if (funcionarioRepository.existsByCpfAndAtivoTrue(funcionario.getCpf())) {
             throw new FuncionarioConflictException("Já existe um funcionário com este CPF");
         }
 
-        if (funcionarioRepository.existsByEmail(funcionario.getEmail())) {
+        if (funcionarioRepository.existsByEmailAndAtivoTrue(funcionario.getEmail())) {
             throw new FuncionarioConflictException("Já existe um funcionário com este e-mail");
         }
 
+        if (funcionario.getSenha() == null || funcionario.getSenha().isEmpty()) {
+            String senha = String.format("%04d", new Random().nextInt(10000));
+            funcionario.setSenha(senha);
+
+            // Enviar email com a senha
+            emailService.sendEmail(
+                    funcionario.getEmail(),
+                    "Cadastro de Funcionário na plataforma SkyTADS",
+                    "Sua senha é: " + senha
+            );
+            System.out.println("Senha criada " +  senha);
+        }
         Funcionario savedFuncionario = this.funcionarioRepository.save(funcionario);
 
         this.rabbitMQProducer.enviarParaCriacaoUsuario(
@@ -64,11 +76,11 @@ public class FuncionarioService {
             throw new FuncionarioNotFoundException("Funcionário não encontrado");
         }
 
-        if (!Objects.equals(funcionario.getCpf(), requestDto.getCpf()) && funcionarioRepository.existsByCpf(requestDto.getCpf())) {
+        if (!Objects.equals(funcionario.getCpf(), requestDto.getCpf()) && funcionarioRepository.existsByCpfAndAtivoTrue(requestDto.getCpf())) {
             throw new FuncionarioConflictException("Já existe um funcionário com este CPF");
         }
 
-        if (!Objects.equals(funcionario.getEmail(), requestDto.getEmail()) && funcionarioRepository.existsByEmail(requestDto.getEmail())) {
+        if (!Objects.equals(funcionario.getEmail(), requestDto.getEmail()) && funcionarioRepository.existsByEmailAndAtivoTrue(requestDto.getEmail())) {
             throw new FuncionarioConflictException("Já existe um funcionário com este e-mail");
         }
 

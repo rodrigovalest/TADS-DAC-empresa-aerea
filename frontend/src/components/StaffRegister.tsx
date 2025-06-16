@@ -2,21 +2,36 @@
 
 import React, { useEffect, useState } from "react";
 import { TextField, Button } from "@mui/material";
-import Employee from "@/types/interfaces";
+import IFuncionarioResponse from "@/models/response/funcionario-response";
+import IInserirFuncionarioRequest from "@/models/requests/inserir-funcionario-request";
+import IAtualizarFuncionarioRequest from "@/models/requests/atualizar-funcionario-request";
 
 interface StaffRegisterProps {
-  onAddEmployee: (employee: Employee) => void;
-  initialData?: Employee | null;
+  onAddEmployee: (employee: IInserirFuncionarioRequest) => void;
+  onEditEmployee: (employee: IAtualizarFuncionarioRequest) => void;
+  initialData?: IFuncionarioResponse | null;
 }
 
-const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialData }) => {
-  const [formData, setFormData] = useState<Employee>({
-    name: "",
+type FormDataType = {
+  codigo?: number;
+  cpf: string;
+  nome: string;
+  email: string;
+  telefone: string;
+  senha?: string;
+};
+
+const StaffRegister: React.FC<StaffRegisterProps> = ({
+  onAddEmployee,
+  onEditEmployee,
+  initialData,
+}) => {
+  const [formData, setFormData] = useState<FormDataType>({
     cpf: "",
+    nome: "",
     email: "",
-    phone: "",
-    password: "",
-    user: "",
+    telefone: "",
+    senha: "",
   });
 
   const [errorCPF, setErrorCPF] = useState(false);
@@ -24,36 +39,55 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
 
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData);
+      setFormData({
+        codigo: initialData.codigo,
+        cpf: initialData.cpf,
+        nome: initialData.nome,
+        email: initialData.email,
+        telefone: initialData.telefone,
+        senha: "",
+      });
     } else {
       setFormData({
-        name: "",
         cpf: "",
+        nome: "",
         email: "",
-        phone: "",
-        password: "",
-        user: "",
+        telefone: "",
+        senha: "",
       });
     }
   }, [initialData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    const normalizedValue =
+      name === "cpf" || name === "telefone" ? value.replace(/\D/g, "") : value;
 
-    if (name === "cpf" || name === "phone") {
-      // Remove tudo que não for número
-      const numericValue = value.replace(/\D/g, "");
-      setFormData((prev) => ({ ...prev, [name]: numericValue }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: normalizedValue,
+    }));
+  };
+
+  const validateCPF = (cpf: string): boolean => cpf.length === 11;
+
+  const handleCPFBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const trimmed = e.target.value.trim();
+    setFormData((prev) => ({ ...prev, cpf: trimmed }));
+
+    if (!initialData && !validateCPF(trimmed)) {
+      setErrorCPF(true);
+      setHelperTextCPF("O CPF deve ter 11 dígitos");
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      setErrorCPF(false);
+      setHelperTextCPF("");
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validação simples do CPF
-    if (formData.cpf.length !== 11) {
+    if (!initialData && !validateCPF(formData.cpf)) {
       setErrorCPF(true);
       setHelperTextCPF("O CPF deve ter 11 dígitos");
       return;
@@ -61,7 +95,35 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
 
     setErrorCPF(false);
     setHelperTextCPF("");
-    onAddEmployee(formData);
+
+    const dataToSubmit = { ...formData };
+
+    if (initialData) {
+      if (!dataToSubmit.senha) {
+        delete dataToSubmit.senha;
+      }
+
+      const atualizacao: IAtualizarFuncionarioRequest = {
+        codigo: dataToSubmit.codigo!,
+        cpf: dataToSubmit.cpf,
+        nome: dataToSubmit.nome,
+        email: dataToSubmit.email,
+        telefone: dataToSubmit.telefone,
+        senha: dataToSubmit.senha,
+      };
+
+      onEditEmployee(atualizacao);
+    } else {
+      const insercao: IInserirFuncionarioRequest = {
+        cpf: dataToSubmit.cpf,
+        nome: dataToSubmit.nome,
+        email: dataToSubmit.email,
+        telefone: dataToSubmit.telefone,
+        senha: dataToSubmit.senha!,
+      };
+
+      onAddEmployee(insercao);
+    }
   };
 
   return (
@@ -70,14 +132,17 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
         <img
           className="w-full h-full object-cover object-top"
           src="images/airportstaffs.jpeg"
-          alt="Imagem de voo"
+          alt="Imagem de funcionários do aeroporto"
         />
       </div>
       <div className="w-1/2 flex justify-center items-center p-8 flex-col">
         <div className="text-[#FF3D00] text-3xl font-semibold mb-4">
           {initialData ? "Editar Funcionário" : "Registrar Novo Funcionário"}
         </div>
-        <form className="flex flex-col gap-4 w-full max-w-md" onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col gap-4 w-full max-w-md"
+          onSubmit={handleSubmit}
+        >
           <TextField
             label="CPF"
             name="cpf"
@@ -85,29 +150,21 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
             variant="outlined"
             value={formData.cpf}
             onChange={handleChange}
-            onBlur={(e) => {
-              const trimmedValue = e.target.value.trim();
-              setFormData((prev) => ({ ...prev, cpf: trimmedValue }));
-              if (trimmedValue.length !== 11) {
-                setErrorCPF(true);
-                setHelperTextCPF("O CPF deve ter 11 dígitos");
-              } else {
-                setErrorCPF(false);
-                setHelperTextCPF("");
-              }
-            }}
+            onBlur={handleCPFBlur}
             error={errorCPF}
             helperText={helperTextCPF}
             fullWidth
             required
-            disabled={!!initialData} // CPF não editável se for edição
+            disabled={!!initialData}
+            inputProps={{
+              maxLength: 11,
+              pattern: "[0-9]*",
+            }}
           />
           <TextField
             label="Nome"
-            name="name"
-            type="text"
-            variant="outlined"
-            value={formData.name}
+            name="nome"
+            value={formData.nome}
             onChange={handleChange}
             fullWidth
             required
@@ -116,7 +173,6 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
             label="Email"
             name="email"
             type="email"
-            variant="outlined"
             value={formData.email}
             onChange={handleChange}
             fullWidth
@@ -124,33 +180,15 @@ const StaffRegister: React.FC<StaffRegisterProps> = ({ onAddEmployee, initialDat
           />
           <TextField
             label="Telefone"
-            name="phone"
-            type="text"
-            variant="outlined"
-            value={formData.phone}
+            name="telefone"
+            type="tel"
+            value={formData.telefone}
             onChange={handleChange}
             fullWidth
             required
-          />
-          <TextField
-            label="Senha"
-            name="password"
-            type="password"
-            variant="outlined"
-            value={formData.password}
-            onChange={handleChange}
-            fullWidth
-            required={!initialData} // Requer senha só no cadastro
-          />
-          <TextField
-            label="Usuário"
-            name="user"
-            type="text"
-            variant="outlined"
-            value={formData.user}
-            onChange={handleChange}
-            fullWidth
-            required
+            inputProps={{
+              pattern: "[0-9]*",
+            }}
           />
           <Button
             variant="contained"
