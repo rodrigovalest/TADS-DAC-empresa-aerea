@@ -1,5 +1,8 @@
 export default interface IInserirFuncionarioRequest {
-	cpf: string;
-	email: string;
-  senha: string;
+  codigo?: number;
+  cpf: string;
+  nome: string;
+  email: string;
+  telefone: string;
+  senha?: string;
 }

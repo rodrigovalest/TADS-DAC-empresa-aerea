@@ -25,6 +25,5 @@ public class UpdateFuncionarioRequestDto {
     @NotBlank(message = "Telefone must not be blank")
     private String telefone;
 
-    @NotBlank(message = "Senha must not be blank")
     private String senha;
 }

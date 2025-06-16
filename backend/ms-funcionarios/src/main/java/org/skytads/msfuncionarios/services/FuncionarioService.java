@@ -38,11 +38,11 @@ public class FuncionarioService {
 
     @Transactional
     public Funcionario inserirFuncionario(Funcionario funcionario) {
-        if (funcionarioRepository.existsByCpf(funcionario.getCpf())) {
+        if (funcionarioRepository.existsByCpfAndAtivoTrue(funcionario.getCpf())) {
             throw new FuncionarioConflictException("Já existe um funcionário com este CPF");
         }
 
-        if (funcionarioRepository.existsByEmail(funcionario.getEmail())) {
+        if (funcionarioRepository.existsByEmailAndAtivoTrue(funcionario.getEmail())) {
             throw new FuncionarioConflictException("Já existe um funcionário com este e-mail");
         }
 
@@ -64,11 +64,11 @@ public class FuncionarioService {
             throw new FuncionarioNotFoundException("Funcionário não encontrado");
         }
 
-        if (!Objects.equals(funcionario.getCpf(), requestDto.getCpf()) && funcionarioRepository.existsByCpf(requestDto.getCpf())) {
+        if (!Objects.equals(funcionario.getCpf(), requestDto.getCpf()) && funcionarioRepository.existsByCpfAndAtivoTrue(requestDto.getCpf())) {
             throw new FuncionarioConflictException("Já existe um funcionário com este CPF");
         }
 
-        if (!Objects.equals(funcionario.getEmail(), requestDto.getEmail()) && funcionarioRepository.existsByEmail(requestDto.getEmail())) {
+        if (!Objects.equals(funcionario.getEmail(), requestDto.getEmail()) && funcionarioRepository.existsByEmailAndAtivoTrue(requestDto.getEmail())) {
             throw new FuncionarioConflictException("Já existe um funcionário com este e-mail");
         }
 
