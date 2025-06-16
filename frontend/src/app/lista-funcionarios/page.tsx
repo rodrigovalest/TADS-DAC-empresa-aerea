@@ -18,7 +18,6 @@ const EmployeePage: React.FC = () => {
   const [editEmployee, setEditEmployee] = useState<IFuncionarioResponse | null>(null);
   const [employees, setEmployees] = useState<IFuncionarioResponse[]>([]);
 
-  // Buscar todos os funcionários ao carregar a página
   const fetchEmployees = async () => {
     try {
       const data = await funcionarioService.findAllFuncionarios();
@@ -42,11 +41,10 @@ const EmployeePage: React.FC = () => {
     setEditEmployee(null);
   };
 
-  // Depois de criar funcionário, buscar lista atualizada inteira
   const handleAddEmployee = async (employee: IInserirFuncionarioRequest) => {
     try {
       await funcionarioService.inserirFuncionario(employee);
-      await fetchEmployees();  // ATUALIZA LISTA COMPLETA
+      await fetchEmployees(); 
       handleClose();
     } catch (error) {
       console.error("Erro ao adicionar funcionário:", error);
