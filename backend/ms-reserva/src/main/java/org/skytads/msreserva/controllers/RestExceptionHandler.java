@@ -4,8 +4,12 @@ import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Map;
+
 import org.skytads.msreserva.dtos.responses.ErrorResponseDto;
 import org.skytads.msreserva.exceptions.ReservaNotFoundException;
+import org.skytads.msreserva.exceptions.SaldoMilhasInsuficienteException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +33,18 @@ public class RestExceptionHandler {
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(restErrorDto);
+    }
+
+    @ExceptionHandler(SaldoMilhasInsuficienteException.class)
+        private ResponseEntity<Map<String, String>> saldoMilhasInsuficienteHandler(
+                SaldoMilhasInsuficienteException ex,
+                HttpServletRequest request) {
+
+                log.info("Saldo de milhas insuficiente | method={} | path={} | cliente={}",
+                        request.getMethod(), request.getRequestURI(), ex.getMessage());
+
+                return ResponseEntity.badRequest()
+                                .body(Map.of("erro", "Saldo de milhas insuficiente"));
     }
 
     @ExceptionHandler(RuntimeException.class)
