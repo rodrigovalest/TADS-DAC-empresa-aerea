@@ -24,6 +24,5 @@ public class CreateFuncionarioRequestDto {
     @NotBlank(message = "Telefone must not be blank")
     private String telefone;
 
-    @NotBlank(message = "Senha must not be blank")
     private String senha;
 }

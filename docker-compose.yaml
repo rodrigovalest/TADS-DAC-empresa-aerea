@@ -198,6 +198,18 @@ services:
       - ms-reserva
       - ms-voos
       - ms-auth
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - "16543:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - db-cliente
+    networks:
+      - private_network
 
 networks:
   private_network:

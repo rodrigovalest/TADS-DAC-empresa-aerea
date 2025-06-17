@@ -14,15 +14,14 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-// import Employee from '../app/interfaces/employee';
-import Employee from "@/types/interfaces";
+import IFuncionarioResponse from "@/models/response/funcionario-response";
 
 type Order = "asc" | "desc";
 
 interface EmployeeTableProps {
-  employees: Employee[];
-  onEdit: (employee: Employee) => void;
-  onDelete: (cpf: string) => void;
+  employees: IFuncionarioResponse[];
+  onEdit: (employee: IFuncionarioResponse) => void;
+  onDelete: (id: number) => void;
 }
 
 const EmployeeTable: React.FC<EmployeeTableProps> = ({
@@ -31,17 +30,20 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   onDelete,
 }) => {
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof Employee>("name");
+  const [orderBy, setOrderBy] = useState<keyof IFuncionarioResponse>("nome");
 
-  const handleSort = (property: keyof Employee) => {
+  const handleSort = (property: keyof IFuncionarioResponse) => {
     const isAscending = orderBy === property && order === "asc";
     setOrder(isAscending ? "desc" : "asc");
     setOrderBy(property);
   };
 
   const sortedEmployees = [...employees].sort((a, b) => {
-    if (a[orderBy] < b[orderBy]) return order === "asc" ? -1 : 1;
-    if (a[orderBy] > b[orderBy]) return order === "asc" ? 1 : -1;
+    const aValue = a[orderBy] ?? "";
+    const bValue = b[orderBy] ?? "";
+
+    if (aValue < bValue) return order === "asc" ? -1 : 1;
+    if (aValue > bValue) return order === "asc" ? 1 : -1;
     return 0;
   });
 
@@ -50,57 +52,33 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>
-              <TableSortLabel
-                active={orderBy === "name"}
-                direction={orderBy === "name" ? order : "asc"}
-                onClick={() => handleSort("name")}
-              >
-                <span className="font-bold text-[20px]">Nome</span>
-              </TableSortLabel>
-            </TableCell>
-            <TableCell>
-              <TableSortLabel
-                active={orderBy === "cpf"}
-                direction={orderBy === "cpf" ? order : "asc"}
-                onClick={() => handleSort("cpf")}
-              >
-                <span className="font-bold text-[20px]">CPF</span>
-              </TableSortLabel>
-            </TableCell>
-            <TableCell>
-              <TableSortLabel
-                active={orderBy === "email"}
-                direction={orderBy === "email" ? order : "asc"}
-                onClick={() => handleSort("email")}
-              >
-                <span className="font-bold text-[20px]">Email</span>
-              </TableSortLabel>
-            </TableCell>
-            <TableCell>
-              <TableSortLabel
-                active={orderBy === "phone"}
-                direction={orderBy === "phone" ? order : "asc"}
-                onClick={() => handleSort("phone")}
-              >
-                <span className="font-bold text-[20px]">Telefone</span>
-              </TableSortLabel>
-            </TableCell>
+            {["nome", "cpf", "email", "telefone"].map((field) => (
+              <TableCell key={field}>
+                <TableSortLabel
+                  active={orderBy === field}
+                  direction={orderBy === field ? order : "asc"}
+                  onClick={() => handleSort(field as keyof IFuncionarioResponse)}
+                >
+                  <span className="font-bold text-[20px]">
+                    {field.charAt(0).toUpperCase() + field.slice(1)}
+                  </span>
+                </TableSortLabel>
+              </TableCell>
+            ))}
             <TableCell>
               <span className="font-bold text-[20px]">Ações</span>
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {sortedEmployees.map((employee, index) => (
-            <TableRow key={index}>
-              <TableCell>{employee.name}</TableCell>
+          {sortedEmployees.map((employee) => (
+            <TableRow key={employee.codigo}>
+              <TableCell>{employee.nome}</TableCell>
               <TableCell>{employee.cpf}</TableCell>
               <TableCell>{employee.email}</TableCell>
-              <TableCell>{employee.phone}</TableCell>
+              <TableCell>{employee.telefone}</TableCell>
               <TableCell>
                 <IconButton
-                  className=" m-2"
                   onClick={() => onEdit(employee)}
                   style={{
                     backgroundColor: "#FF3D00",
@@ -111,7 +89,13 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                   <EditIcon />
                 </IconButton>
                 <IconButton
-                  onClick={() => onDelete(employee.cpf)}
+                  onClick={() => {
+                    if (employee.codigo) {
+                      onDelete(employee.codigo);
+                    } else {
+                      console.error("ID do funcionário ausente:", employee);
+                    }
+                  }}
                   style={{
                     backgroundColor: "#FF3D00",
                     color: "#FFFFFF",

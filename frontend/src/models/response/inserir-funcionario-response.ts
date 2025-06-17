@@ -3,5 +3,5 @@ export default interface IInserirFuncionarioResponse {
   cpf: string,
   email: string,
   nome: string,
-  tipo: string
+  telefone: string
 }
