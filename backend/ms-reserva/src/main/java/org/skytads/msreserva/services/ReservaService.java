@@ -18,6 +18,7 @@ import org.skytads.msreserva.repositories.ReservaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,27 +34,48 @@ public class ReservaService {
     private final ReservaMapper reservaMapper;
 
     @Transactional
-    public ReservaEntity criarReserva(Float valor, Long milhas, Long quantidadePoltronas, Long codigoCliente, VooEntity vooEntity) {
-        ReservaEntity novaReserva = this.reservaRepository.save(
-                new ReservaEntity(null, codigoCliente, vooEntity, quantidadePoltronas, null, EstadoReservaEnum.CRIADA)
+    public ReservaEntity criarReserva(
+            Float      valor,
+            Long       milhas,
+            Long       quantidadePoltronas,
+            Long       codigoCliente,
+            VooEntity  vooEntity) {
+
+        ReservaEntity novaReserva = reservaRepository.save(
+                new ReservaEntity(
+                        null,
+                        codigoCliente,
+                        vooEntity,
+                        quantidadePoltronas,
+                        LocalDateTime.now(),
+                        EstadoReservaEnum.CRIADA
+                )
         );
 
-        this.reservaResumoService.create(novaReserva.getCodigo(), valor, milhas, quantidadePoltronas, codigoCliente, vooEntity.getCodigo());
+        reservaResumoService.create(
+                novaReserva.getCodigo(),
+                valor,
+                milhas,
+                quantidadePoltronas,
+                codigoCliente,
+                vooEntity.getCodigo()
+        );
+
         return novaReserva;
     }
 
     @Transactional
     public void cancelarReserva(Long reservaId) {
-        ReservaEntity reserva = this.reservaRepository.findById(reservaId)
-                .orElseThrow(() -> new ReservaNotFoundException("Cancelar reserva: reserva com id " + reservaId + " nao encontrado", reservaId));
+        ReservaEntity reserva = buscarPorId(reservaId);
 
-        HistoricoReservaEntity historicoReserva = new HistoricoReservaEntity(
-                null, reserva, null, reserva.getEstado(), EstadoReservaEnum.CANCELADA
-        );
-        this.historicoReservaRespository.save(historicoReserva);
+        historicoReservaRespository.save(new HistoricoReservaEntity(
+                null, reserva, null,
+                reserva.getEstado(),
+                EstadoReservaEnum.CANCELADA
+        ));
 
         reserva.setEstado(EstadoReservaEnum.CANCELADA);
-        this.reservaRepository.save(reserva);
+        reservaRepository.save(reserva);
     }
 
     @Transactional
@@ -112,5 +134,32 @@ public class ReservaService {
                                 .stream()
                                 .map(reservaMapper::toReservaResponseDto)
                                 .collect(Collectors.toList());
+    }
+
+    public ReservaEntity buscarPorId(Long id) {
+        return reservaRepository.findById(id)
+                .orElseThrow(() -> new ReservaNotFoundException(
+                        "Reserva " + id + " não encontrada", id));
+    }
+
+
+    @Transactional
+    public ReservaEntity alterarEstado(Long id, String novoEstado) {
+        var reserva = buscarPorId(id);
+        var estadoAntigo = reserva.getEstado();
+
+        if (!estadoAntigo.name().equals(novoEstado)) {
+            historicoReservaRespository.save(new HistoricoReservaEntity(
+                    null, reserva, null, estadoAntigo, EstadoReservaEnum.valueOf(novoEstado)
+            ));
+            reserva.setEstado(EstadoReservaEnum.valueOf(novoEstado));
+            reservaRepository.save(reserva);
+        }
+        return reserva;
+    }
+
+    @Transactional
+    public void excluir(Long id) {
+        reservaRepository.deleteById(id);
     }
 }

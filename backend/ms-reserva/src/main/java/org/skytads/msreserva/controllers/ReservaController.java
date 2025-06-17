@@ -2,6 +2,8 @@ package org.skytads.msreserva.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.skytads.msreserva.dtos.requests.AlterarEstadoReservaRequest;
 import org.skytads.msreserva.dtos.requests.CriarReservaRequestDto;
 import org.skytads.msreserva.dtos.responses.ConsultaReservaResponseDto;
 import org.skytads.msreserva.dtos.responses.CriarReservaResponseDto;
@@ -37,6 +39,27 @@ public class ReservaController {
     return ResponseEntity
                 .created(URI.create("/reservas/" + reserva.getCodigo()))
                 .body(reservaMapper.toCriarReservaResponseDto(reserva));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CriarReservaResponseDto> obterReserva(@PathVariable Long id) {
+        var reserva = reservaService.buscarPorId(id);
+        return ResponseEntity.ok(reservaMapper.toCriarReservaResponseDto(reserva));
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<CriarReservaResponseDto> alterarEstado(
+            @PathVariable Long id,
+            @RequestBody @Valid AlterarEstadoReservaRequest body) {
+
+        var reserva = reservaService.alterarEstado(id, body.getEstado());
+        return ResponseEntity.ok(reservaMapper.toCriarReservaResponseDto(reserva));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluirReserva(@PathVariable Long id) {
+        reservaService.excluir(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
