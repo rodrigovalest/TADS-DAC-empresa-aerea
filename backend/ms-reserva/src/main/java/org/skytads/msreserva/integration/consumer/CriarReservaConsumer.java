@@ -25,7 +25,7 @@ public class CriarReservaConsumer {
 
         if (dto.getSuccess()) {
             log.info("[SAGA criar reserva (2)] Sucesso reservar poltrona. Usando milhas do cliente {}", dto);
-            this.reservaService.usarMilhasCliente(dto.getReservaId(), dto.getValorPassagem());
+            this.reservaService.usarMilhasCliente(dto.getReservaId());
         } else {
             log.error("[SAGA criar reserva (2)] Falha ao efetuar reserva {} | {}", dto.getReservaId(), dto);
             this.reservaService.cancelarReserva(dto.getReservaId());

@@ -35,6 +35,7 @@ public class DataSeeder {
             // Seed de voos
             if (vooRepository.count() == 0) {
                 var voos = List.of(
+                        new Object[]{"2025-08-10T10:30:00-03:00", "POA", "CWB"},
                         new Object[]{"2025-09-11T09:30:00-03:00", "CWB", "GIG"},
                         new Object[]{"2025-10-12T08:30:00-03:00", "CWB", "POA"}
                 );
