@@ -30,6 +30,7 @@ public class ReservaService {
     private final HistoricoReservaRespository historicoReservaRespository;
     private final ReservaResumoService reservaResumoService;
     private final CriarReservaProducer criarReservaProducer;
+    private final ReservaMapper reservaMapper;
 
     @Transactional
     public ReservaEntity criarReserva(Float valor, Long milhas, Long quantidadePoltronas, Long codigoCliente, VooEntity vooEntity) {
@@ -56,23 +57,16 @@ public class ReservaService {
     }
 
     @Transactional
-    public void usarMilhasCliente(Long reservaId, Float valorPassagem) {
-        ReservaResumoEntity reservaResumo = this.reservaResumoService.findByCodigoReserva(reservaId);
+    public void usarMilhasCliente(Long reservaId) {
+        ReservaResumoEntity resumo = reservaResumoService.findByCodigoReserva(reservaId);
 
-        float diferencaValor = valorPassagem - reservaResumo.getValor();
-        long milhasNecessarias = (long) Math.round(diferencaValor / 5.0f);
+        long milhasParaDescontar = resumo.getMilhasUtilizadas();
 
-        if (milhasNecessarias < 0) {
-            milhasNecessarias = 0L;
-        }
-
-        this.criarReservaProducer.sendUsarMilhasToCliente(
-                reservaId, reservaResumo.getCodigoCliente(), milhasNecessarias
+        criarReservaProducer.sendUsarMilhasToCliente(
+                reservaId,
+                resumo.getCodigoCliente(),
+                milhasParaDescontar
         );
-
-        reservaResumo.setMilhasUtilizadas(milhasNecessarias);
-
-        this.reservaResumoService.updateReservaResumoById(reservaId, reservaResumo);
     }
 
     @Transactional
@@ -85,10 +79,10 @@ public class ReservaService {
     }
 
     public List<ConsultaReservaResponseDto> listarReservas() {
-        List<ReservaEntity> reservas = reservaRepository.findAll();
-        return reservas.stream()
-                .map(ReservaMapper::toConsultaReservaResponseDto)
-                .collect(Collectors.toList());
+        return reservaRepository.findAll()
+                                .stream()
+                                .map(reservaMapper::toConsultaReservaResponseDto)
+                                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -111,11 +105,12 @@ public class ReservaService {
 
         cancelarReserva(reservaId);
     }
+
     @Transactional(readOnly = true)
     public List<ReservaResponseDto> getReservasByCliente(Long codigoCliente) {
-        List<ReservaEntity> reservas = reservaRepository.findByCodigoCliente(codigoCliente);
-        return reservas.stream()
-                .map(ReservaMapper::toReservaResponseDto)
-                .collect(Collectors.toList());
+        return reservaRepository.findByCodigoCliente(codigoCliente)
+                                .stream()
+                                .map(reservaMapper::toReservaResponseDto)
+                                .collect(Collectors.toList());
     }
 }

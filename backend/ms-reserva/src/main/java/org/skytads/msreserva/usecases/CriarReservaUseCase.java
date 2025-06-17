@@ -45,7 +45,7 @@ public class CriarReservaUseCase {
         ReservaEntity reserva = this.reservaService.criarReserva(valor, milhas, quantidadePoltronas, codigoCliente, persistedVoo);
 
         log.info("[SAGA criar reserva (3)] Validar cliente e usar milhas | reservaId {}, milhas {}, cliente id {}", reserva.getCodigo(), milhas, codigoCliente);
-        this.reservaService.usarMilhasCliente(reserva.getCodigo(), persistedVoo.getValorPassagem());
+        reservaService.usarMilhasCliente(reserva.getCodigo());
 
         return reserva;
     }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "ms-voos", url = "http://localhost:8083")
+@FeignClient(name = "ms-voos", url = "http://ms-voos:8083")
 public interface VooClient {
 
     @PutMapping("/voos/{codigo}/reservar-poltronas")

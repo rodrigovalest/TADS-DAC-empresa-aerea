@@ -22,6 +22,7 @@ public class ReservaController {
 
     private final CriarReservaUseCase criarReservaUseCase;
     private final ReservaService reservaService;
+    private final ReservaMapper reservaMapper;
 
     @PostMapping
     public ResponseEntity<CriarReservaResponseDto> criarReserva(@RequestBody @Valid CriarReservaRequestDto requestDto) {
@@ -33,9 +34,9 @@ public class ReservaController {
                 requestDto.getCodigoVoo()
         );
 
-        return ResponseEntity
+    return ResponseEntity
                 .created(URI.create("/reservas/" + reserva.getCodigo()))
-                .body(ReservaMapper.toCriarReservaResponseDto(reserva));
+                .body(reservaMapper.toCriarReservaResponseDto(reserva));
     }
 
     @GetMapping
