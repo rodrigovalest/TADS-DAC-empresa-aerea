@@ -1,8 +1,9 @@
 import api from "@/config/api";
 import IAutocadastroRequest from "@/models/requests/autocadastro-request";
-import IComprarMilhasRequest from "@/models/requests/comprar-milhas-request";
 import IAutocadastroResponse from "@/models/response/autocadastro-response";
 import IClienteResponse from "@/models/response/cliente-response";
+import IComprarMilhasResponse from "@/models/response/comprar-milhas-response";
+import IExtratoMilhasResponse from "@/models/response/extrato-milhas-response";
 
 const clienteService = {
   autocadastro: async (
@@ -47,23 +48,23 @@ const clienteService = {
     }
   },
 
-  comprarMilhas: async (data: IComprarMilhasRequest) => {
+  comprarMilhas: async (clienteId: number, quantidade: number): Promise<IComprarMilhasResponse> => {
     try {
-      const response = await api.post(`/clientes/comprar-milhas`, data);
+      const response = await api.put<IComprarMilhasResponse>(`/clientes/${clienteId}/milhas`, { quantidade });
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao comprar milhas:", error);
-      throw new Error("Erro ao comprar milhas");
+      throw new Error(error.message || "Erro ao comprar milhas");
     }
   },
 
-  extratoMilhas: async () => {
+  extratoMilhas: async (clienteId: number): Promise<IExtratoMilhasResponse> => {
     try {
-      const response = await api.get(`/clientes/extrato-milhas`);
+      const response = await api.get<IExtratoMilhasResponse>(`/clientes/${clienteId}/milhas`);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao buscar extrato de milhas:", error);
-      throw new Error("Erro ao buscar extrato de milhas");
+      throw new Error(error.message || "Erro ao buscar extrato de milhas");
     }
   },
 };
