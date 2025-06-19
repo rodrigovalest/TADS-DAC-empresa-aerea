@@ -17,11 +17,25 @@ const authService = {
       Cookies.set("role", loginData.tipo);
 
       return loginData;
-    } catch {
+    } catch (error: any) {
+      console.error("[AUTH] Erro ao fazer login:", error);
+      
       localStorage.clear();
       Cookies.remove("token");
       Cookies.remove("role");
-      return Promise.reject("Usuário ou senha incorretos");
+      
+      // Tratar diferentes tipos de erro
+      if (error.status === 0) {
+        return Promise.reject(error.message || "Erro de conexão com o servidor");
+      } else if (error.status === 401) {
+        return Promise.reject("Usuário ou senha incorretos");
+      } else if (error.status === 404) {
+        return Promise.reject("Usuário não encontrado");
+      } else if (error.message) {
+        return Promise.reject(error.message);
+      } else {
+        return Promise.reject("Erro interno do servidor. Tente novamente.");
+      }
     }
   },
 

@@ -9,7 +9,7 @@ import CustomOrangeDialog from "@/components/CustomOrangeDialog";
 interface BuyMilesDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (amount: number) => void;
+  onSubmit: (amount: number) => Promise<void> | void;
 }
 
 const BuyMilesDialog: React.FC<BuyMilesDialogProps> = ({
@@ -22,6 +22,7 @@ const BuyMilesDialog: React.FC<BuyMilesDialogProps> = ({
   const [miles, setMiles] = React.useState(0);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const MILES_RATE = 5;
 
@@ -62,10 +63,20 @@ const BuyMilesDialog: React.FC<BuyMilesDialogProps> = ({
   };
 
   // Confirma a compra e fecha os diálogos
-  const handleConfirmPurchase = () => {
-    onSubmit(miles); // Chama a função de callback para processar a compra
-    setIsConfirmDialogOpen(false); // Fecha o diálogo de confirmação
-    onClose(); // Fecha o diálogo principal
+  const handleConfirmPurchase = async () => {
+    setIsLoading(true);
+    setError("");
+    
+    try {
+      await onSubmit(miles); // Chama a função de callback para processar a compra
+      setIsConfirmDialogOpen(false); // Fecha o diálogo de confirmação
+      onClose(); // Fecha o diálogo principal
+    } catch (error: any) {
+      setError(error.message || "Erro ao comprar milhas");
+      setIsConfirmDialogOpen(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -138,8 +149,16 @@ const BuyMilesDialog: React.FC<BuyMilesDialogProps> = ({
           </div>
         }
         buttons={[
-          { label: "Cancelar", onClick: onClose, variant: "secondary" },
-          { label: "Comprar", onClick: handleSubmit, variant: "primary" },
+          { 
+            label: "Cancelar", 
+            onClick: onClose, 
+            variant: "secondary"
+          },
+          { 
+            label: isLoading ? "Comprando..." : "Comprar", 
+            onClick: handleSubmit, 
+            variant: "primary"
+          },
         ]}
       />
 
@@ -162,7 +181,7 @@ const BuyMilesDialog: React.FC<BuyMilesDialogProps> = ({
             variant: "secondary",
           },
           {
-            label: "Confirmar",
+            label: isLoading ? "Processando..." : "Confirmar",
             onClick: handleConfirmPurchase,
             variant: "primary",
           },

@@ -5,6 +5,6 @@ export default interface IClienteResponse {
   cpf: string,
   email: string,
   nome: string,
-  saldoMilhas: number,
+  saldo_milhas: number, 
   endereco: IEnderecoResponse
 }

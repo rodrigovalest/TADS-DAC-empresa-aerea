@@ -2,14 +2,27 @@
 import Link from "next/link";
 import { useState } from "react";
 import BuyMilesDialog from "./BuyMilesDialog";
+import { useMilhas } from "@/hooks/useMilhas";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPointsModalOpen, setIsPointsModalOpen] = useState(false);
+  const { saldoMilhas, loading, error, comprarMilhas, recarregarSaldo } = useMilhas();
+
   const openPointsModal = () => setIsPointsModalOpen(true);
   const closePointsModal = () => setIsPointsModalOpen(false);
-  const handleSubmit = (amount: number) => {};
+  
+  const handleSubmit = async (amount: number) => {
+    const success = await comprarMilhas(amount);
+    if (success) {
+      await recarregarSaldo();
+    } else {
+      console.error("[Header] Erro ao comprar milhas:", error);
+    }
+  };
+  
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    
   return (
     <div className="fixed flex min-w-[100%] bg-[#00000080] flex-row justify-between items-center p-4">
       <img
@@ -53,7 +66,7 @@ export default function Header() {
         </ul>
       </nav>
       <h2 className="text-white cursor-pointer" onClick={openPointsModal}>
-        1200 pts
+        {loading ? "Carregando..." : `Milhas: ${saldoMilhas.toLocaleString()} pts`}
       </h2>
       <BuyMilesDialog
         isOpen={isPointsModalOpen}
