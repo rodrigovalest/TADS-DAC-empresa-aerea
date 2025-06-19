@@ -50,15 +50,7 @@ const RegisterForm: React.FC<{
       onSubmit={handleSubmit(onSubmit)}
       className="p-6 pb-2 w-full max-w-md"
     >
-      <div style={{
-              position: 'absolute',
-              top: '10px',
-              left: '10px',
-              zIndex: 9999,
-              cursor: 'pointer'
-            }}>
-              <FontAwesomeIcon icon={faArrowLeft} size="lg" />
-            </div>
+      
       <h2 className="text-3xl font-medium mb-4 text-center text-white">
         Autocadastro
       </h2>
