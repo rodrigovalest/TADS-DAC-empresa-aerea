@@ -52,7 +52,7 @@ public class ReservaService {
                 )
         );
 
-        reservaResumoService.create(
+        ReservaResumoEntity resumo = reservaResumoService.create(
                 novaReserva.getCodigo(),
                 valor,
                 milhas,
@@ -61,11 +61,14 @@ public class ReservaService {
                 vooEntity.getCodigo()
         );
 
+        log.info("[RESERVASERVICE.CRIARRESERVA] Reserva criada | codigoReserva={} | reserva={} | reservaResumo={}",
+                novaReserva.getCodigo(), novaReserva, resumo);
+
         return novaReserva;
     }
 
     @Transactional
-    public void cancelarReserva(Long reservaId) {
+    public ReservaEntity cancelarReserva(Long reservaId) {
         ReservaEntity reserva = buscarPorId(reservaId);
 
         historicoReservaRespository.save(new HistoricoReservaEntity(
@@ -75,7 +78,7 @@ public class ReservaService {
         ));
 
         reserva.setEstado(EstadoReservaEnum.CANCELADA);
-        reservaRepository.save(reserva);
+        return reservaRepository.save(reserva);
     }
 
     @Transactional
@@ -108,7 +111,7 @@ public class ReservaService {
     }
 
     @Transactional
-    public void cancelarReservaSaga(Long reservaId) {
+    public ReservaEntity cancelarReservaSaga(Long reservaId) {
         ReservaResumoEntity reservaResumo = this.reservaResumoService.findByCodigoReserva(reservaId);
 
         log.info("[SAGA cancelar reserva] Iniciando cancelamento da reserva {}", reservaId);
@@ -125,7 +128,7 @@ public class ReservaService {
                 reservaResumo.getQuantidadePoltronas()
         );
 
-        cancelarReserva(reservaId);
+        return this.cancelarReserva(reservaId);
     }
 
     @Transactional(readOnly = true)
@@ -136,30 +139,28 @@ public class ReservaService {
                                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public ReservaEntity buscarPorCodigo(Long codigo) {
+        return this.reservaRepository.findByCodigo(codigo)
+                .orElseThrow(() -> new ReservaNotFoundException("Reserva " + codigo + " não encontrada", codigo));
+    }
+
+    @Transactional(readOnly = true)
     public ReservaEntity buscarPorId(Long id) {
-        return reservaRepository.findById(id)
-                .orElseThrow(() -> new ReservaNotFoundException(
-                        "Reserva " + id + " não encontrada", id));
-    }
-
-
-    @Transactional
-    public ReservaEntity alterarEstado(Long id, String novoEstado) {
-        var reserva = buscarPorId(id);
-        var estadoAntigo = reserva.getEstado();
-
-        if (!estadoAntigo.name().equals(novoEstado)) {
-            historicoReservaRespository.save(new HistoricoReservaEntity(
-                    null, reserva, null, estadoAntigo, EstadoReservaEnum.valueOf(novoEstado)
-            ));
-            reserva.setEstado(EstadoReservaEnum.valueOf(novoEstado));
-            reservaRepository.save(reserva);
-        }
-        return reserva;
+        return this.reservaRepository.findById(id)
+                .orElseThrow(() -> new ReservaNotFoundException("Reserva " + id + " não encontrada", id));
     }
 
     @Transactional
-    public void excluir(Long id) {
-        reservaRepository.deleteById(id);
+    public ReservaEntity alterarEstado(Long id, EstadoReservaEnum novoEstado) {
+        var reserva = this.buscarPorId(id);
+
+        HistoricoReservaEntity historicoReserva = new HistoricoReservaEntity(
+                null, reserva, null, reserva.getEstado(), novoEstado
+        );
+        this.historicoReservaRespository.save(historicoReserva);
+
+        reserva.setEstado(novoEstado);
+        return reservaRepository.save(reserva);
     }
 }

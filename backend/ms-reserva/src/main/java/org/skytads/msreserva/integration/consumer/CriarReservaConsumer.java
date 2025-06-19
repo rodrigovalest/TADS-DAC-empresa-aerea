@@ -38,7 +38,6 @@ public class CriarReservaConsumer {
 
         if (dto.getSuccess()) {
             log.info("[SAGA criar reserva (4)] RESERVA {} efetuada com sucesso", dto.getReservaId());
-            this.reservaResumoService.finalizarCriarReserva(dto.getReservaId());
         } else {
             log.error("[SAGA criar reserva (4)] Falha ao efetuar reserva {} | {}", dto.getReservaId(), dto);
             this.reservaService.cancelarReserva(dto.getReservaId());
