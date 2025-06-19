@@ -15,13 +15,13 @@ public class ReservaResumoService {
 
     @Transactional
     public ReservaResumoEntity findByCodigoReserva(Long codigoReserva) {
-       return this.reservaResumoRepository.findById(codigoReserva)
+       return this.reservaResumoRepository.findByCodigoReserva(codigoReserva)
                 .orElseThrow(() -> new ReservaNotFoundException("Find reserva resumo by codigo " + codigoReserva + " not found", codigoReserva));
     }
 
     @Transactional
-    public void create(Long codigoReserva, Float valor, Long milhas, Long quantidadePoltronas, Long codigoCliente, Long codigoVoo) {
-        this.reservaResumoRepository.save(
+    public ReservaResumoEntity create(Long codigoReserva, Float valor, Long milhas, Long quantidadePoltronas, Long codigoCliente, Long codigoVoo) {
+        return this.reservaResumoRepository.save(
                 new ReservaResumoEntity(codigoReserva, codigoCliente, codigoVoo, quantidadePoltronas, valor, milhas)
         );
     }
@@ -38,10 +38,5 @@ public class ReservaResumoService {
         persistedReservaResumo.setQuantidadePoltronas(reservaResumo.getQuantidadePoltronas());
 
         this.reservaResumoRepository.save(persistedReservaResumo);
-    }
-
-    @Transactional
-    public void finalizarCriarReserva(Long reservaId) {
-        this.reservaResumoRepository.deleteById(reservaId);
     }
 }

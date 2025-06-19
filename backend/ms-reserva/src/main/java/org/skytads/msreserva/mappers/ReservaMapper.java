@@ -1,6 +1,7 @@
 package org.skytads.msreserva.mappers;
 
 import lombok.RequiredArgsConstructor;
+import org.skytads.msreserva.entities.ReservaResumoEntity;
 import org.springframework.stereotype.Component;
 import org.skytads.msreserva.dtos.responses.*;
 import org.skytads.msreserva.entities.ReservaEntity;
@@ -16,7 +17,7 @@ public class ReservaMapper {
 
     private final ReservaResumoService reservaResumoService;
 
-    public CriarReservaResponseDto toCriarReservaResponseDto(ReservaEntity reserva) {
+    public CriarReservaResponseDto toCriarReservaResponseDto(ReservaEntity reserva, ReservaResumoEntity resumo) {
 
         VooEntity voo = reserva.getVoo();
 
@@ -32,8 +33,6 @@ public class ReservaMapper {
                 voo.getAeroportoDestino().getCidade(),
                 voo.getAeroportoDestino().getUf()
         );
-
-        var resumo = reservaResumoService.findByCodigoReserva(reserva.getCodigo());
 
         return new CriarReservaResponseDto(
                 reserva.getCodigo(),

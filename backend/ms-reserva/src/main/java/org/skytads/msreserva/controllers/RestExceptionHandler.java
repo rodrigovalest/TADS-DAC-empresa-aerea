@@ -2,6 +2,8 @@ package org.skytads.msreserva.controllers;
 
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.skytads.msreserva.exceptions.AlterarEstadoReservaComEstadoVooInvalidoException;
+import org.skytads.msreserva.exceptions.AlterarEstadoReservaInvalido;
 import org.slf4j.MDC;
 import lombok.extern.slf4j.Slf4j;
 
@@ -112,6 +114,32 @@ public class RestExceptionHandler {
             FeignException e
     ) {
         log.error("Feign exception | {}", e.getMessage());
+
+        ErrorResponseDto restErrorDto = new ErrorResponseDto(HttpStatus.BAD_REQUEST, e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(restErrorDto);
+    }
+
+    @ExceptionHandler(AlterarEstadoReservaComEstadoVooInvalidoException.class)
+    private ResponseEntity<ErrorResponseDto> AlterarEstadoReservaComEstadoVooInvalidoExceptionHandler(
+            AlterarEstadoReservaComEstadoVooInvalidoException e
+    ) {
+        log.error("AlterarEstadoReservaComEstadoVooInvalidoException | {}", e.getMessage());
+
+        ErrorResponseDto restErrorDto = new ErrorResponseDto(HttpStatus.BAD_REQUEST, e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(restErrorDto);
+    }
+
+    @ExceptionHandler(AlterarEstadoReservaInvalido.class)
+    private ResponseEntity<ErrorResponseDto> AlterarEstadoReservaInvalidoHandler(
+            AlterarEstadoReservaInvalido e
+    ) {
+        log.error("AlterarEstadoReservaComEstadoVooInvalidoException | {}", e.getMessage());
 
         ErrorResponseDto restErrorDto = new ErrorResponseDto(HttpStatus.BAD_REQUEST, e.getMessage());
         return ResponseEntity
