@@ -8,6 +8,8 @@ import authService from "@/services/auth-service";
 import ILoginRequest from "@/models/requests/login-request";
 import ILoginResponse from "@/models/response/login-response";
 import { TextField, Button } from "@mui/material";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const Login = () => {
   const [isFormInvalid, setFormInvalid] = useState(false);
@@ -36,6 +38,11 @@ const Login = () => {
 
   return (
     <div className="flex h-screen">
+     <Link href="/">
+      <a className="return" aria-label="Voltar para home">
+        <FontAwesomeIcon icon={faArrowLeft} size="lg" />
+      </a>
+    </Link>
       <div className="w-1/2 bg-black flex justify-center items-center">
         <img
           className="w-full h-full object-cover"
