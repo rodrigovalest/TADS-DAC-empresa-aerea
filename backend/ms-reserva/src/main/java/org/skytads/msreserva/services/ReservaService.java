@@ -163,4 +163,32 @@ public class ReservaService {
         reserva.setEstado(novoEstado);
         return reservaRepository.save(reserva);
     }
+
+    @Transactional
+    public void cancelarVoo(Long codigoVoo) {
+        List<ReservaEntity> reservaEntities = this.reservaRepository.findByVooCodigo(codigoVoo);
+
+        for (ReservaEntity reserva : reservaEntities) {
+            reserva.setEstado(EstadoReservaEnum.CANCELADA_VOO);
+            this.reservaRepository.save(reserva);
+        }
+    }
+
+    @Transactional
+    public void realizarVoo(Long codigoVoo) {
+        List<ReservaEntity> reservaEntities = this.reservaRepository.findByVooCodigo(codigoVoo);
+
+        for (ReservaEntity reserva : reservaEntities) {
+            if (EstadoReservaEnum.EMBARCADA.equals(reserva.getEstado()))
+                reserva.setEstado(EstadoReservaEnum.REALIZADA);
+
+            else if (EstadoReservaEnum.CRIADA.equals(reserva.getEstado()))
+                reserva.setEstado(EstadoReservaEnum.NAO_REALIZADA);
+
+            else if (EstadoReservaEnum.CHECK_IN.equals(reserva.getEstado()))
+                reserva.setEstado(EstadoReservaEnum.NAO_REALIZADA);
+
+            this.reservaRepository.save(reserva);
+        }
+    }
 }

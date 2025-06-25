@@ -99,4 +99,27 @@ public class VooMapper {
                 voosDto
         );
     }
+
+    public static AlterarEstadoVooResponseDto toAlterarEstadoVooResponseDto(VooEntity voo) {
+        return new AlterarEstadoVooResponseDto(
+                voo.getCodigo(),
+                voo.getStatusVoo(),
+                OffsetDateTime.of(voo.getData(), ZoneOffset.of("-03:00")).toString(),
+                voo.getValorPassagem(),
+                voo.getQuantidadePoltronas(),
+                voo.getQuantidadePoltronasOcupadas(),
+                new AeroportoResponseDto(
+                        voo.getAeroportoOrigem().getCodigo(),
+                        voo.getAeroportoOrigem().getNome(),
+                        voo.getAeroportoOrigem().getCidade(),
+                        voo.getAeroportoOrigem().getUf()
+                ),
+                new AeroportoResponseDto(
+                        voo.getAeroportoDestino().getCodigo(),
+                        voo.getAeroportoDestino().getNome(),
+                        voo.getAeroportoDestino().getCidade(),
+                        voo.getAeroportoDestino().getUf()
+                )
+        );
+    }
 }

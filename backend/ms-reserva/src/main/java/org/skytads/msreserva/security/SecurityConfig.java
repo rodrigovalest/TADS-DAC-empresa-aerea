@@ -31,13 +31,10 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/reservas/**").hasAuthority("ROLE_CLIENTE")
-                        .requestMatchers(HttpMethod.PATCH, "/reservas/**").hasAuthority("ROLE_CLIENTE")
                         .requestMatchers(HttpMethod.DELETE, "/reservas/**").hasAuthority("ROLE_CLIENTE")
                         .requestMatchers(HttpMethod.POST, "/reservas").hasAuthority("ROLE_CLIENTE")
-                        .requestMatchers(HttpMethod.GET, "/reservas/*").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/reservas/*").hasAuthority("ROLE_CLIENTE")
-                        .requestMatchers(HttpMethod.PATCH, "/reservas/*/estado").hasAuthority("ROLE_FUNCIONARIO")
+                        .requestMatchers(HttpMethod.GET, "/reservas").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();
