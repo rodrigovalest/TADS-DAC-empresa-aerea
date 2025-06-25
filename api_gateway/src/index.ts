@@ -43,6 +43,7 @@ const services = {
   reservas: 'http://ms-reserva:8082',
   voos: 'http://ms-voos:8083',
   auth: 'http://ms-auth:8084',
+  aeroportos: 'http://ms-voos:8083'
 };
 
 Object.entries(services).forEach(([route, target]) => {

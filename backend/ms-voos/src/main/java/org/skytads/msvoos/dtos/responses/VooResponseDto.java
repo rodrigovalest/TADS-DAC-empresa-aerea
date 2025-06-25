@@ -15,6 +15,7 @@ public class VooResponseDto {
     private Long codigo;
     private String data;
     private String valorPassagem;
+    private Float valor;
     private Long quantidadePoltronasTotal;
     private Long quantidadePoltronasOcupadas;
     private StatusVooEnum estado;
