@@ -1,4 +1,7 @@
-'use client';
+"use client";
+export const dynamic = "force-dynamic";
+
+import { Suspense } from "react";
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import HeaderBanner from "@/components/HeaderBanner";
@@ -7,7 +10,7 @@ import useFindReservaByCodigo from "@/hooks/useFindReservaByCodigo";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 
-const InfoReservation: React.FC = () => {
+function InfoReservationContent() {
   const searchParams = useSearchParams();
   const codigoParam = searchParams.get("codigo");
   const router = useRouter();
@@ -90,4 +93,10 @@ const InfoReservation: React.FC = () => {
   );
 };
 
-export default InfoReservation;
+export default function InfoReservationPage() {
+  return (
+    <Suspense fallback={<div>Carregando reserva...</div>}>
+      <InfoReservationContent />
+    </Suspense>
+  );
+}

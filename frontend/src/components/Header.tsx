@@ -12,10 +12,10 @@ export default function Header() {
 
   // Get client Id from localStorage (set after login)
   const clienteId = typeof window !== "undefined"
-    ? JSON.parse(localStorage.getItem("logged_user") || "{}")?.codigo
+    ? JSON.parse(localStorage.getItem("logged_user") || "{}")?.usuario.codigo
     : null;
 
-console.log("clienteId:", clienteId);
+  console.log("clienteId:", clienteId);
 
   const fetchSaldoMilhas = async () => {
     if (!clienteId) {
@@ -34,7 +34,9 @@ console.log("clienteId:", clienteId);
   };
 
   useEffect(() => {
-    fetchSaldoMilhas();
+    if (clienteId) {
+      fetchSaldoMilhas();
+    }
   }, [clienteId]);
 
   const openPointsModal = () => setIsPointsModalOpen(true);
