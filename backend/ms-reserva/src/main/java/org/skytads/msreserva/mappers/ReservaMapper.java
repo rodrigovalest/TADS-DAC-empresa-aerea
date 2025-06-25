@@ -15,7 +15,40 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class ReservaMapper {
 
-    private final ReservaResumoService reservaResumoService;
+    public ListarReservaResponseDto toListarReservaResponseDto(ReservaEntity reserva, ReservaResumoEntity resumo) {
+        VooEntity voo = reserva.getVoo();
+
+        AeroportoResponseDto origem = new AeroportoResponseDto(
+                voo.getAeroportoOrigem().getCodigo(),
+                voo.getAeroportoOrigem().getNome(),
+                voo.getAeroportoOrigem().getCidade(),
+                voo.getAeroportoOrigem().getUf()
+        );
+        AeroportoResponseDto destino = new AeroportoResponseDto(
+                voo.getAeroportoDestino().getCodigo(),
+                voo.getAeroportoDestino().getNome(),
+                voo.getAeroportoDestino().getCidade(),
+                voo.getAeroportoDestino().getUf()
+        );
+
+        return new ListarReservaResponseDto(
+                reserva.getCodigo(),
+                reserva.getDataHoraReserva()
+                        .atOffset(ZoneOffset.of("-03:00"))
+                        .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+                resumo.getValor(),
+                resumo.getMilhasUtilizadas(),
+                reserva.getQuantidadePoltronas(),
+                reserva.getCodigoCliente(),
+                reserva.getEstado(),
+                new ListarReservaVooResponseDto(
+                        voo.getCodigo(),
+                        voo.getData(),
+                        origem,
+                        destino
+                )
+        );
+    }
 
     public CriarReservaResponseDto toCriarReservaResponseDto(ReservaEntity reserva, ReservaResumoEntity resumo) {
 
@@ -44,7 +77,7 @@ public class ReservaMapper {
                 reserva.getQuantidadePoltronas(),
                 reserva.getCodigoCliente(),
                 reserva.getEstado(),
-                new VooResponseDto(voo.getCodigo(), origem, destino)
+                new VooResponseDto(voo.getCodigo(), voo.getData(), origem, destino)
         );
     }
 

@@ -1,7 +1,8 @@
-import ICodigoAeroporto from "@/models/response/codigo-aeroporto-response";
+import IAeroportoResponse from "./aeroporto-response";
 
 export default interface IVooReservaResponse {
   codigo: string;
-  aeroporto_origem: ICodigoAeroporto,
-  aeroporto_destino: ICodigoAeroporto
+  data: string;
+  aeroporto_origem: IAeroportoResponse,
+  aeroporto_destino: IAeroportoResponse
 }

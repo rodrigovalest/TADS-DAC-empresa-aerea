@@ -7,16 +7,20 @@ import org.skytads.msreserva.dtos.requests.AlterarEstadoReservaRequestDto;
 import org.skytads.msreserva.dtos.requests.CriarReservaRequestDto;
 import org.skytads.msreserva.dtos.responses.ConsultaReservaResponseDto;
 import org.skytads.msreserva.dtos.responses.CriarReservaResponseDto;
+import org.skytads.msreserva.dtos.responses.ListarReservaResponseDto;
 import org.skytads.msreserva.entities.ReservaEntity;
 import org.skytads.msreserva.entities.ReservaResumoEntity;
 import org.skytads.msreserva.mappers.ReservaMapper;
+import org.skytads.msreserva.security.UserDetailsImpl;
 import org.skytads.msreserva.services.ReservaResumoService;
 import org.skytads.msreserva.services.ReservaService;
 import org.skytads.msreserva.usecases.AlterarEstadoReservaUseCase;
 import org.skytads.msreserva.usecases.CriarReservaUseCase;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -68,6 +72,22 @@ public class ReservaController {
     public ResponseEntity<List<ConsultaReservaResponseDto>> listarReservas() {
         List<ConsultaReservaResponseDto> reservas = reservaService.listarReservas();
         return ResponseEntity.ok(reservas);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<ListarReservaResponseDto>> listarReservaDoClienteLogado(
+            @AuthenticationPrincipal UserDetailsImpl usuarioLogado
+    ) {
+        List<ReservaEntity> list = this.reservaService.listarReservaPorCodigoCliente(usuarioLogado.getCodigo());
+        List<ListarReservaResponseDto> responseDtoList = new ArrayList<>();
+
+        for (ReservaEntity reserva : list) {
+            ReservaResumoEntity resumo = this.reservaResumoService.findByCodigoReserva(reserva.getCodigo());
+            var responseDto = reservaMapper.toListarReservaResponseDto(reserva, resumo);
+            responseDtoList.add(responseDto);
+        }
+
+        return ResponseEntity.ok(responseDtoList);
     }
 
     @PostMapping("/{reservaId}/cancelar")

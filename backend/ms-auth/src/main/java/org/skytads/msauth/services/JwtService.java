@@ -20,6 +20,8 @@ public class JwtService {
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getTipo().name());
+        claims.put("id", user.getId());
+        claims.put("codigo", user.getCodigo());
 
         return Jwts
                 .builder()
@@ -38,6 +40,15 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload()
                 .get("role", String.class);
+    }
+
+    public Long extractCodigo(String token) {
+        return Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("codigo", Long.class);
     }
 
     public String extractSubject(String token) {

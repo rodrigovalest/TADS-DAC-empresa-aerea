@@ -1,7 +1,8 @@
 import IVooReservaResponse from "@/models/response/voo-reserva-response";
 import { EstadoReservaType } from "../types/estado-reserva.type";
+import IVooListarReservaResponse from "./IVooListarReservaResponseDto";
 
-export default interface IReservaResponse {
+export default interface IListarReservaResponse {
   codigo: string;
   data: string;
   valor: string;
@@ -9,5 +10,5 @@ export default interface IReservaResponse {
   milhas_utilizadas: string;
   quantidade_poltronas: string;
   estado: EstadoReservaType;
-  voo: IVooReservaResponse;
+  voo: IVooListarReservaResponse;
 }

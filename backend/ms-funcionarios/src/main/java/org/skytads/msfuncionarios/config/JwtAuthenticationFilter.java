@@ -34,8 +34,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null) {
             String subject = this.jwtService.extractSubject(token);
             String role = this.jwtService.extractRole(token);
+            Long codigo = this.jwtService.extractCodigo(token);
 
-            UserDetailsImpl userDetails = new UserDetailsImpl(subject, UserType.valueOf(role));
+            UserDetailsImpl userDetails = new UserDetailsImpl(subject, UserType.valueOf(role), codigo);
             var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

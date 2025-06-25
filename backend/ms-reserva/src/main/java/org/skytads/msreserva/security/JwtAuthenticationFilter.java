@@ -30,12 +30,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null) {
             String subject = this.jwtService.extractSubject(token);
             String role = this.jwtService.extractRole(token);
+            Long codigo = this.jwtService.extractCodigo(token);
 
-            UserDetailsImpl userDetails = new UserDetailsImpl(subject, UserType.valueOf(role));
+            UserDetailsImpl userDetails = new UserDetailsImpl(subject, UserType.valueOf(role), codigo);
             var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getServletPath();
+        return path.equals("/login") || path.equals("/login/") ||
+            path.equals("/logout") || path.equals("/logout/");
     }
 }
