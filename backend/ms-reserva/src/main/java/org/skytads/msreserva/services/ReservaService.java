@@ -110,6 +110,10 @@ public class ReservaService {
                                 .collect(Collectors.toList());
     }
 
+    public List<ReservaEntity> listarReservaPorCodigoCliente(Long codigoCliente) {
+        return this.reservaRepository.findByCodigoCliente(codigoCliente);
+    }
+
     @Transactional
     public ReservaEntity cancelarReservaSaga(Long reservaId) {
         ReservaResumoEntity reservaResumo = this.reservaResumoService.findByCodigoReserva(reservaId);

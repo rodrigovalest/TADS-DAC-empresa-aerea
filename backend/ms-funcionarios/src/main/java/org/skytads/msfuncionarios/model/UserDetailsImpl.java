@@ -15,6 +15,7 @@ public class UserDetailsImpl implements UserDetails {
 
     private final String email;
     private final UserType tipo;
+    private final Long codigo;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

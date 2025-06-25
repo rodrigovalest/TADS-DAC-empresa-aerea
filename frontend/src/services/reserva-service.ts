@@ -2,6 +2,7 @@ import api from "@/config/api";
 import ICriarReservaRequest from "@/models/requests/criar-reserva-request";
 import IMudarEstadoReservaRequest from "@/models/requests/mudar-estado-reserva-request";
 import IEstadoReservaResponse from "@/models/response/estado-reserva-response";
+import IListarReservaResponse from "@/models/response/listar-reservas.response";
 import IReservaResponse from "@/models/response/reserva-response";
 
 const reservaService = {
@@ -10,16 +11,14 @@ const reservaService = {
     return response.data;
   },
 
-  consultarReserva: async (): Promise<IReservaResponse> => {
-    throw new Error("Not implemented yet");
+  consultarReserva: async (id: number): Promise<IReservaResponse> => {
+    const response = await api.get<IReservaResponse>(`/reservas/${id}`);
+    return response.data;
   },
 
   cancelarReserva: async (id: number): Promise<IEstadoReservaResponse> => {
-    const response = await fetch(`http://localhost:8082/reservas/${id}/cancelar`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const response = await fetch(`http://localhost:8082/reservas/${id}`, {
+      method: "DELETE"
     });
 
     if (!response.ok) {
@@ -44,6 +43,11 @@ const reservaService = {
   
     return await response.json();
 	},
+
+  findAllReservasByUser: async (): Promise<IListarReservaResponse []> => {
+    const response = await api.get<IListarReservaResponse []>("/reservas/user");
+    return response.data;
+  }
 };
 
 export default reservaService;

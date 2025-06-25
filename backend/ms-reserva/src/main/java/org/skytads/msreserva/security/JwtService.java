@@ -23,6 +23,15 @@ public class JwtService {
                 .get("role", String.class);
     }
 
+    public Long extractCodigo(String token) {
+        return Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("codigo", Long.class);
+    }
+
     public String extractSubject(String token) {
         return Jwts.parser()
                 .verifyWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))

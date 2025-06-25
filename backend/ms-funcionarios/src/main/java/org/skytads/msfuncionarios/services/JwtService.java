@@ -32,6 +32,15 @@ public class JwtService {
                 .getSubject();
     }
 
+    public Long extractCodigo(String token) {
+        return Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("codigo", Long.class);
+    }
+
     public boolean isTokenValid(String token, String email) {
         try {
             Claims claims = Jwts.parser()

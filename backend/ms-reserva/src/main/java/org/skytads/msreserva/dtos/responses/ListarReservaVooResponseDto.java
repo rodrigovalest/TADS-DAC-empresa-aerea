@@ -1,7 +1,6 @@
 package org.skytads.msreserva.dtos.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VooResponseDto {
+public class ListarReservaVooResponseDto {
     private Long codigo;
     private String data;
 
