@@ -1,28 +1,53 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BuyMilesDialog from "./BuyMilesDialog";
-import { useMilhas } from "@/hooks/useMilhas";
+import clienteService from "@/services/cliente-service";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPointsModalOpen, setIsPointsModalOpen] = useState(false);
-  const { saldoMilhas, loading, error, comprarMilhas, recarregarSaldo } = useMilhas();
+  const [saldoMilhas, setSaldoMilhas] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
+
+  // Get client Id from localStorage (set after login)
+  const clienteId = typeof window !== "undefined"
+    ? JSON.parse(localStorage.getItem("logged_user") || "{}")?.codigo
+    : null;
+
+console.log("clienteId:", clienteId);
+
+  const fetchSaldoMilhas = async () => {
+    if (!clienteId) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    try {
+      const cliente = await clienteService.findClienteById(clienteId);
+      setSaldoMilhas(cliente.saldo_milhas);
+    } catch (error) {
+      setSaldoMilhas(0);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSaldoMilhas();
+  }, [clienteId]);
 
   const openPointsModal = () => setIsPointsModalOpen(true);
   const closePointsModal = () => setIsPointsModalOpen(false);
-  
+
   const handleSubmit = async (amount: number) => {
-    const success = await comprarMilhas(amount);
-    if (success) {
-      await recarregarSaldo();
-    } else {
-      console.error("[Header] Erro ao comprar milhas:", error);
-    }
+    if (!clienteId) return;
+    await clienteService.comprarMilhas(clienteId, amount);
+    await fetchSaldoMilhas();
   };
-  
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-    
+
   return (
     <div className="fixed flex min-w-[100%] bg-[#00000080] flex-row justify-between items-center p-4">
       <img

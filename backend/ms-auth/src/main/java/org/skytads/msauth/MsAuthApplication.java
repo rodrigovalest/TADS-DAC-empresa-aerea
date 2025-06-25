@@ -19,6 +19,6 @@ public class MsAuthApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        this.userRepository.deleteAll();
+        // this.userRepository.deleteAll();
     }
 }

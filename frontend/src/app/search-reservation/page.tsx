@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import HeaderBanner from "@/components/HeaderBanner";
 import { Flight, Reservation } from "@/types/interfaces";
 import SearchIcon from "@mui/icons-material/Search";
+import clienteService from "@/services/cliente-service";
 
 // Interface para combinar dados do voo e da reserva
 interface ReservationWithFlightDetails {
@@ -14,48 +15,11 @@ interface ReservationWithFlightDetails {
 const SearchReservationPage: React.FC = () => {
   const [reservationCode, setReservationCode] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [allReservations, setAllReservations] = useState<ReservationWithFlightDetails[]>([]);
 
-  // Mock data usando as interfaces corretas
-  const [allReservations, setAllReservations] = useState<
-    ReservationWithFlightDetails[]
-  >([
-    {
-      reservation: {
-        id: "r1",
-        code: "VOO123",
-        flightId: "f1",
-        status: "CHECK-IN",
-      },
-      flight: {
-        id: "f1",
-        date: "2025-05-07",
-        time: "03:00:00",
-        origin: "São Paulo (GRU)",
-        destination: "Rio de Janeiro (GIG)",
-        status: "CONFIRMADO",
-        value: 4500,
-        miles: 300,
-      },
-    },
-    {
-      reservation: {
-        id: "r2",
-        code: "VOO456",
-        flightId: "f2",
-        status: "CHECK-IN",
-      },
-      flight: {
-        id: "f2",
-        date: "2025-05-20",
-        time: "10:00:00",
-        origin: "Brasília (BSB)",
-        destination: "Salvador (SSA)",
-        status: "CONFIRMADO",
-        value: 3200,
-        miles: 200,
-      },
-    },
-  ]);
+  const clienteId = typeof window !== "undefined"
+    ? JSON.parse(localStorage.getItem("logged_user") || "{}")?.codigo
+    : null;
 
   const fetchFilteredReservations = () => {
     // Filtra as reservas com base no código digitado, permitindo buscas parciais
@@ -117,7 +81,7 @@ const SearchReservationPage: React.FC = () => {
     {}
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const newFormattedDates: Record<string, string> = {};
     allReservations.forEach((item) => {
       const key = item.reservation.id;
