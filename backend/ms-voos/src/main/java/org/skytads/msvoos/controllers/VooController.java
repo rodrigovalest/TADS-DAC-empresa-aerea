@@ -6,12 +6,10 @@ import org.skytads.msvoos.dtos.requests.AlterarEstadoVooRequestDto;
 import org.skytads.msvoos.dtos.requests.CriarReservaVooRequestDto;
 import org.skytads.msvoos.dtos.requests.CriarVooRequestDto;
 import org.skytads.msvoos.dtos.requests.ListarVooParamsRequestDto;
-import org.skytads.msvoos.dtos.responses.CriarReservaVooResponseDto;
-import org.skytads.msvoos.dtos.responses.CriarVooResponseDto;
-import org.skytads.msvoos.dtos.responses.ListarVoosPorParamsResponseDto;
-import org.skytads.msvoos.dtos.responses.VooResponseDto;
+import org.skytads.msvoos.dtos.responses.*;
 import org.skytads.msvoos.entities.VooEntity;
 import org.skytads.msvoos.mappers.VooMapper;
+import org.skytads.msvoos.services.AlterarEstadoVooUseCase;
 import org.skytads.msvoos.services.VooService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -28,6 +26,7 @@ import java.util.List;
 public class VooController {
 
     private final VooService vooService;
+    private final AlterarEstadoVooUseCase alterarEstadoVooUseCase;
 
     @PostMapping
     public ResponseEntity<CriarVooResponseDto> criarVoo(@RequestBody @Valid CriarVooRequestDto requestDto) {
@@ -48,15 +47,6 @@ public class VooController {
     ) {
         VooEntity voo = vooService.findById(codigo);
         return ResponseEntity.ok(VooMapper.toVooResponseDto(voo));
-    }
-
-    @PatchMapping("/{codigo}/estado")
-    public ResponseEntity<?> updateEstadoVoo(
-            @PathVariable("codigo") Long codigo,
-            @RequestBody @Valid AlterarEstadoVooRequestDto requestDto
-    ) {
-        VooEntity vooAtualizado = vooService.updateEstadoVoo(codigo, requestDto.getEstado());
-        return ResponseEntity.ok(vooAtualizado);
     }
 
     @GetMapping("/origem/{aeroportoOrigemCodigo}")
@@ -122,5 +112,14 @@ public class VooController {
                 params.getData(),
                 voos
         ));
+    }
+
+    @PatchMapping("/{codigo}/estado")
+    public ResponseEntity<AlterarEstadoVooResponseDto> updateEstadoVoo(
+            @PathVariable("codigo") Long codigo,
+            @RequestBody @Valid AlterarEstadoVooRequestDto requestDto
+    ) {
+        VooEntity voo = this.alterarEstadoVooUseCase.execute(codigo, requestDto.getEstado());
+        return ResponseEntity.ok(VooMapper.toAlterarEstadoVooResponseDto(voo));
     }
 }

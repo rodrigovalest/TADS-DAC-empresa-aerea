@@ -10,6 +10,7 @@ import org.skytads.msvoos.enums.StatusVooEnum;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AlterarEstadoVooRequestDto {
+
     @NotNull
     private StatusVooEnum estado;
 }

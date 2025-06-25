@@ -12,4 +12,6 @@ public interface ReservaRepository extends JpaRepository<ReservaEntity, Long> {
     List<ReservaEntity> findByCodigoCliente(Long codigoCliente);
 
     Optional<ReservaEntity> findByCodigo(Long codigo);
+
+    List<ReservaEntity> findByVooCodigo(Long codigoVoo);
 }

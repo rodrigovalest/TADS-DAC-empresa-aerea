@@ -45,22 +45,10 @@ public class CriarReservaConsumer {
         }
     }
 
-    @RabbitListener(queues = RabbitMQConfig.QUEUE_CANCELAR_RESERVA_MILHAS_CLIENTE)
-    public void cancelarMilhasCliente(CriarReservaUsarMilhasMessageDto dto) {
-        log.info("[SAGA cancelar reserva] Reverter milhas do cliente. {}", dto);
-
-        if (dto.getSuccess()) {
-            log.info("[SAGA cancelar reserva] Milhas revertidas com sucesso para a reserva {}", dto.getReservaId());
-        } else {
-            log.error("[SAGA cancelar reserva] Falha ao reverter milhas para a reserva {}", dto.getReservaId());
-        }
-    }
-
     @RabbitListener(queues = RabbitMQConfig.QUEUE_CANCELAR_RESERVA_POLTRONAS_VOO)
     public void cancelarPoltronasVoo(CriarReservaReverterPoltronasMessageDto dto) {
         log.info("[SAGA cancelar reserva] Liberar poltronas no voo. {}", dto);
 
         log.info("[SAGA cancelar reserva] Poltronas liberadas com sucesso para a reserva {}", dto.getReservaId());
     }
-
 }

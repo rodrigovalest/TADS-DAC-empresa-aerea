@@ -1,4 +1,4 @@
-package org.skytads.msreserva.enums;
+package org.skytads.msvoos.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -19,11 +19,6 @@ public enum EstadoReservaEnum {
 
     @JsonValue
     public String toValue() {
-        return switch (this) {
-            case CHECK_IN       -> "CHECK-IN";
-            case CANCELADA_VOO  -> "CANCELADA VOO";
-            case NAO_REALIZADA  -> "NÃO REALIZADA";
-            default             -> this.name().replace("_", " ");
-        };
+        return this.name().replace("_", "-");
     }
 }

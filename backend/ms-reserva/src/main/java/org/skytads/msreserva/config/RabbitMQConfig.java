@@ -42,6 +42,13 @@ public class RabbitMQConfig {
     public static final String QUEUE_REQUEST_RESERVAS = "request-reservas.queue";
     public static final String ROUTING_KEY_REQUEST_RESERVAS = "request-reservas.routing";
 
+    // Alterar estado voo
+    public static final String QUEUE_CANCELAR_VOO_RESERVA = "cancelar-voo.reserva.queue";
+    public static final String ROUTING_KEY_CANCELAR_VOO_RESERVA = "cancelar-voo.reserva.routing";
+
+    public static final String QUEUE_REALIZAR_VOO_RESERVA = "realizar-voo.reserva.queue";
+    public static final String ROUTING_KEY_REALIZAR_VOO_RESERVA = "realizar-voo.reserva.routing";
+
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
@@ -152,5 +159,29 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(queueRequestReservas())
                 .to(exchangeReserva())
                 .with(ROUTING_KEY_REQUEST_RESERVAS);
+    }
+
+    @Bean
+    public Queue filaCancelarVooReserva() {
+        return new Queue(QUEUE_CANCELAR_VOO_RESERVA, true);
+    }
+
+    @Bean
+    public Binding bindingCancelarVooReserva() {
+        return BindingBuilder.bind(filaCancelarVooReserva())
+                .to(exchangeReserva())
+                .with(ROUTING_KEY_CANCELAR_VOO_RESERVA);
+    }
+
+    @Bean
+    public Queue filaRealizarVooReserva() {
+        return new Queue(QUEUE_REALIZAR_VOO_RESERVA, true);
+    }
+
+    @Bean
+    public Binding bindingRealizarVooReserva() {
+        return BindingBuilder.bind(filaRealizarVooReserva())
+                .to(exchangeReserva())
+                .with(ROUTING_KEY_REALIZAR_VOO_RESERVA);
     }
 }
