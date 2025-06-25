@@ -10,33 +10,40 @@ import {
   TableBody,
   TableSortLabel,
 } from "@mui/material";
-import { Flight } from "@/types/interfaces";
+import IVooResponse from "@/models/response/voo-response";
 
 type Order = "asc" | "desc";
 
 interface TripsTableProps {
-  trips: Flight[];
-  onRowClick?: (trip: Flight) => void;
+  trips: IVooResponse[];
+  onRowClick?: (trip: IVooResponse) => void;
 }
+
+type SortableField = "data" | "valor_passagem";
 
 const TripsTable: React.FC<TripsTableProps> = ({ trips, onRowClick }) => {
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof Flight>("date");
+  const [orderBy, setOrderBy] = useState<SortableField>("data");
 
-  const handleSort = (property: keyof Flight) => {
+  const handleSort = (property: SortableField) => {
     const isAscending = orderBy === property && order === "asc";
     setOrder(isAscending ? "desc" : "asc");
     setOrderBy(property);
   };
 
   const sortedTrips = [...trips].sort((a, b) => {
-    if (orderBy === "date") {
+    if (orderBy === "data") {
       return order === "asc"
-        ? new Date(a.date).getTime() - new Date(b.date).getTime()
-        : new Date(b.date).getTime() - new Date(a.date).getTime();
+        ? new Date(a.data).getTime() - new Date(b.data).getTime()
+        : new Date(b.data).getTime() - new Date(a.data).getTime();
     }
-    if (a[orderBy] < b[orderBy]) return order === "asc" ? -1 : 1;
-    if (a[orderBy] > b[orderBy]) return order === "asc" ? 1 : -1;
+
+    if (orderBy === "valor_passagem") {
+      const valA = parseFloat(a.valor_passagem);
+      const valB = parseFloat(b.valor_passagem);
+      return order === "asc" ? valA - valB : valB - valA;
+    }
+
     return 0;
   });
 
@@ -47,20 +54,11 @@ const TripsTable: React.FC<TripsTableProps> = ({ trips, onRowClick }) => {
           <TableRow>
             <TableCell>
               <TableSortLabel
-                active={orderBy === "date"}
-                direction={orderBy === "date" ? order : "asc"}
-                onClick={() => handleSort("date")}
+                active={orderBy === "data"}
+                direction={orderBy === "data" ? order : "asc"}
+                onClick={() => handleSort("data")}
               >
                 <span className="font-bold text-[16px]">Data</span>
-              </TableSortLabel>
-            </TableCell>
-            <TableCell>
-              <TableSortLabel
-                active={orderBy === "time"}
-                direction={orderBy === "time" ? order : "asc"}
-                onClick={() => handleSort("time")}
-              >
-                <span className="font-bold text-[16px]">Horário</span>
               </TableSortLabel>
             </TableCell>
             <TableCell>
@@ -71,12 +69,15 @@ const TripsTable: React.FC<TripsTableProps> = ({ trips, onRowClick }) => {
             </TableCell>
             <TableCell>
               <TableSortLabel
-                active={orderBy === "value"}
-                direction={orderBy === "value" ? order : "asc"}
-                onClick={() => handleSort("value")}
+                active={orderBy === "valor_passagem"}
+                direction={orderBy === "valor_passagem" ? order : "asc"}
+                onClick={() => handleSort("valor_passagem")}
               >
                 <span className="font-bold text-[16px]">Valor</span>
               </TableSortLabel>
+            </TableCell>
+            <TableCell>
+              <span className="font-bold text-[16px]">Status</span>
             </TableCell>
           </TableRow>
         </TableHead>
@@ -89,16 +90,18 @@ const TripsTable: React.FC<TripsTableProps> = ({ trips, onRowClick }) => {
               style={{ transition: "background-color 0.3s ease" }}
             >
               <TableCell>
-                {new Date(trip.date).toLocaleDateString("pt-BR", {
+                {new Date(trip.data).toLocaleDateString("pt-BR", {
                   day: "2-digit",
                   month: "2-digit",
                   year: "numeric",
                 })}
               </TableCell>
-              <TableCell>{trip.time}</TableCell>
-              <TableCell>{trip.origin}</TableCell>
-              <TableCell>{trip.destination}</TableCell>
-              <TableCell>R${trip.value.toFixed(2)}</TableCell>
+              <TableCell>{trip.aeroporto_origem?.nome}</TableCell>
+              <TableCell>{trip.aeroporto_destino?.nome}</TableCell>
+              <TableCell>
+                R${parseFloat(trip.valor_passagem).toFixed(2)}
+              </TableCell>
+              <TableCell>{trip.estado}</TableCell>
             </TableRow>
           ))}
         </TableBody>

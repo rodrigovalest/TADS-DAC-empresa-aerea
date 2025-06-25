@@ -38,6 +38,7 @@ public class VooMapper {
                 voo.getCodigo(),
                 OffsetDateTime.of(voo.getData(), ZoneOffset.of("-03:00")).toString(),
                 String.format("%.2f", voo.getValorPassagem()),
+                voo.getValorPassagem(),
                 voo.getQuantidadePoltronas(),
                 voo.getQuantidadePoltronasOcupadas(),
                 voo.getStatusVoo(),
