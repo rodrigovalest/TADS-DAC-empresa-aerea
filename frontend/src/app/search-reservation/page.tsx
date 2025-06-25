@@ -5,6 +5,7 @@ import HeaderBanner from "@/components/HeaderBanner";
 import { Flight, Reservation } from "@/types/interfaces";
 import SearchIcon from "@mui/icons-material/Search";
 import clienteService from "@/services/cliente-service";
+import reservaService from "@/services/reserva-service";
 
 // Interface para combinar dados do voo e da reserva
 interface ReservationWithFlightDetails {
@@ -21,12 +22,51 @@ const SearchReservationPage: React.FC = () => {
     ? JSON.parse(localStorage.getItem("logged_user") || "{}")?.usuario.codigo
     : null;
 
+  useEffect(() => {
+    const fetchReservations = async () => {
+  try {
+    const reservas = await reservaService.findAllReservasByUser();
+    console.log("Reservas retornadas:", reservas);
+
+    const mapped = reservas.map((r: any) => ({
+      reservation: {
+        id: r.codigo,
+        code: r.codigo.toString(),
+        date: r.data,
+        value: r.valor,
+        status: r.estado,
+        miles: r.milhas_utilizadas,
+        seats: r.quantidade_poltronas,
+        clientId: r.codigo_cliente,
+        flightId: r.voo.codigo,
+      },
+      flight: {
+        id: r.voo.codigo,
+        date: r.voo.data.split("T")[0],
+        time: r.voo.data.split("T")[1]?.substring(0, 5) || "",
+        value: r.valor,
+        origin: r.voo.aeroporto_origem.codigo,
+        destination: r.voo.aeroporto_destino.codigo,
+        status: r.voo.estado,
+        miles: r.milhas_utilizadas,
+      }
+    }));
+
+    setAllReservations(mapped);
+  } catch (error) {
+    setErrorMessage("Erro ao buscar reservas.");
+  }
+};
+
+    fetchReservations();
+  }, []);
+
   const fetchFilteredReservations = () => {
-    // Filtra as reservas com base no código digitado, permitindo buscas parciais
-    return allReservations.filter((item) =>
-      item.reservation.code
-        .toLowerCase()
-        .includes(reservationCode.toLowerCase())
+    return allReservations.filter(
+      (item) =>
+        item.reservation &&
+        item.reservation.code &&
+        item.reservation.code.toLowerCase().includes(reservationCode.toLowerCase())
     );
   };
 
