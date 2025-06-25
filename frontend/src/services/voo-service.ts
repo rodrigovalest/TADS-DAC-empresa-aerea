@@ -17,7 +17,13 @@ const vooService = {
   },
   
   inserirVoo: async (data: IInserirVooRequest): Promise<IEstadoVooResponse> => {
-    throw new Error("Not implemented yet");
+    try {
+      const response = await api.post<IEstadoVooResponse>("/voos", data);
+      return response.data;
+    } catch (error: any) {
+      console.error("Erro ao inserir voo:", error);
+      throw new Error(error.message || "Erro ao inserir voo");
+    }
   },
 
   findVooById: async (data: number): Promise<IVooResponse> => {
