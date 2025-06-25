@@ -165,22 +165,22 @@ services:
     networks:
       - private_network
 
-  frontend:
-    build: ./frontend
-    container_name: frontend_service
-    restart: always
-    ports:
-      - "3000:3000"
-    networks:
-      - public_network
-      - private_network
-    depends_on:
-      - db-cliente
-      - db-funcionario
-      - db-reserva
-      - db-voos
-      - db-auth
-      - rabbitmq
+  # frontend:
+  #   build: ./frontend
+  #   container_name: frontend_service
+  #   restart: always
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - public_network
+  #     - private_network
+  #   depends_on:
+  #     - db-cliente
+  #     - db-funcionario
+  #     - db-reserva
+  #     - db-voos
+  #     - db-auth
+  #     - rabbitmq
 
   api_gateway:
     build: 

@@ -18,7 +18,7 @@ const SearchReservationPage: React.FC = () => {
   const [allReservations, setAllReservations] = useState<ReservationWithFlightDetails[]>([]);
 
   const clienteId = typeof window !== "undefined"
-    ? JSON.parse(localStorage.getItem("logged_user") || "{}")?.codigo
+    ? JSON.parse(localStorage.getItem("logged_user") || "{}")?.usuario.codigo
     : null;
 
   const fetchFilteredReservations = () => {
