@@ -5,6 +5,7 @@ import HeaderBanner from "@/components/HeaderBanner";
 import { Flight, Reservation } from "@/types/interfaces";
 import SearchIcon from "@mui/icons-material/Search";
 import clienteService from "@/services/cliente-service";
+import CancelReservationButton from "@/components/CancelReservationButton";
 
 // Interface para combinar dados do voo e da reserva
 interface ReservationWithFlightDetails {
@@ -50,16 +51,6 @@ const SearchReservationPage: React.FC = () => {
     setAllReservations(updatedReservations);
     setErrorMessage("");
     alert("Check-in realizado com sucesso!");
-  };
-
-  const handleCancelReservation = (reservationId: string) => {
-    const updatedReservations = allReservations.filter(
-      (item) => item.reservation.id !== reservationId
-    );
-
-    setAllReservations(updatedReservations);
-    setErrorMessage("");
-    alert("Reserva cancelada com sucesso!");
   };
 
   const isFlightWithin48Hours = (item: ReservationWithFlightDetails) => {
@@ -163,12 +154,12 @@ const SearchReservationPage: React.FC = () => {
                       Fazer Check-in
                     </button>
                   )}
-                <button
-                  onClick={() => handleCancelReservation(item.reservation.id)}
-                  className="px-6 py-2 bg-red-500 text-white text-2xl rounded-md hover:bg-red-700 transition-all"
-                >
-                  Cancelar Reserva
-                </button>
+
+                <CancelReservationButton
+                  reservationCode={item.reservation.id}
+                  telaAtual={true}
+                />
+
               </div>
             </div>
           ))}
