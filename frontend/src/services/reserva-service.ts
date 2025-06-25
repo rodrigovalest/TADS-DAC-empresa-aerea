@@ -15,11 +15,8 @@ const reservaService = {
   },
 
   cancelarReserva: async (id: number): Promise<IEstadoReservaResponse> => {
-    const response = await fetch(`http://localhost:8082/reservas/${id}/cancelar`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const response = await fetch(`http://localhost:8082/reservas/${id}`, {
+      method: "DELETE",
     });
 
     if (!response.ok) {
