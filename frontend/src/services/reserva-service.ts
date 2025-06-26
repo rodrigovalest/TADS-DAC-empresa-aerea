@@ -17,29 +17,28 @@ const reservaService = {
   },
 
   cancelarReserva: async (id: number): Promise<IEstadoReservaResponse> => {
-    const response = await api.delete<IEstadoReservaResponse>(`/reservas/${id}`);
-    return response.data;
+    const response = await fetch(`http://localhost:8082/reservas/${id}`, {
+      method: "DELETE"
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao cancelar reserva");
+    }
+
+    return await response.json();
+  },
+  mudarEstadoReserva: async (
+    { reservaId, estado }: IMudarEstadoReservaRequest
+  ): Promise<IEstadoReservaResponse> => {
+    const { data } = await api.patch<IEstadoReservaResponse>(
+      `/reservas/${reservaId}/estado`,
+      { estado }
+    );
+    return data;
   },
 
-//TODO
-  mudarEstadoReserva: async (data: IMudarEstadoReservaRequest): Promise<IEstadoReservaResponse> => {
-    const response = await fetch(`http://localhost:8082/reservas/${data.estado}/estado`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ estado: data.estado }),
-    });
-  
-    if (!response.ok) {
-      throw new Error("Erro ao mudar estado da reserva");
-    }
-  
-    return await response.json();
-	},
-
-  findAllReservasByUser: async (): Promise<IListarReservaResponse []> => {
-    const response = await api.get<IListarReservaResponse []>("/reservas/user");
+  findAllReservasByUser: async (): Promise<IListarReservaResponse[]> => {
+    const response = await api.get<IListarReservaResponse[]>("/reservas/user");
     return response.data;
   }
 };
