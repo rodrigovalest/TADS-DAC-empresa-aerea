@@ -39,7 +39,7 @@ const EmployeeHomePage: React.FC = () => {
     setActionType("");
   };
 
-  const handleConfirmAction = () => {
+  const handleConfirmAction = async () => {
     if (!selectedFlight) return;
 
     let success = false;
@@ -49,14 +49,14 @@ const EmployeeHomePage: React.FC = () => {
         alert("Por favor, insira o código da reserva.");
         return;
       }
-      success = handleConfirmBoarding(
+      success = await handleConfirmBoarding(
         selectedFlight.codigo,
         reservationCodeInput.trim()
       );
     } else if (actionType === "cancelar") {
-      success = handleCancelFlight(selectedFlight.codigo);
+      success = await handleCancelFlight(selectedFlight.codigo);
     } else if (actionType === "realizar") {
-      success = handleCompleteFlight(selectedFlight.codigo);
+      success = await handleCompleteFlight(selectedFlight.codigo);
     }
 
     handleCloseModal();
