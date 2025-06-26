@@ -1,4 +1,3 @@
-import IVooReservaResponse from "@/models/response/voo-reserva-response";
 import { EstadoReservaType } from "../types/estado-reserva.type";
 import IVooListarReservaResponse from "./IVooListarReservaResponseDto";
 

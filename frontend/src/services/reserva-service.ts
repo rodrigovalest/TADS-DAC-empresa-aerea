@@ -41,6 +41,16 @@ const reservaService = {
   findAllReservasByUser: async (): Promise<IListarReservaResponse []> => {
     const response = await api.get<IListarReservaResponse []>("/reservas/user");
     return response.data;
+  },
+
+  findReservasByCodigoVoo: async (codigoVoo: number): Promise<IListarReservaResponse []> => {
+    const response = await api.get<IListarReservaResponse []>(`/reservas/voos/${codigoVoo}`);
+    return response.data;
+  },
+
+  embarcarReserva: async (codigoReserva: number): Promise<IReservaResponse> => {
+    const response = await api.patch<IReservaResponse>(`/reservas/${codigoReserva}/estado`, { estado: 'EMBARCADA' });
+    return response.data;
   }
 };
 

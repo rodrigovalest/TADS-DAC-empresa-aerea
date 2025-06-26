@@ -114,6 +114,10 @@ public class ReservaService {
         return this.reservaRepository.findByCodigoCliente(codigoCliente);
     }
 
+    public List<ReservaEntity> listarReservaPorCodigoVoo(Long codigoVoo) {
+        return this.reservaRepository.findByVooCodigo(codigoVoo);
+    }
+
     @Transactional
     public ReservaEntity cancelarReservaSaga(Long reservaId) {
         ReservaResumoEntity reservaResumo = this.reservaResumoService.findByCodigoReserva(reservaId);

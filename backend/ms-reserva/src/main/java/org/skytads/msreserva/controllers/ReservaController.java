@@ -105,4 +105,20 @@ public class ReservaController {
         ReservaResumoEntity resumo = this.reservaResumoService.findByCodigoReserva(reserva.getCodigo());
         return ResponseEntity.ok(reservaMapper.toCriarReservaResponseDto(reserva, resumo));
     }
+
+    @GetMapping("/voos/{codigoVoo}")
+    public ResponseEntity<List<ListarReservaResponseDto>> listarReservasPorCodigoVoo(
+            @PathVariable("codigoVoo") Long codigoVoo
+    ) {
+        List<ReservaEntity> list = this.reservaService.listarReservaPorCodigoVoo(codigoVoo);
+        List<ListarReservaResponseDto> responseDtoList = new ArrayList<>();
+
+        for (ReservaEntity reserva : list) {
+            ReservaResumoEntity resumo = this.reservaResumoService.findByCodigoReserva(reserva.getCodigo());
+            var responseDto = reservaMapper.toListarReservaResponseDto(reserva, resumo);
+            responseDtoList.add(responseDto);
+        }
+
+        return ResponseEntity.ok(responseDtoList);
+    }
 }
