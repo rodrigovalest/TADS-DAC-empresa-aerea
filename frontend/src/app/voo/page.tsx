@@ -52,36 +52,36 @@ const fetchAeroportos = async () =>{
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  if (!data || !hora || !poltronas || !origem || !destino || !valor) {
-    alert("Por favor, preencha todos os campos obrigatórios.");
-    return;
-  }
+    if (!data || !hora || !poltronas || !origem || !destino || !valor) {
+      alert("Por favor, preencha todos os campos obrigatórios.");
+      return;
+    }
 
-  if (origem === destino) {
-    alert("Aeroporto de origem e destino não podem ser iguais.");
-    return;
-  }
+    if (origem === destino) {
+      alert("Aeroporto de origem e destino não podem ser iguais.");
+      return;
+    }
 
-  const vooData: IInserirVooRequest = {
-    data: `${data}T${hora}`,
-    valor_passagem: parseFloat(valor),
-    quantidade_poltronas_total: parseInt(poltronas),
-    codigo_aeroporto_origem: origem,
-    codigo_aeroporto_destino: destino,
-    quantidade_poltronas_ocupadas: 0
+    const vooData: IInserirVooRequest = {
+      data: `${data}T${hora}:00-03:00`,
+      valor_passagem: parseFloat(valor),
+      quantidade_poltronas_total: parseInt(poltronas),
+      codigo_aeroporto_origem: origem,
+      codigo_aeroporto_destino: destino,
+      quantidade_poltronas_ocupadas: 0
+    };
+
+    try {
+      await vooService.inserirVoo(vooData);
+      alert("Voo criado com sucesso!");
+      router.push("/employee");
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      alert("Erro ao cadastrar voo. Tente novamente.");
+    }
   };
-
-  try {
-    await vooService.inserirVoo(vooData);
-    alert("Voo criado com sucesso!");
-    router.push("/employee");
-  } catch (error) {
-    console.error("Erro na requisição:", error);
-    alert("Erro ao cadastrar voo. Tente novamente.");
-  }
-};
   useEffect(()=>{
     console.log('funcionei')
     fetchAeroportos();

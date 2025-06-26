@@ -6,6 +6,7 @@ import { Flight, Reservation } from "@/types/interfaces";
 import SearchIcon from "@mui/icons-material/Search";
 import clienteService from "@/services/cliente-service";
 import reservaService from "@/services/reserva-service";
+import { EstadoVooType } from "@/models/types/estado-voo.type";
 
 // Interface para combinar dados do voo e da reserva
 interface ReservationWithFlightDetails {
@@ -66,7 +67,9 @@ const SearchReservationPage: React.FC = () => {
       (item) =>
         item.reservation &&
         item.reservation.code &&
-        item.reservation.code.toLowerCase().includes(reservationCode.toLowerCase())
+        item.reservation.code.toLowerCase().includes(reservationCode.toLowerCase()) &&
+        (item.reservation.status == "CRIADA" ||
+         item.reservation.status == "CRIADO")
     );
   };
 
