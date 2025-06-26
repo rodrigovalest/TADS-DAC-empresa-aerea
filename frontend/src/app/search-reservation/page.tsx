@@ -95,14 +95,18 @@ const SearchReservationPage: React.FC = () => {
     alert("Check-in realizado com sucesso!");
   };
 
-  const handleCancelReservation = (reservationId: string) => {
-    const updatedReservations = allReservations.filter(
-      (item) => item.reservation.id !== reservationId
-    );
-
-    setAllReservations(updatedReservations);
-    setErrorMessage("");
-    alert("Reserva cancelada com sucesso!");
+  const handleCancelReservation = async (reservationId: string) => {
+    try {
+      await reservaService.cancelarReserva(Number(reservationId));
+      const updatedReservations = allReservations.filter(
+        (item) => item.reservation.id !== reservationId
+      );
+      setAllReservations(updatedReservations);
+      setErrorMessage("");
+      alert("Reserva cancelada com sucesso!");
+    } catch (error) {
+      setErrorMessage("Erro ao cancelar reserva!");
+    }
   };
 
   const isFlightWithin48Hours = (item: ReservationWithFlightDetails) => {
