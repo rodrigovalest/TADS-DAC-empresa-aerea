@@ -8,6 +8,30 @@ export const useFlightManagement = () => {
   const [flights, setFlights] = useState<Flight[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
+  useEffect(() => {
+    const fetchFlights = async () => {
+      try {
+        const response = await vooService.findVoos(null, null, null, null, null);
+        const mappedFlights: Flight[] = (response.voos || []).map((v: any) => ({
+          id: v.codigo,
+          date: v.data.split("T")[0].split("-").reverse().join("/"),
+          time: v.data.split("T")[1]?.substring(0, 5) || "",
+          origin: v.aeroporto_origem.codigo,
+          destination: v.aeroporto_destino.codigo,
+          status: v.estado === "CONFIRMADO" || v.estado === "CANCELADO" || v.estado === "REALIZADO"
+            ? v.estado
+            : "CONFIRMADO",
+          value: Number(v.valor),
+          miles: 0,
+        }));
+        setFlights(mappedFlights);
+      } catch (error) {
+        console.error("Erro ao buscar voos:", error);
+      }
+    };
+    fetchFlights();
+  }, []);
+
   const getFlightsWithin48Hours = (flightsList: Flight[]) => {
     const now = new Date();
     const fortyEightHoursLater = new Date(now.getTime() + 48 * 60 * 60 * 1000);
@@ -86,27 +110,20 @@ export const useFlightManagement = () => {
     }
   };
 
-  const handleCompleteFlight = (flightId: string) => {
-    const flight = flights.find((f) => f.id === flightId);
-    if (!flight || flight.status !== "CONFIRMADO") {
-      alert("Erro: Apenas voos confirmados podem ser realizados.");
+  const handleCompleteFlight = async (flightId: string) => {
+    try {
+      await vooService.mudarEstadoVoo(Number(flightId), "REALIZADO");
+      setFlights((prev) =>
+        prev.map((f) =>
+          f.id === flightId ? { ...f, status: "REALIZADO" } : f
+        )
+      );
+      alert("Voo realizado com sucesso!");
+      return true;
+    } catch (error) {
+      alert("Erro ao realizar voo!");
       return false;
     }
-
-    setFlights((prev) =>
-      prev.map((f) => (f.id === flightId ? { ...f, status: "REALIZADO" } : f))
-    );
-    setReservations((prev) =>
-      prev.map((r) => {
-        if (r.flightId !== flightId) return r;
-        if (r.status === "EMBARCADO") return { ...r, status: "REALIZADA" };
-        if (r.status === "CHECK-IN") return { ...r, status: "NÃO REALIZADA" };
-        return r;
-      })
-    );
-
-    alert("Voo realizado com sucesso!");
-    return true;
   };
 
   const upcomingFlights = getFlightsWithin48Hours(
