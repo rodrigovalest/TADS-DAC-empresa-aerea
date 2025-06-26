@@ -7,7 +7,7 @@ import Header from '@/components/Header';
 import HeaderBanner from '@/components/HeaderBanner';
 import useFindReservasByUser from '@/hooks/useFindReservasByUser';
 
-const ClienteLandingPage: React.FC = () => {
+const CheckinPage: React.FC = () => {
   const { data: reservas, isLoading, isError } = useFindReservasByUser();
 
   const filtrarVoosProximas48h = (reservas: any[]) => {
@@ -45,4 +45,4 @@ const ClienteLandingPage: React.FC = () => {
   );
 };
 
-export default ClienteLandingPage;
+export default CheckinPage;
