@@ -17,16 +17,10 @@ const reservaService = {
   },
 
   cancelarReserva: async (id: number): Promise<IEstadoReservaResponse> => {
-    const response = await fetch(`http://localhost:8082/reservas/${id}`, {
-      method: "DELETE"
-    });
-
-    if (!response.ok) {
-      throw new Error("Erro ao cancelar reserva");
-    }
-
-    return await response.json();
+    const response = await api.delete<IEstadoReservaResponse>(`/reservas/${id}`);
+    return response.data;
   },
+
 //TODO
   mudarEstadoReserva: async (data: IMudarEstadoReservaRequest): Promise<IEstadoReservaResponse> => {
     const response = await fetch(`http://localhost:8082/reservas/${data.estado}/estado`, {

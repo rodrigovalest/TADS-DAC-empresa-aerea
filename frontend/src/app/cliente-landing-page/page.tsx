@@ -18,9 +18,14 @@ const ClienteLandingPage: React.FC = () => {
         {isLoading && <p className="text-center">Carregando reservas...</p>}
         {isError && <p className="text-center text-red-600">Erro ao carregar reservas.</p>}
         {reservas?.length === 0 && <p className="text-center">Nenhuma reserva encontrada.</p>}
-        {reservas?.map((reserva) => (
-          <TravelCardRecord key={reserva.codigo} reserva={reserva} />
-        ))}
+        {reservas &&
+          reservas
+            .slice()
+            .sort((a, b) => new Date(b.voo.data).getTime() - new Date(a.voo.data).getTime())
+            .map((reserva) => (
+              <TravelCardRecord key={reserva.codigo} reserva={reserva} />
+            ))
+        }
       </div>
     </div>
   );
