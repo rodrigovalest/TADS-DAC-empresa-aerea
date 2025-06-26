@@ -12,8 +12,9 @@ const vooService = {
     return response.data;
   },
   
-  mudarEstadoVoo: async (data: IMudarEstadoVooRequest): Promise<IEstadoVooResponse> => {
-    throw new Error("Not implemented yet");
+  mudarEstadoVoo: async (codigo: number, estado: string): Promise<IEstadoVooResponse> => {
+    const response = await api.patch<IEstadoVooResponse>(`/voos/${codigo}/estado`, { estado });
+    return response.data;
   },
   
   inserirVoo: async (data: IInserirVooRequest): Promise<IEstadoVooResponse> => {
