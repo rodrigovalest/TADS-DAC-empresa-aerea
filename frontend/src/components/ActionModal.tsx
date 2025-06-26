@@ -1,8 +1,8 @@
 import React from "react";
-import { Flight } from "@/types/interfaces";
+import IVooResponse from "@/models/response/voo-response";
 
 interface ActionModalProps {
-  flight: Flight;
+  flight: IVooResponse;
   actionType: "confirmar" | "cancelar" | "realizar" | "";
   reservationCodeInput: string;
   setReservationCodeInput: (value: string) => void;
@@ -28,9 +28,9 @@ const ActionModal: React.FC<ActionModalProps> = ({
         </h2>
 
         <div className="mb-4">
-          <p><strong>Data:</strong> {flight.date}</p>
-          <p><strong>Origem:</strong> {flight.origin}</p>
-          <p><strong>Destino:</strong> {flight.destination}</p>
+          <p><strong>Data:</strong> {flight.data}</p>
+          <p><strong>Origem:</strong> {flight.aeroporto_origem?.nome}</p>
+          <p><strong>Destino:</strong> {flight.aeroporto_destino?.nome}</p>
         </div>
 
         {actionType === "confirmar" && (
