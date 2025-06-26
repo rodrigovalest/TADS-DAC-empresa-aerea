@@ -1,186 +1,12 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Flight, Reservation } from "@/types/interfaces";
+import vooService from "@/services/voo-service";
 
 export const useFlightManagement = () => {
   const router = useRouter();
   const [flights, setFlights] = useState<Flight[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
-
-  useEffect(() => {
-    const mockFlights: Flight[] = [
-      {
-        id: "1",
-        date: "24/05/2025",
-        time: "08:00",
-        origin: "Aeroporto de Curitiba",
-        destination: "Aeroporto de São Paulo/Guarulhos ",
-        status: "CONFIRMADO",
-        value: 500,
-        miles: 400,
-      },
-      {
-        id: "2",
-        date: "24/05/2025",
-        time: "10:00",
-        origin: "Aeroporto do Rio de Janeiro/Galeão",
-        destination: "Aeroporto de Curitiba",
-        status: "CONFIRMADO",
-        value: 600,
-        miles: 500,
-      },
-      {
-        id: "3",
-        date: "24/05/2025",
-        time: "14:00",
-        origin: "Aeroporto Salgado Filho",
-        destination: "Aeroporto do Rio de Janeiro/Galeão",
-        status: "CONFIRMADO",
-        value: 450,
-        miles: 350,
-      },
-      {
-        id: "4",
-        date: "24/05/2025",
-        time: "18:00",
-        origin: "Aeroporto de São Paulo/Guarulhos ",
-        destination: "Aeroporto de Curitiba",
-        status: "CONFIRMADO",
-        value: 550,
-        miles: 450,
-      },
-      {
-        id: "5",
-        date: "25/05/2025",
-        time: "08:00",
-        origin: "Aeroporto de Curitiba",
-        destination: "Aeroporto de São Paulo/Guarulhos ",
-        status: "CONFIRMADO",
-        value: 500,
-        miles: 400,
-      },
-      {
-        id: "6",
-        date: "25/05/2025",
-        time: "10:00",
-        origin: "Aeroporto do Rio de Janeiro/Galeão",
-        destination: "Aeroporto de Curitiba",
-        status: "CONFIRMADO",
-        value: 600,
-        miles: 500,
-      },
-      {
-        id: "7",
-        date: "10/05/2025",
-        time: "14:00",
-        origin: "Aeroporto Salgado Filho",
-        destination: "Aeroporto do Rio de Janeiro/Galeão",
-        status: "CONFIRMADO",
-        value: 450,
-        miles: 350,
-      },
-      {
-        id: "8",
-        date: "09/05/2025",
-        time: "18:00",
-        origin: "Aeroporto de São Paulo/Guarulhos ",
-        destination: "Aeroporto de Curitiba",
-        status: "CONFIRMADO",
-        value: 550,
-        miles: 450,
-      },
-      {
-        id: "9",
-        date: "08/05/2025",
-        time: "08:00",
-        origin: "Aeroporto de Curitiba",
-        destination: "Aeroporto de São Paulo/Guarulhos ",
-        status: "CONFIRMADO",
-        value: 500,
-        miles: 400,
-      },
-      {
-        id: "10",
-        date: "07/05/2025",
-        time: "10:00",
-        origin: "Aeroporto do Rio de Janeiro/Galeão",
-        destination: "Aeroporto de Curitiba",
-        status: "CONFIRMADO",
-        value: 600,
-        miles: 500,
-      },
-      {
-        id: "11",
-        date: "06/05/2025",
-        time: "14:00",
-        origin: "Aeroporto Salgado Filho",
-        destination: "Aeroporto do Rio de Janeiro/Galeão",
-        status: "CONFIRMADO",
-        value: 450,
-        miles: 350,
-      },
-      {
-        id: "12",
-        date: "05/05/2025",
-        time: "18:00",
-        origin: "Aeroporto de São Paulo/Guarulhos ",
-        destination: "Aeroporto de Curitiba",
-        status: "CONFIRMADO",
-        value: 550,
-        miles: 450,
-      },
-      {
-        id: "13",
-        date: "04/05/2025",
-        time: "08:00",
-        origin: "Aeroporto de Curitiba",
-        destination: "Aeroporto de São Paulo/Guarulhos ",
-        status: "CONFIRMADO",
-        value: 500,
-        miles: 400,
-      },
-      {
-        id: "14",
-        date: "04/05/2025",
-        time: "10:00",
-        origin: "Aeroporto do Rio de Janeiro/Galeão",
-        destination: "Aeroporto de Curitiba",
-        status: "CONFIRMADO",
-        value: 600,
-        miles: 500,
-      },
-      {
-        id: "15",
-        date: "04/05/2025",
-        time: "14:00",
-        origin: "Aeroporto Salgado Filho",
-        destination: "Aeroporto do Rio de Janeiro/Galeão",
-        status: "CONFIRMADO",
-        value: 450,
-        miles: 350,
-      },
-      {
-        id: "16",
-        date: "04/05/2025",
-        time: "18:00",
-        origin: "Aeroporto de São Paulo/Guarulhos ",
-        destination: "Aeroporto de Curitiba",
-        status: "CONFIRMADO",
-        value: 550,
-        miles: 450,
-      },
-    ];
-
-    const mockReservations: Reservation[] = [
-      { id: "r1", flightId: "1", status: "CHECK-IN", code: "ABC123" },
-      { id: "r2", flightId: "2", status: "CHECK-IN", code: "DEF456" },
-      { id: "r3", flightId: "3", status: "CHECK-IN", code: "GHI789" },
-      { id: "r4", flightId: "4", status: "CHECK-IN", code: "JKL012" },
-    ];
-
-    setFlights(mockFlights);
-    setReservations(mockReservations);
-  }, []);
 
   const getFlightsWithin48Hours = (flightsList: Flight[]) => {
     const now = new Date();
@@ -235,24 +61,29 @@ export const useFlightManagement = () => {
     return true;
   };
 
-  const handleCancelFlight = (flightId: string) => {
+  const handleCancelFlight = async (flightId: string) => {
     const flight = flights.find((f) => f.id === flightId);
     if (!flight || flight.status !== "CONFIRMADO") {
       alert("Erro: Apenas voos confirmados podem ser cancelados.");
       return false;
     }
 
-    setFlights((prev) =>
-      prev.map((f) => (f.id === flightId ? { ...f, status: "CANCELADO" } : f))
-    );
-    setReservations((prev) =>
-      prev.map((r) =>
-        r.flightId === flightId ? { ...r, status: "CANCELADO VOO" } : r
-      )
-    );
-
-    alert("Voo cancelado com sucesso!");
-    return true;
+    try {
+      await vooService.mudarEstadoVoo(Number(flightId), "CANCELADO");
+      setFlights((prev) =>
+        prev.map((f) => (f.id === flightId ? { ...f, status: "CANCELADO" } : f))
+      );
+      setReservations((prev) =>
+        prev.map((r) =>
+          r.flightId === flightId ? { ...r, status: "CANCELADO VOO" } : r
+        )
+      );
+      alert("Voo cancelado com sucesso!");
+      return true;
+    } catch (error) {
+      alert("Erro ao cancelar voo!");
+      return false;
+    }
   };
 
   const handleCompleteFlight = (flightId: string) => {
