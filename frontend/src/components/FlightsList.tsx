@@ -4,45 +4,34 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Flight } from "@/types/interfaces";
 import FlightCard from "./FlightCard";
+import { useFindVoos } from "@/hooks/useFindVoos";
+import IVooResponse from "@/models/response/voo-response";
 
 interface FlightsListProps {
   onOpenModal: (
-    flight: Flight,
+    voo: IVooResponse,
     action: "confirmar" | "cancelar" | "realizar"
   ) => void;
 }
 
 const FlightsList: React.FC<FlightsListProps> = ({ onOpenModal }) => {
   const router = useRouter();
-  const [flights, setFlights] = useState<Flight[]>([]);
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState<string | null>(null); 
+  const [error, setError] = useState<string | null>(null);
+  const { data, mutate: onFindVoos, isPending, isError} = useFindVoos();
 
   useEffect(() => {
-    const fetchFlights = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/voos", {
-          method: "GET",
-        });
-
-        if (!response.ok) {
-          throw new Error("Erro ao buscar voos.");
-        }
-
-        const data = await response.json();
-        setFlights(data);
-      } catch (error: any) {
-        console.error("Erro ao carregar voos:", error);
-        setError("Erro ao carregar voos. Tente novamente mais tarde.");
-      } finally {
-        setLoading(false);
+    onFindVoos(
+      {
+        data: null,
+        origem: null,
+        destino: null,
+        inicio: null,
+        fim: null,
       }
-    };
+    );
+  }, [onFindVoos]);
 
-    fetchFlights();
-  }, []);
-
-  if (loading) {
+  if (isPending) {
     return (
       <div className="text-center py-8">
         <p>Carregando voos...</p>
@@ -50,25 +39,22 @@ const FlightsList: React.FC<FlightsListProps> = ({ onOpenModal }) => {
     );
   }
 
-  if (error) {
+  if (error || isError || !data) {
     return (
       <div className="text-center py-8 text-red-500">
-        <p>{error}</p>
+        <p>Algo deu errado</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-4 font-bold">
-      {flights.length > 0 ? (
-        flights.map((flight) => (
+      {data.voos.length > 0 ? (
+        data.voos.map((voo) => (
           <FlightCard
-            key={flight.id}
-            flight={flight}
+            key={voo.codigo}
+            voo={voo}
             onOpenModal={onOpenModal}
-            onConfirmBoarding={() =>
-              router.push("/confirmar-embarques/" + flight.id)
-            }
           />
         ))
       ) : (
