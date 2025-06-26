@@ -1,130 +1,48 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import "../../app/globals.css";
-import Header from "../../components/Header";
-import HeaderBanner from "@/components/HeaderBanner";
-import TravelCardCheckIn from "@/components/TravelCardCheckIn";
-import { Flight, Reservation } from "@/types/interfaces";
+import React from 'react';
+import '../../app/globals.css';
+import TravelCardRecord from '@/components/TravelCardRecord';
+import Header from '@/components/Header';
+import HeaderBanner from '@/components/HeaderBanner';
+import useFindReservasByUser from '@/hooks/useFindReservasByUser';
 
-// Interface para combinar dados do voo e da reserva
-interface ReservationWithFlightDetails {
-  reservation: Reservation;
-  flight: Flight;
-}
+const ClienteLandingPage: React.FC = () => {
+  const { data: reservas, isLoading, isError } = useFindReservasByUser();
 
-const mockFlights: ReservationWithFlightDetails[] = [
-  {
-    reservation: {
-      id: "r1",
-      code: "VOO123",
-      flightId: "f1",
-      status: "CRIADO",
-    },
-    flight: {
-      id: "f1",
-      date: "2025-05-07",
-      time: "03:00:00",
-      origin: "São Paulo (GRU)",
-      destination: "Rio de Janeiro (GIG)",
-      status: "CONFIRMADO",
-      value: 4500,
-      miles: 300,
-    },
-  },
-  {
-    reservation: {
-      id: "r2",
-      code: "VOO456",
-      flightId: "f2",
-      status: "CRIADO",
-    },
-    flight: {
-      id: "f2",
-      date: "2025-05-08",
-      time: "10:00:00",
-      origin: "Brasília (BSB)",
-      destination: "Salvador (SSA)",
-      status: "CONFIRMADO",
-      value: 3200,
-      miles: 200,
-    },
-  },
-  {
-    reservation: {
-      id: "r3",
-      code: "VOO789",
-      flightId: "f3",
-      status: "CRIADO",
-    },
-    flight: {
-      id: "f3",
-      date: "2025-05-07",
-      time: "15:00:00",
-      origin: "Rio de Janeiro (GIG)",
-      destination: "São Paulo (GRU)",
-      status: "CONFIRMADO",
-      value: 5000,
-      miles: 400,
-    },
-  },
-  {
-    reservation: {
-      id: "r4",
-      code: "VOO101",
-      flightId: "f4",
-      status: "CHECK-IN",
-    },
-    flight: {
-      id: "f4",
-      date: "2025-05-30",
-      time: "18:00:00",
-      origin: "São Paulo (GRU)",
-      destination: "Belo Horizonte (CNF)",
-      status: "CONFIRMADO",
-      value: 2500,
-      miles: 150,
-    },
-  },
-];
+  const filtrarVoosProximas48h = (reservas: any[]) => {
+    const agora = new Date();
+    const em48h = new Date(agora.getTime() + (48 * 60 * 60 * 1000)); 
 
-const CheckInPage: React.FC = () => {
-  const [flights, setFlights] = useState(mockFlights);
-
-  const handleCheckIn = (code: string) => {
-    setFlights((prevFlights) =>
-      prevFlights.map((flight) =>
-        flight.reservation.code === code
-          ? { ...flight, flightStatus: "CHECK-IN" }
-          : flight
-      )
-    );
+    return reservas.filter(reserva => {
+      const dataVoo = new Date(reserva.voo.data);
+      return dataVoo >= agora && dataVoo <= em48h;
+    });
   };
 
-  const upcomingFlights = flights.filter((flight) => {
-    const now = new Date();
-    const dateTime = new Date(`${flight.flight.date}T${flight.flight.time}`);
-    return (
-      dateTime > now &&
-      dateTime <= new Date(now.getTime() + 48 * 60 * 60 * 1000)
-    );
-  });
+  const reservasFiltradasPor48h = reservas ? filtrarVoosProximas48h(reservas) : [];
 
   return (
-    <div className="mb-10">
+    <div>
       <Header />
-      <HeaderBanner htmlContent="Seu <span class='text-[#FF3D00] font-bold'>vôo</span> está a sua espera" />
-      <div className="rounded-3xl border-3 w-[85vw] border-black mx-auto mt-8 bg-white p-4">
-        {upcomingFlights.map((flight) => (
-          <TravelCardCheckIn
-            key={flight.reservation.id}
-            flight={flight}
-            onCheckIn={handleCheckIn}
-          />
-        ))}
+      <HeaderBanner text="Seus voos nas próximas 48 horas" />
+      <div className="rounded-3xl border-3 w-[85vw] border-black mx-auto -mt-12 bg-white p-4">
+        {isLoading && <p className="text-center">Carregando reservas...</p>}
+        {isError && <p className="text-center text-red-600">Erro ao carregar reservas.</p>}
+        {!isLoading && !isError && reservasFiltradasPor48h.length === 0 && (
+          <p className="text-center">Nenhum voo encontrado nas próximas 48 horas.</p>
+        )}
+        {reservasFiltradasPor48h &&
+          reservasFiltradasPor48h
+            .slice()
+            .sort((a, b) => new Date(a.voo.data).getTime() - new Date(b.voo.data).getTime()) 
+            .map((reserva) => (
+              <TravelCardRecord key={reserva.codigo} reserva={reserva} />
+            ))
+        }
       </div>
     </div>
   );
 };
 
-export default CheckInPage;
+export default ClienteLandingPage;
