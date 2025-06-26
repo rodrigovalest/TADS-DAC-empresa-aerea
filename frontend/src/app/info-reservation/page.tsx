@@ -8,6 +8,8 @@ import HeaderBanner from "@/components/HeaderBanner";
 import CancelReservationButton from "@/components/CancelReservationButton";
 import useFindReservaByCodigo from "@/hooks/useFindReservaByCodigo";
 import { useRouter, useSearchParams } from "next/navigation";
+import useCheckInReserva from "@/hooks/useCheckInReserva"; 
+
 import { toast } from "react-toastify";
 
 function InfoReservationContent() {
@@ -16,16 +18,20 @@ function InfoReservationContent() {
   const router = useRouter();
 
   const codigo = Number(codigoParam);
-  const { data: reserva, isLoading, isError } = useFindReservaByCodigo(codigo);
+  const { data: reserva, isLoading, isError, refetch } = useFindReservaByCodigo(codigo);
   const [formattedDate, setFormattedDate] = useState<string>("");
+
+  const { mutate: checkInReserva, isPending: isCheckInLoading } = useCheckInReserva(); 
 
   useEffect(() => {
     if (reserva?.voo?.data) {
       const data = new Date(reserva.voo.data);
-      setFormattedDate(data.toLocaleString("pt-BR", {
-        dateStyle: "short",
-        timeStyle: "short"
-      }));
+      setFormattedDate(
+        data.toLocaleString("pt-BR", {
+          dateStyle: "short",
+          timeStyle: "short",
+        })
+      );
     }
   }, [reserva]);
 
@@ -35,6 +41,24 @@ function InfoReservationContent() {
     const now = new Date();
     const diffInHours = (flightDate.getTime() - now.getTime()) / (1000 * 60 * 60);
     return diffInHours <= 48 && diffInHours > 0;
+  };
+
+  const handleCheckIn = () => {
+    if (!codigo || isNaN(codigo)) {
+      toast.error("Código da reserva inválido.");
+      return;
+    }
+
+    checkInReserva(codigo, {
+      onSuccess: () => {
+        toast.success("Check-in realizado com sucesso!");
+        refetch();
+      },
+      onError: (error) => {
+        console.error("Erro no check-in:", error);
+        toast.error("Erro ao realizar check-in. Tente novamente.");
+      },
+    });
   };
 
   if (isLoading) {
@@ -55,35 +79,50 @@ function InfoReservationContent() {
       <div className="flex justify-center -mt-20 md:-mt-24 px-4">
         <div className="p-6 bg-white shadow-xl flex flex-col gap-5 w-full max-w-3xl rounded-md font-pathway">
           <div className="flex flex-col md:flex-row justify-between gap-6 text-3xl">
-            <p><span className="font-semibold">Código da Reserva:</span> {reserva.codigo}</p>
-            <p><span className="font-semibold">Status:</span> {reserva.estado}</p>
+            <p>
+              <span className="font-semibold">Código da Reserva:</span> {reserva.codigo}
+            </p>
+            <p>
+              <span className="font-semibold">Status:</span> {reserva.estado}
+            </p>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between gap-6 text-3xl">
-            <p><span className="font-semibold">Data/Hora de Embarque:</span> {formattedDate}</p>
-            <p><span className="font-semibold">Valor:</span> R${reserva.valor}</p>
+            <p>
+              <span className="font-semibold">Data/Hora de Embarque:</span> {formattedDate}
+            </p>
+            <p>
+              <span className="font-semibold">Valor:</span> R${reserva.valor}
+            </p>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between gap-6 text-3xl">
-            <p><span className="font-semibold">Origem:</span> {reserva.voo?.aeroporto_origem?.cidade}</p>
-            <p><span className="font-semibold">Destino:</span> {reserva.voo?.aeroporto_destino?.cidade}</p>
+            <p>
+              <span className="font-semibold">Origem:</span> {reserva.voo?.aeroporto_origem?.cidade}
+            </p>
+            <p>
+              <span className="font-semibold">Destino:</span> {reserva.voo?.aeroporto_destino?.cidade}
+            </p>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between gap-6 text-3xl">
-            <p><span className="font-semibold">Milhas:</span> {reserva.milhas_utilizadas}</p>
+            <p>
+              <span className="font-semibold">Milhas:</span> {reserva.milhas_utilizadas}
+            </p>
           </div>
 
           <div className="flex flex-row justify-center gap-6">
             {isFlightWithin48Hours() && reserva.estado === "CRIADA" && (
               <button
-                onClick={() => alert("Check-in realizado com sucesso!")}
-                className="px-6 py-2 bg-green-500 text-white text-2xl rounded-md hover:bg-green-700 transition-all"
+                onClick={handleCheckIn}
+                disabled={isCheckInLoading}
+                className="px-6 py-2 bg-green-500 text-white text-2xl rounded-md hover:bg-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Fazer Check-in
+                {isCheckInLoading ? "Realizando Check-In..." : "Fazer Check-in"}
               </button>
             )}
 
-            {!['CANCELADA', 'CANCELADA VOO', 'REALIZADA', 'NÃO REALIZADA'].includes(reserva.estado) && (
+            {!["CANCELADA", "CANCELADA VOO", "REALIZADA", "NÃO REALIZADA"].includes(reserva.estado) && (
               <CancelReservationButton reservationCode={reserva.codigo} telaAtual={true} />
             )}
           </div>
@@ -91,7 +130,7 @@ function InfoReservationContent() {
       </div>
     </div>
   );
-};
+}
 
 export default function InfoReservationPage() {
   return (

@@ -27,25 +27,19 @@ const reservaService = {
 
     return await response.json();
   },
-//TODO
-  mudarEstadoReserva: async (data: IMudarEstadoReservaRequest): Promise<IEstadoReservaResponse> => {
-    const response = await fetch(`http://localhost:8082/reservas/${data.estado}/estado`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ estado: data.estado }),
-    });
-  
-    if (!response.ok) {
-      throw new Error("Erro ao mudar estado da reserva");
-    }
-  
-    return await response.json();
-	},
+  //TODO
+  mudarEstadoReserva: async (
+    { reservaId, estado }: IMudarEstadoReservaRequest
+  ): Promise<IEstadoReservaResponse> => {
+    const { data } = await api.patch<IEstadoReservaResponse>(
+      `/reservas/${reservaId}/estado`,
+      { estado }
+    );
+    return data;
+  },
 
-  findAllReservasByUser: async (): Promise<IListarReservaResponse []> => {
-    const response = await api.get<IListarReservaResponse []>("/reservas/user");
+  findAllReservasByUser: async (): Promise<IListarReservaResponse[]> => {
+    const response = await api.get<IListarReservaResponse[]>("/reservas/user");
     return response.data;
   }
 };
