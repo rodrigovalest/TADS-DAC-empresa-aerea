@@ -1,43 +1,63 @@
 import React from "react";
-import { Flight } from "@/types/interfaces";
+import IVooResponse from "@/models/response/voo-response";
+import { useRouter } from "next/navigation";
 
 interface FlightCardProps {
-  flight: Flight;
-  onOpenModal: (flight: Flight, action: "confirmar" | "cancelar" | "realizar") => void;
-  onConfirmBoarding: () => void;
+  voo: IVooResponse;
+  onOpenModal: (voo: IVooResponse, action: "confirmar" | "cancelar" | "realizar") => void;
 }
 
-const FlightCard: React.FC<FlightCardProps> = ({ flight, onOpenModal, onConfirmBoarding }) => {
+const FlightCard: React.FC<FlightCardProps> = ({ voo, onOpenModal }) => {
+  const router = useRouter();
+
+  const onConfirmBoarding = () => {
+    router.push("/confirmar-embarques/" + voo.codigo);
+  }
+
   return (
     <div className="bg-gray-200 rounded-lg p-4 mb-4">
       <div className="grid grid-cols-1 gap-2">
-        <div className="flex justify-between">
-          <p className="font-medium">Data: {flight.date}</p>
-          <p className="font-medium">Horário: {flight.time}</p>
+        <div className="flex items-center justify-between w-full">
+          <p className="font-medium">Data: {voo.data}</p>
+          <p className="font-medium">Valor: R$ {voo.valor_passagem}</p>
         </div>
-        <div className="flex items-center justify-between w-full px-4">
-          <span className="text-left">Origem: {flight.origin}</span>
-          <span className="text-right">Destino: {flight.destination}</span>
+
+        <div className="flex items-center justify-between w-full">
+          <span className="text-left">Origem: {voo.aeroporto_origem.nome}</span>
+          <span className="text-right">Destino: {voo.aeroporto_destino.nome}</span>
         </div>
+
+        <div className="flex items-center justify-between w-full">
+          <span className="text-left">Estado: {voo.estado}</span>
+        </div>
+
         <div className="flex justify-between mt-2">
-          <button
-            onClick={() => onOpenModal(flight, "realizar")}
-            className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl text-sm font-bold"
-          >
-            Realizar voo
-          </button>
-          <button
-            onClick={onConfirmBoarding}
-            className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl text-sm font-bold"
-          >
-            Confirmar embarque
-          </button>
-          <button
-            onClick={() => onOpenModal(flight, "cancelar")}
-            className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl text-sm font-bold"
-          >
-            Cancelar voo
-          </button>
+          {voo.estado === 'CONFIRMADO' && (
+            <button
+              onClick={() => onOpenModal(voo, "realizar")}
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl text-sm font-bold"
+            >
+              Realizar voo
+            </button>
+          )}
+
+          {voo.estado === 'CONFIRMADO' && (
+            <button
+              onClick={onConfirmBoarding}
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl text-sm font-bold"
+            >
+              Confirmar embarque
+            </button>
+          )}
+
+          {voo.estado === 'CONFIRMADO' && (
+            <button
+              onClick={() => onOpenModal(voo, "cancelar")}
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl text-sm font-bold"
+            >
+              Cancelar voo
+            </button>
+          )}
         </div>
       </div>
     </div>

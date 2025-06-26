@@ -5,14 +5,14 @@ import React, { useEffect, useState } from "react";
 import FlightBanner from "@/components/FlightBanner";
 import FlightsList from "@/components/FlightsList";
 import ActionModal from "@/components/ActionModal";
-import { Flight, Reservation } from "@/types/interfaces";
 import { useFlightManagement } from "@/hooks/useFlightManagement";
 import HeaderBanner from "@/components/HeaderBanner";
 import MenuFuncionario from "@/components/MenuFuncionario";
+import IVooResponse from "@/models/response/voo-response";
 
 const EmployeeHomePage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
+  const [selectedFlight, setSelectedFlight] = useState<IVooResponse | null>(null);
   const [actionType, setActionType] = useState<
     "confirmar" | "cancelar" | "realizar" | ""
   >("");
@@ -26,8 +26,8 @@ const EmployeeHomePage: React.FC = () => {
     handleCompleteFlight,
   } = useFlightManagement();
 
-  const handleOpenModal = (flight: Flight, action: typeof actionType) => {
-    setSelectedFlight(flight);
+  const handleOpenModal = (voo: IVooResponse, action: typeof actionType) => {
+    setSelectedFlight(voo);
     setActionType(action);
     setReservationCodeInput("");
     setShowModal(true);
@@ -50,17 +50,18 @@ const EmployeeHomePage: React.FC = () => {
         return;
       }
       success = handleConfirmBoarding(
-        selectedFlight.id,
+        selectedFlight.codigo,
         reservationCodeInput.trim()
       );
     } else if (actionType === "cancelar") {
-      success = handleCancelFlight(selectedFlight.id);
+      success = handleCancelFlight(selectedFlight.codigo);
     } else if (actionType === "realizar") {
-      success = handleCompleteFlight(selectedFlight.id);
+      success = handleCompleteFlight(selectedFlight.codigo);
     }
 
     handleCloseModal();
   };
+
 
   return (
     <div>
